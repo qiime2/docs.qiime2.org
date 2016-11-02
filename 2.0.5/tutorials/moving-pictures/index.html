@@ -40,6 +40,7 @@
     ga('create', 'UA-86671044-2', 'auto');
     ga('send', 'pageview');
   </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   </head>
   <body role="document">
@@ -52,10 +53,12 @@
 
 <div id="wrapper" class="container clearfix">
   <div id="header">
-    <img
-    id="header-img"
-    src="../../_static/logo400.png" alt="QIIME 2"
-    />
+    <a href="/">
+      <img
+        id="header-img"
+        src="../../_static/logo400.png" alt="QIIME 2"
+      />
+    </a>
   </div>
   <div id="content">
     
@@ -81,8 +84,8 @@
 <h2>Obtaining and importing raw data<a class="headerlink" href="#obtaining-and-importing-raw-data" title="Permalink to this headline">¶</a></h2>
 <p>Download the raw sequences that we&#8217;ll use in this analysis. In this tutorial we&#8217;ll work with a small subset of the complete sequence data so that the commands will run quickly.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span></span>mkdir raw-sequences
-curl -sL http://data.qiime2.org/tutorials/moving-pictures/raw-sequences/barcodes.fastq.gz &gt; raw-sequences/barcodes.fastq.gz
-curl -sL http://data.qiime2.org/tutorials/moving-pictures/raw-sequences/sequences.fastq.gz &gt; raw-sequences/sequences.fastq.gz
+curl -sL https://data.qiime2.org/2.0.5/tutorials/moving-pictures/raw-sequences/barcodes.fastq.gz &gt; raw-sequences/barcodes.fastq.gz
+curl -sL https://data.qiime2.org/2.0.5/tutorials/moving-pictures/raw-sequences/sequences.fastq.gz &gt; raw-sequences/sequences.fastq.gz
 </pre></div>
 </div>
 <p>All data that is used as input to QIIME 2 is in form of QIIME 2 artifacts, which contain information about the type of data and the source of the data. So, the first thing we need to do is import these raw data files into a QIIME 2 artifact. The semantic type of this artifact is <code class="docutils literal"><span class="pre">RawSequences</span></code>.</p>
@@ -219,27 +222,21 @@ qiime feature-table view-seq-data --i-data rep-seqs.qza --o-visualization rep-se
 <h2>Alpha and beta diversity analysis<a class="headerlink" href="#alpha-and-beta-diversity-analysis" title="Permalink to this headline">¶</a></h2>
 <p>QIIME 2&#8217;s diversity analyses are available through the <code class="docutils literal"><span class="pre">q2-diversity</span></code> plugin, which supports computing alpha and beta diversity metrics, applying related statistical tests, and generating interactive visualizations. We&#8217;ll first apply the <code class="docutils literal"><span class="pre">core-metrics</span></code> method, which rarefies a <code class="docutils literal"><span class="pre">FeatureTable[Frequency]</span></code> to a user-specified depth, and then computes a series of alpha and beta diversity metrics. The metrics computed by default are:</p>
 <ul class="simple">
-<li>Alpha diversity</li>
-</ul>
-<blockquote>
-<div><ul class="simple">
+<li>Alpha diversity<ul>
 <li>Shannon&#8217;s diversity index (a quantitative measure of community richness)</li>
 <li>Observed OTUs (a qualitative measure of community richness)</li>
 <li>Faith&#8217;s Phylogenetic Diversity (a qualitiative measure of community richness that incorporates phylogenetic relationships between the features)</li>
 <li>Evenness (or Pielou&#8217;s Evenness; a measure of community evenness)</li>
 </ul>
-</div></blockquote>
-<ul class="simple">
-<li>Beta diversity</li>
-</ul>
-<blockquote>
-<div><ul class="simple">
+</li>
+<li>Beta diversity<ul>
 <li>Jaccard distance (a qualitative measure of community dissimilarity)</li>
 <li>Bray-Curtis distance (a quantitative measure of community dissimilarity)</li>
 <li>unweighted UniFrac distance (a qualitative measure of community dissimilarity that incorporates phylogenetic relationships between the features)</li>
 <li>weighted UniFrac distance (a quantitative measure of community dissimilarity that incorporates phylogenetic relationships between the features)</li>
 </ul>
-</div></blockquote>
+</li>
+</ul>
 <p>The only parameter that needs to be provided to this script is <code class="docutils literal"><span class="pre">--p-counts-per-sample</span></code>, which is the even sampling (i.e. rarefaction) depth. Because most diversity metrics are sensitive to different sampling depths across different samples, this script will randomly subsample the counts from each sample to the value provided for this parameter. For example, if you provide <code class="docutils literal"><span class="pre">--p-counts-per-sample</span> <span class="pre">500</span></code>, this step will subsample the counts in each sample without replacement so that each sample in the resulting table has a total count of 500. If the total count for any sample(s) are smaller than this value, those samples will be dropped from the diversity analysis. Choosing this value is tricky. We recommend making your choice by reviewing the information presented in the <code class="docutils literal"><span class="pre">table.qzv</span></code> file that was created above and choosing a value that is as high as possible (so you retain more sequences per sample) while excluding as few samples as possible.</p>
 <div class="question admonition" id="question-1">
 <p class="first admonition-title">Question</p>
@@ -364,7 +361,7 @@ qiime emperor plot --i-pcoa cm1441/bray_curtis_pcoa_results.qza --o-visualizatio
 <div class="section" id="taxonomic-analysis">
 <h2>Taxonomic analysis<a class="headerlink" href="#taxonomic-analysis" title="Permalink to this headline">¶</a></h2>
 <p>In the next sections we&#8217;ll begin to explore the taxonomic composition of the samples, and again relate that to sample metadata. The first step in this process is to assign taxonomy to the sequences in our <code class="docutils literal"><span class="pre">FeatureData[Sequence]</span></code> artifact. We&#8217;ll do that using a Naive Bayes classifier with the <code class="docutils literal"><span class="pre">q2-feature-classifier</span></code> plugin. This classifier was trained on the Greengenes 13_8 99% OTUs, where the sequences have been trimmed to only include the region of the 16S that was sequenced in this analysis (the V4 region, bound by the 515F/806R primer pair). We&#8217;ll download and apply the pre-trained classifier here because training this classifier can be slow, but it is easy to train Naive Bayes and other classifiers on custom sequence collections using the <code class="docutils literal"><span class="pre">q2-feature-classifier</span></code> plugin. We&#8217;ll then apply this classifier to our sequences, and we can generate a visualization of the resulting mapping from sequence to taxonomy.</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>curl -sLO http://data.qiime2.org/common/gg-13-8-99-515-806-nb-classifier.qza
+<div class="highlight-shell"><div class="highlight"><pre><span></span>curl -sLO https://data.qiime2.org/2.0.5/common/gg-13-8-99-515-806-nb-classifier.qza
 
 qiime feature-classifier classify --i-classifier gg-13-8-99-515-806-nb-classifier.qza --i-reads rep-seqs.qza --o-classification taxonomy
 

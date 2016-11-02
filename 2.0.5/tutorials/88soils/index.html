@@ -40,6 +40,7 @@
     ga('create', 'UA-86671044-2', 'auto');
     ga('send', 'pageview');
   </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   </head>
   <body role="document">
@@ -52,10 +53,12 @@
 
 <div id="wrapper" class="container clearfix">
   <div id="header">
-    <img
-    id="header-img"
-    src="../../_static/logo400.png" alt="QIIME 2"
-    />
+    <a href="/">
+      <img
+        id="header-img"
+        src="../../_static/logo400.png" alt="QIIME 2"
+      />
+    </a>
   </div>
   <div id="content">
     
@@ -73,7 +76,7 @@
 <h2>Prepare for the analysis<a class="headerlink" href="#prepare-for-the-analysis" title="Permalink to this headline">¶</a></h2>
 <p>You should first look through the sample metadata to familiarize yourself with the samples used in this study. The <a class="reference external" href="https://docs.google.com/spreadsheets/d/1p-jHnu6O0DPXcQqERkKM9A0w1XlkhYuR1VCP2VSRl1M/edit?usp=sharing">sample metadata</a> is available as a Google Spreadsheet. You should download this file as tab-separated text by selecting <code class="docutils literal"><span class="pre">File</span></code> &gt; <code class="docutils literal"><span class="pre">Download</span> <span class="pre">as</span></code> &gt; <code class="docutils literal"><span class="pre">Tab-separated</span> <span class="pre">values</span></code>. Save the file as <code class="docutils literal"><span class="pre">sample-metadata.tsv</span></code>.</p>
 <p>You can next download the <em>demultiplexed sequences</em> that we&#8217;ll use in this analysis. In this tutorial we&#8217;ll work with a small subset (1%) of the complete sequence data so that the commands will run quickly.</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>curl -sLO http://data.qiime2.org/tutorials/88soils/88soils-tutorial-demux-1p.qza
+<div class="highlight-shell"><div class="highlight"><pre><span></span>curl -sLO https://data.qiime2.org/2.0.5/tutorials/88soils/88soils-tutorial-demux-1p.qza
 </pre></div>
 </div>
 <div class="admonition">
