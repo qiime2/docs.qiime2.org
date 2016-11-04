@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/external-links.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
     <link rel="top" title="QIIME 2 2.0.6 documentation" href="../../" />
     <link rel="up" title="Tutorials" href="../" />
     <link rel="next" title="Fecal microbiota transplant (FMT) study: an exercise" href="../fmt/" />
@@ -80,9 +81,16 @@
 <span class="nb">cd</span> qiime2-moving-pictures-tutorial
 </pre></div>
 </div>
-<p>Next, explore the sample metadata to familiarize yourself with the samples used in this study. The <a class="reference external" href="https://docs.google.com/spreadsheets/d/1_3ZbqCtAYx-9BJYHoWlICkVJ4W_QGMfJRPLedt_0hws/edit?usp=sharing">sample metadata</a> is available as a Google Sheet. You can download this file as tab-separated text by selecting <code class="docutils literal"><span class="pre">File</span></code> &gt; <code class="docutils literal"><span class="pre">Download</span> <span class="pre">as</span></code> &gt; <code class="docutils literal"><span class="pre">Tab-separated</span> <span class="pre">values</span></code>. Alternatively, the following command will download the sample metadata as tab-separated text and save it in the file <code class="docutils literal"><span class="pre">sample-metadata.tsv</span></code>. This <code class="docutils literal"><span class="pre">sample-metadata.tsv</span></code> file is used throughout the rest of the tutorial.</p>
+<div class="section" id="sample-metadata">
+<h2>Sample metadata<a class="headerlink" href="#sample-metadata" title="Permalink to this headline">¶</a></h2>
+<p>Before starting the analysis, explore the sample metadata to familiarize yourself with the samples used in this study. The <a class="reference external" href="https://docs.google.com/spreadsheets/d/1_3ZbqCtAYx-9BJYHoWlICkVJ4W_QGMfJRPLedt_0hws/edit?usp=sharing">sample metadata</a> is available as a Google Sheet. You can download this file as tab-separated text by selecting <code class="docutils literal"><span class="pre">File</span></code> &gt; <code class="docutils literal"><span class="pre">Download</span> <span class="pre">as</span></code> &gt; <code class="docutils literal"><span class="pre">Tab-separated</span> <span class="pre">values</span></code>. Alternatively, the following command will download the sample metadata as tab-separated text and save it in the file <code class="docutils literal"><span class="pre">sample-metadata.tsv</span></code>. This <code class="docutils literal"><span class="pre">sample-metadata.tsv</span></code> file is used throughout the rest of the tutorial.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span></span>curl -sL <span class="s2">&quot;https://docs.google.com/spreadsheets/d/1_3ZbqCtAYx-9BJYHoWlICkVJ4W_QGMfJRPLedt_0hws/export?gid=0&amp;format=tsv&quot;</span> &gt; sample-metadata.tsv
 </pre></div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last"><a class="reference external" href="http://keemei.qiime.org">Keemei</a> is a Google Sheets add-on for validating sample metadata. Validation of sample metadata is important before beginning any analysis. Try installing Keemei following the instructions on its website, and then validate the sample metadata spreadsheet linked above. The spreadsheet also includes a sheet with some invalid data to try out with Keemei.</p>
+</div>
 </div>
 <div class="section" id="obtaining-and-importing-raw-data">
 <h2>Obtaining and importing raw data<a class="headerlink" href="#obtaining-and-importing-raw-data" title="Permalink to this headline">¶</a></h2>
@@ -460,6 +468,7 @@ qiime composition ancom --i-table comp-table-l2.qza --m-metadata-file sample-met
   <h3><a href="../../">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">&#8220;Moving Pictures&#8221; tutorial</a><ul>
+<li><a class="reference internal" href="#sample-metadata">Sample metadata</a></li>
 <li><a class="reference internal" href="#obtaining-and-importing-raw-data">Obtaining and importing raw data</a></li>
 <li><a class="reference internal" href="#demultiplexing-sequences">Demultiplexing sequences</a></li>
 <li><a class="reference internal" href="#sequence-quality-control">Sequence quality control</a></li>
