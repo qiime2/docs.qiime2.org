@@ -1,0 +1,100 @@
+midpoint_root: Midpoint root an unrooted phylogenetic tree.
+===========================================================
+
+Midpoint root an unrooted phylogenetic tree.
+
+.. raw:: html
+
+   <table class="table action-signature">
+     
+     <thead>
+       <tr>
+         <th colspan="3">Inputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">tree</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Phylogeny[Unrooted]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="3">Parameters</th>
+       </tr>
+       
+       <tr>
+         <th colspan="3" class="text-muted">N/A</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="3">Outputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">rooted_tree</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Phylogeny[Rooted]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">N/A</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+     </tbody>
+     
+   </table>

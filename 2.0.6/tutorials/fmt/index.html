@@ -69,7 +69,7 @@
 <h1>Fecal microbiota transplant (FMT) study: an exercise<a class="headerlink" href="#fecal-microbiota-transplant-fmt-study-an-exercise" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This guide assumes you have performed the steps in the <a class="reference internal" href="../../install/"><span class="doc">install guide</span></a>.</p>
+<p class="last">This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a>.</p>
 </div>
 <p>This document is intended to be run after <a class="reference internal" href="../moving-pictures/"><span class="doc">the moving pictures tutorial</span></a>. It is designed to introduce a few new ideas, and to be an exercise in applying the tools that were explored in that document.</p>
 <div class="admonition note">
@@ -107,8 +107,14 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/fmt/fmt-tutorial-demux-2-10p.q
 <div class="section" id="sequence-quality-control">
 <h2>Sequence quality control<a class="headerlink" href="#sequence-quality-control" title="Permalink to this headline">¶</a></h2>
 <p>We&#8217;ll begin by performing quality control on the demultiplexed sequences using <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/27214047">DADA2</a>, but this time we&#8217;ll run the <code class="docutils literal"><span class="pre">denoise</span></code> command on each set of demultiplexed sequences individually. Again, we&#8217;ll want to start by visualizing sequence quality for some of the samples in each run. When we run <code class="docutils literal"><span class="pre">denoise</span></code>, we need to use the same values for <code class="docutils literal"><span class="pre">--p-trunc-len</span></code> and <code class="docutils literal"><span class="pre">--p-trim-left</span></code> for both runs, so when looking at the visualizations that result from these two commands, think about what values would make sense for these parameters for both commands.</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime dada2 plot-qualities --i-demultiplexed-seqs fmt-tutorial-demux-1-10p.qza --p-n <span class="m">10</span> --o-visualization demux-qual-plots-1
-qiime dada2 plot-qualities --i-demultiplexed-seqs fmt-tutorial-demux-2-10p.qza --p-n <span class="m">10</span> --o-visualization demux-qual-plots-2
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime dada2 plot-qualities <span class="se">\</span>
+  --i-demultiplexed-seqs fmt-tutorial-demux-1-10p.qza <span class="se">\</span>
+  --p-n <span class="m">10</span> <span class="se">\</span>
+  --o-visualization demux-qual-plots-1
+qiime dada2 plot-qualities <span class="se">\</span>
+  --i-demultiplexed-seqs fmt-tutorial-demux-2-10p.qza <span class="se">\</span>
+  --p-n <span class="m">10</span> <span class="se">\</span>
+  --o-visualization demux-qual-plots-2
 </pre></div>
 </div>
 <div class="admonition">
@@ -123,8 +129,18 @@ qiime dada2 plot-qualities --i-demultiplexed-seqs fmt-tutorial-demux-2-10p.qza -
 <p class="last">Based on the plots you see in <code class="docutils literal"><span class="pre">demux-qual-plots-1.qzv</span></code> and <code class="docutils literal"><span class="pre">demux-qual-plots-2.qzv</span></code>, what values would you choose for <code class="docutils literal"><span class="pre">--p-trunc-len</span></code> and <code class="docutils literal"><span class="pre">--p-trim-left</span></code> in this case? How does these plots compare to those generated in the <a class="reference internal" href="../moving-pictures/"><span class="doc">the moving pictures tutorial</span></a>?</p>
 </div>
 <p>Here the quality seems relatively low in the first few bases, and seems to decrease again around 130 bases. We&#8217;ll therefore trim the first 10 bases from each sequence and truncate the sequences at 130 bases. Each of the following commands will take a few minutes to complete.</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime dada2 denoise --p-trim-left <span class="m">10</span> --p-trunc-len <span class="m">130</span> --i-demultiplexed-seqs fmt-tutorial-demux-1-10p.qza --o-representative-sequences rep-seqs-1 --o-table table-1
-qiime dada2 denoise --p-trim-left <span class="m">10</span> --p-trunc-len <span class="m">130</span> --i-demultiplexed-seqs fmt-tutorial-demux-2-10p.qza --o-representative-sequences rep-seqs-2 --o-table table-2
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime dada2 denoise <span class="se">\</span>
+  --p-trim-left <span class="m">10</span> <span class="se">\</span>
+  --p-trunc-len <span class="m">130</span> <span class="se">\</span>
+  --i-demultiplexed-seqs fmt-tutorial-demux-1-10p.qza <span class="se">\</span>
+  --o-representative-sequences rep-seqs-1 <span class="se">\</span>
+  --o-table table-1
+qiime dada2 denoise <span class="se">\</span>
+  --p-trim-left <span class="m">10</span> <span class="se">\</span>
+  --p-trunc-len <span class="m">130</span> <span class="se">\</span>
+  --i-demultiplexed-seqs fmt-tutorial-demux-2-10p.qza <span class="se">\</span>
+  --o-representative-sequences rep-seqs-2 <span class="se">\</span>
+  --o-table table-2
 </pre></div>
 </div>
 <div class="admonition">
@@ -140,8 +156,14 @@ qiime dada2 denoise --p-trim-left <span class="m">10</span> --p-trunc-len <span 
 <div class="section" id="merging-denoised-sequence-variant-data">
 <h2>Merging denoised sequence variant data<a class="headerlink" href="#merging-denoised-sequence-variant-data" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal"><span class="pre">denoise</span></code> command is the last step in this analysis that needs to be run on a per sequencing run basis. We&#8217;re therefore ready to merge the artifacts generated by those two commands. First we&#8217;ll merge the two <code class="docutils literal"><span class="pre">FeatureTable[Frequency]</span></code> artifacts, and then we&#8217;ll merge the two <code class="docutils literal"><span class="pre">FeatureData[Sequence]</span></code> artifacts. This is possible because the feature ids generated in each run of <code class="docutils literal"><span class="pre">denoise</span></code> are directly comparable (in this case, the feature id is the md5 hash of the sequence defining the feature).</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table merge --i-table1 table-1.qza --i-table2 table-2.qza --o-merged-table table.qza
-qiime feature-table merge-seq-data --i-data1 rep-seqs-1.qza --i-data2 rep-seqs-2.qza --o-merged-data rep-seqs.qza
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table merge <span class="se">\</span>
+  --i-table1 table-1.qza <span class="se">\</span>
+  --i-table2 table-2.qza <span class="se">\</span>
+  --o-merged-table table.qza
+qiime feature-table merge-seq-data <span class="se">\</span>
+  --i-data1 rep-seqs-1.qza <span class="se">\</span>
+  --i-data2 rep-seqs-2.qza <span class="se">\</span>
+  --o-merged-data rep-seqs.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -152,7 +174,9 @@ qiime feature-table merge-seq-data --i-data1 rep-seqs-1.qza --i-data2 rep-seqs-2
 </ul>
 </div>
 <p>Next, we&#8217;ll generate a summary of the merged <code class="docutils literal"><span class="pre">FeatureTable[Frequency]</span></code> artifact.</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table summarize --i-table table.qza --o-visualization table
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table summarize <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --o-visualization table
 </pre></div>
 </div>
 <div class="admonition">
@@ -170,7 +194,9 @@ qiime feature-table merge-seq-data --i-data1 rep-seqs-1.qza --i-data2 rep-seqs-2
 <p class="last">Generate summaries of the tables for the individual runs of <code class="docutils literal"><span class="pre">qiime</span> <span class="pre">dada2</span> <span class="pre">denoise</span></code>. How many features were defined in the first run? How many features were defined in the second run? How do these numbers compare to total number of features after merging?</p>
 </div>
 <p>We&#8217;ll also generate a summary of the merged <code class="docutils literal"><span class="pre">FeatureData[Sequence]</span></code> artifact. You can use this summary to obtain additional information about specific features of interest as you proceed through the analysis.</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table tabulate-seqs --i-data rep-seqs.qza --o-visualization rep-seqs
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table tabulate-seqs <span class="se">\</span>
+  --i-data rep-seqs.qza <span class="se">\</span>
+  --o-visualization rep-seqs
 </pre></div>
 </div>
 <div class="admonition">
@@ -220,17 +246,41 @@ qiime feature-table merge-seq-data --i-data1 rep-seqs-1.qza --i-data2 rep-seqs-2
     
     <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
       
-  <h3><a href="../../">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Fecal microbiota transplant (FMT) study: an exercise</a><ul>
-<li><a class="reference internal" href="#prepare-for-the-analysis">Prepare for the analysis</a></li>
-<li><a class="reference internal" href="#sequence-quality-control">Sequence quality control</a></li>
-<li><a class="reference internal" href="#merging-denoised-sequence-variant-data">Merging denoised sequence variant data</a></li>
-<li><a class="reference internal" href="#diversity-analysis">Diversity analysis</a></li>
+<h3><a href="../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">&#8220;Moving Pictures&#8221; tutorial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../88soils/">&#8220;88 soils&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../import/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../import-sequence-data/">Importing sequence data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../table-filtering/">Filtering feature tables</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a></li>
 </ul>
 
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
     </div>
     
   </div>

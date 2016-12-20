@@ -1,0 +1,72 @@
+feature-table
+=============
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Version</th>
+         <td>0.0.6</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-feature-table">https://github.com/qiime2/q2-feature-table</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           No user support information available. See plugin website: <a href="https://github.com/qiime2/q2-feature-table">https://github.com/qiime2/q2-feature-table</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           No citation available. Cite plugin website: <a href="https://github.com/qiime2/q2-feature-table">https://github.com/qiime2/q2-feature-table</a><br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   filter_features
+   
+   filter_samples
+   
+   merge
+   
+   merge_seq_data
+   
+   merge_taxa_data
+   
+   presence_absence
+   
+   rarefy
+   
+   relative_frequency
+   
+
+
+Visualizers
+-----------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   summarize
+   
+   tabulate_seqs
+   

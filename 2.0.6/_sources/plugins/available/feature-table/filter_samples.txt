@@ -1,0 +1,236 @@
+filter_samples: Filter samples from table.
+==========================================
+
+Filter samples from table based on frequency and/or metadata. Any features with a frequency of zero after sample filtering will also be removed. If no value(s) are provided for max_frequency or max_features, they will default to infinity (i.e., no maximum frequency and/or feature filter will be applied).
+
+The where parameter takes a SQLite WHERE clause. See the table filtering tutorial for additional detail: https://docs.qiime2.org/2.0.6/tutorials/table-filtering.html
+
+.. raw:: html
+
+   <table class="table action-signature">
+     
+     <thead>
+       <tr>
+         <th colspan="3">Inputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">table</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">FeatureTable[Frequency]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="3">Parameters</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">min_frequency</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">0</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">max_frequency</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">None</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">min_features</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">0</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">max_features</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">None</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">sample_metadata</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Metadata</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">None</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">where</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Str</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">None</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="3">Outputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">filtered_table</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">FeatureTable[Frequency]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">N/A</span>
+           </code>
+         </td>
+         
+       </tr>
+       
+     </tbody>
+     
+   </table>

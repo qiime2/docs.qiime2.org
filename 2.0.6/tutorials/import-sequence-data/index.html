@@ -28,7 +28,7 @@
     <link rel="top" title="QIIME 2 2.0.6 documentation" href="../../" />
     <link rel="up" title="Tutorials" href="../" />
     <link rel="next" title="Filtering feature tables" href="../table-filtering/" />
-    <link rel="prev" title="Importing data" href="../import/" />
+    <link rel="prev" title="Training feature classifiers with q2-feature-classifier" href="../feature-classifier/" />
   <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
   <link rel="stylesheet" href="../../_static/bootstrap.min.css" media="screen" />
   <link rel="stylesheet" href="../../_static/normalize.css" media="screen">
@@ -69,7 +69,7 @@
 <h1>Importing sequence data<a class="headerlink" href="#importing-sequence-data" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This guide assumes you have performed the steps in the <a class="reference internal" href="../../install/"><span class="doc">install guide</span></a> and have read <a class="reference internal" href="../import/"><span class="doc">Importing Data</span></a>.</p>
+<p class="last">This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a> and have read <a class="reference internal" href="../import/"><span class="doc">Importing Data</span></a>.</p>
 </div>
 <p>To begin a QIIME 2 analysis with sequence data, for example as generated on an Illumina MiSeq instrument, it must be imported into a QIIME 2 artifact (<code class="docutils literal"><span class="pre">.qza</span></code>) file. This document illustrates how to import data in various starting formats, and will be expanded as additional relevant formats are identified. Each section below briefly describes a format of sequence data, provides commands to download example data files, and illustrates how to import data in that format.</p>
 <div class="admonition note">
@@ -92,7 +92,10 @@ curl -sL https://data.qiime2.org/2.0.6/tutorials/moving-pictures/raw-sequences/s
 </div>
 <div class="section" id="importing-data">
 <h3>Importing data<a class="headerlink" href="#importing-data" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime tools import --type RawSequences --input-path raw-sequences/ --output-path raw-sequences.qza
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type RawSequences <span class="se">\</span>
+  --input-path raw-sequences/ <span class="se">\</span>
+  --output-path raw-sequences.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -118,7 +121,11 @@ unzip -q casava-18-single-end-demultiplexed.zip
 </div>
 <div class="section" id="id3">
 <h3>Importing data<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime tools import --type <span class="s1">&#39;SampleData[SequencesWithQuality]&#39;</span> --input-path casava-18-single-end-demultiplexed --output-path demux --source-format CasavaOneEightSingleLanePerSampleDirFmt
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type <span class="s1">&#39;SampleData[SequencesWithQuality]&#39;</span> <span class="se">\</span>
+  --input-path casava-18-single-end-demultiplexed <span class="se">\</span>
+  --source-format CasavaOneEightSingleLanePerSampleDirFmt <span class="se">\</span>
+  --output-path demux
 </pre></div>
 </div>
 <div class="admonition">
@@ -138,25 +145,41 @@ unzip -q casava-18-single-end-demultiplexed.zip
     
     <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
       
-  <h3><a href="../../">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Importing sequence data</a><ul>
-<li><a class="reference internal" href="#emp-protocol-multiplexed-fastq">&#8220;EMP protocol&#8221; multiplexed fastq</a><ul>
-<li><a class="reference internal" href="#format-description">Format description</a></li>
-<li><a class="reference internal" href="#obtaining-example-data">Obtaining example data</a></li>
-<li><a class="reference internal" href="#importing-data">Importing data</a></li>
+<h3><a href="../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">&#8220;Moving Pictures&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../88soils/">&#8220;88 soils&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../import/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Importing sequence data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../table-filtering/">Filtering feature tables</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#casava-1-8-single-end-demultiplexed-fastq">Casava 1.8 single-end demultiplexed fastq</a><ul>
-<li><a class="reference internal" href="#id1">Format description</a></li>
-<li><a class="reference internal" href="#id2">Obtaining example data</a></li>
-<li><a class="reference internal" href="#id3">Importing data</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a></li>
 </ul>
 
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
     </div>
     
   </div>
