@@ -52,19 +52,19 @@
   />
 </a>
 
-<div id="wrapper" class="container clearfix">
-  <div id="header">
-    <a href="/">
-      <img
-        class="img-responsive"
-        src="../../_static/logo400.png" alt="QIIME 2"
-      />
-    </a>
-  </div>
-  <div id="content">
-    
-    <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/logo400.png" alt="QIIME 2"
+        />
+      </a>
+    </div>
+    <div id="content">
       
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
   <div class="section" id="natively-installing-qiime-2">
 <h1>Natively installing QIIME 2<a class="headerlink" href="#natively-installing-qiime-2" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
@@ -84,12 +84,12 @@
 <h2>Create a conda environment and install QIIME 2<a class="headerlink" href="#create-a-conda-environment-and-install-qiime-2" title="Permalink to this headline">¶</a></h2>
 <p>Once you have Miniconda installed, create a <code class="docutils literal"><span class="pre">conda</span></code> environment to install QIIME 2 software in. You can use an existing environment if you have one, though we recommend creating an environment specifically for QIIME 2 as there are many required dependencies that you may not want added to an existing environment.</p>
 <p>You can choose whatever name you&#8217;d like for the environment. In this example, we&#8217;ll name the environment <code class="docutils literal"><span class="pre">qiime2</span></code>. While creating the environment, we will also instruct <code class="docutils literal"><span class="pre">conda</span></code> to install Python 3.5, the QIIME 2 framework, and <a class="reference external" href="https://github.com/qiime2/q2cli">q2cli</a> (a command-line interface for QIIME 2).</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>conda create -n qiime2 -c qiime2 <span class="nv">python</span><span class="o">=</span>3.5 qiime q2cli
+<div class="highlight-shell"><div class="highlight"><pre><span></span>conda create -n qiime2-2.0.6 --override-channels -c qiime2 -c defaults <span class="nv">python</span><span class="o">=</span>3.5 <span class="nv">qiime</span><span class="o">=</span>2.0.6 <span class="nv">q2cli</span><span class="o">=</span>0.0.6
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">-n</span> <span class="pre">qiime2</span></code> specifies the name of the environment, and <code class="docutils literal"><span class="pre">-c</span> <span class="pre">qiime2</span></code> specifies the channel to search for packages.</p>
+<p><code class="docutils literal"><span class="pre">-n</span> <span class="pre">qiime2-2.0.6</span></code> specifies the name of the environment, and <code class="docutils literal"><span class="pre">-c</span> <span class="pre">qiime2</span></code> specifies the channel to search for packages.</p>
 <p>Now that you have an environment, activate it using the environment&#8217;s name:</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span><span class="nb">source</span> activate qiime2
+<div class="highlight-shell"><div class="highlight"><pre><span></span><span class="nb">source</span> activate qiime2-2.0.6
 </pre></div>
 </div>
 <p>To deactivate an environment, run <code class="docutils literal"><span class="pre">source</span> <span class="pre">deactivate</span></code>.</p>
@@ -130,8 +130,8 @@ qiime info
 <div class="section" id="install-plugins">
 <h2>Install plugins<a class="headerlink" href="#install-plugins" title="Permalink to this headline">¶</a></h2>
 <p>Out of the box, installing the QIIME 2 framework and command-line interface does not provide microbiome analysis functionality (plugins provide this). Install the <code class="docutils literal"><span class="pre">q2-types</span></code> and <code class="docutils literal"><span class="pre">q2-feature-table</span></code> plugins:</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install <span class="nv">matplotlib</span><span class="o">==</span>1.5.1
-conda install -c qiime2 q2-types q2-feature-table
+<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install --override-channels -c defaults <span class="nv">matplotlib</span><span class="o">==</span>1.5.1
+conda install --override-channels -c qiime2 -c defaults q2-types<span class="o">=</span>0.0.6 q2-feature-table<span class="o">=</span>0.0.6
 </pre></div>
 </div>
 <p>Now execute the <code class="docutils literal"><span class="pre">qiime</span> <span class="pre">info</span></code> command again:</p>
@@ -145,7 +145,7 @@ conda install -c qiime2 q2-types q2-feature-table
 </div>
 <p>You will also see some other information about the plugin here, including its website, how it should be cited, and how users can get technical support with the plugin.</p>
 <p>Install the <code class="docutils literal"><span class="pre">q2-diversity</span></code> and <code class="docutils literal"><span class="pre">q2-emperor</span></code> plugins as well:</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install -c qiime2 -c conda-forge q2-diversity q2-emperor
+<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install --override-channels -c qiime2 -c conda-forge -c defaults q2-diversity<span class="o">=</span>0.0.6 q2-emperor<span class="o">=</span>0.0.6
 </pre></div>
 </div>
 <p>You&#8217;ll now have four plugins installed:</p>
@@ -159,9 +159,10 @@ qiime emperor
 </pre></div>
 </div>
 <p>Let&#8217;s wrap up by installing several more plugins used in the tutorials.</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install -c bioconda -c r bioconductor-dada2 mafft
-conda install -c biocore fasttree
-conda install -c qiime2 q2-demux q2-alignment q2-phylogeny q2-dada2 q2-composition q2-taxa q2-feature-classifier
+<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install --override-channels -c r -c defaults r
+conda install --override-channels -c bioconda -c r -c defaults bioconductor-dada2 mafft
+conda install --override-channel -c biocore -c defaults fasttree
+conda install --override-channel -c qiime2 -c defaults q2-demux<span class="o">=</span>0.0.6 q2-alignment<span class="o">=</span>0.0.6 q2-phylogeny<span class="o">=</span>0.0.6 q2-dada2<span class="o">=</span>0.0.6 q2-composition<span class="o">=</span>0.0.6 q2-taxa<span class="o">=</span>0.0.6 q2-feature-classifier<span class="o">=</span>0.0.6
 </pre></div>
 </div>
 <p>Now that you have some plugins installed and have explored the command-line interface a bit, you&#8217;re ready to analyze microbiome data! Check out the <a class="reference internal" href="../../tutorials/"><span class="doc">QIIME 2 tutorials</span></a> for analyses of tutorial datasets.</p>
@@ -173,12 +174,16 @@ conda install -c qiime2 q2-demux q2-alignment q2-phylogeny q2-dada2 q2-compositi
 </div>
 
 
-    </div>
-    
-
-    
-    <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+      </div>
       
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu dropdown-menu-right"></ul>
+        </div>
+        
 <h3><a href="../../">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
@@ -209,14 +214,16 @@ conda install -c qiime2 q2-demux q2-alignment q2-phylogeny q2-dada2 q2-compositi
     </form>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
     </div>
-    
-  </div>
-</div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, QIIME 2 Development Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
     </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
   </body>
 </html>

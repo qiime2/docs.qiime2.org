@@ -20,18 +20,27 @@ h1 {
 }
 
 #sidebar {
-  padding: 15px 0;
+  padding: 15px 10px;
   border-top: 1px dashed #bbb;
 }
 
+#version-div .btn {
+  font-size: 12px;
+}
+
 div.footer {
-    maring-top: 50px;
+    padding: 25px 0 100px 0;
     font-size: 11px;
 }
 
 code.docutils.literal {
     background-color: #f5f5f5;
     color: #333;
+}
+
+div.admonition a {
+    font-weight: 700;
+    text-decoration: underline;
 }
 
 div.admonition.tip, div.admonition.note {
@@ -71,6 +80,10 @@ div.admonition.qiime1 {
     text-align: center;
 }
 
+form.search input[name=q]{
+    width: 100%;
+}
+
 @media screen and (min-width: 992px) {
 
   #github-banner {
@@ -82,7 +95,7 @@ div.admonition.qiime1 {
 
   #wrapper {
     width: 95%;
-    max-width: 960px;
+    max-width: 1024px;
     margin: 0 auto;
   }
 
@@ -104,22 +117,19 @@ div.admonition.qiime1 {
     font-size: 14px;
   }
 
-  #sidebar ul {
-    padding: inherit;
+  #sidebar > ul {
+    padding-left: 15px;
     font-size: 12px;
   }
 
-  #sidebar ul li ul {
+  #sidebar > ul li ul {
     padding-left: 10px;
-  }
-
-  #sidebar ul li ul li {
-    padding: 5px 0;
   }
 
   div.footer {
     float: right;
     font-size: 14px;
+    padding: 25px 0;
   }
 
 }

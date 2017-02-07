@@ -52,19 +52,19 @@
   />
 </a>
 
-<div id="wrapper" class="container clearfix">
-  <div id="header">
-    <a href="/">
-      <img
-        class="img-responsive"
-        src="../../_static/logo400.png" alt="QIIME 2"
-      />
-    </a>
-  </div>
-  <div id="content">
-    
-    <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/logo400.png" alt="QIIME 2"
+        />
+      </a>
+    </div>
+    <div id="content">
       
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
   <div class="section" id="artifact-api">
 <h1>Artifact API<a class="headerlink" href="#artifact-api" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
@@ -150,18 +150,22 @@
 </pre></div>
 </div>
 <p>Another powerful feature of QIIME 2 is that you can combine interfaces. For example, you could develop a Python script that automatically processes files for you to generate results as we just did, and then perform analysis of those files using the <a class="reference internal" href="../q2cli/"><span class="doc">command line interface</span></a> or the <a class="reference internal" href="../q2studio/"><span class="doc">QIIME 2 Studio</span></a>. For instance, you could now continue your analysis and view some results on the command line as follows:</p>
-<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime diversity alpha-group-significance --i-alpha-diversity oo.qza --m-metadata-file sample-metadata.tsv  --o-visualization oo-group-significance
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime diversity alpha-group-significance --i-alpha-diversity oo.qza --m-metadata-file sample-metadata.tsv  --o-visualization oo-group-significance.qzv
 </pre></div>
 </div>
 </div>
 
 
-    </div>
-    
-
-    
-    <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+      </div>
       
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu dropdown-menu-right"></ul>
+        </div>
+        
 <h3><a href="../../">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
@@ -193,14 +197,16 @@
     </form>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
     </div>
-    
-  </div>
-</div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, QIIME 2 Development Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
     </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
   </body>
 </html>

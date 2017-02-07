@@ -52,19 +52,19 @@
   />
 </a>
 
-<div id="wrapper" class="container clearfix">
-  <div id="header">
-    <a href="/">
-      <img
-        class="img-responsive"
-        src="../../_static/logo400.png" alt="QIIME 2"
-      />
-    </a>
-  </div>
-  <div id="content">
-    
-    <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/logo400.png" alt="QIIME 2"
+        />
+      </a>
+    </div>
+    <div id="content">
       
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
   <div class="section" id="filtering-feature-tables">
 <h1>Filtering feature tables<a class="headerlink" href="#filtering-feature-tables" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
@@ -94,7 +94,7 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
   --i-table table.qza <span class="se">\</span>
   --p-min-frequency <span class="m">1500</span> <span class="se">\</span>
-  --o-filtered-table sample-frequency-filtered-table
+  --o-filtered-table sample-frequency-filtered-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -107,7 +107,7 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
   --i-table table.qza <span class="se">\</span>
   --p-min-frequency <span class="m">10</span> <span class="se">\</span>
-  --o-filtered-table feature-frequency-filtered-table
+  --o-filtered-table feature-frequency-filtered-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -125,7 +125,7 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
   --i-table table.qza <span class="se">\</span>
   --p-min-samples <span class="m">2</span> <span class="se">\</span>
-  --o-filtered-table sample-contingency-filtered-table
+  --o-filtered-table sample-contingency-filtered-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -138,7 +138,7 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
   --i-table table.qza <span class="se">\</span>
   --p-min-features <span class="m">10</span> <span class="se">\</span>
-  --o-filtered-table feature-contingency-filtered-table
+  --o-filtered-table feature-contingency-filtered-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -162,7 +162,7 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
  --i-table table.qza <span class="se">\</span>
  --m-sample-metadata-file samples-to-keep.tsv <span class="se">\</span>
- --o-filtered-table index-filtered-table
+ --o-filtered-table index-filtered-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -180,7 +180,7 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
   --i-table table.qza <span class="se">\</span>
   --m-sample-metadata-file sample-metadata.tsv <span class="se">\</span>
   --p-where <span class="s2">&quot;Subject=&#39;subject-1&#39;&quot;</span> <span class="se">\</span>
-  --o-filtered-table subject-1-filtered-table
+  --o-filtered-table subject-1-filtered-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -194,7 +194,7 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
   --i-table table.qza <span class="se">\</span>
   --m-sample-metadata-file sample-metadata.tsv <span class="se">\</span>
   --p-where <span class="s2">&quot;Subject=&#39;subject-1&#39; AND BodySite=&#39;gut&#39;&quot;</span> <span class="se">\</span>
-  --o-filtered-table subject-1-gut-filtered-table
+  --o-filtered-table subject-1-gut-filtered-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -208,7 +208,7 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
   --i-table table.qza <span class="se">\</span>
   --m-sample-metadata-file sample-metadata.tsv <span class="se">\</span>
   --p-where <span class="s2">&quot;Subject=&#39;subject-1&#39; AND NOT BodySite=&#39;gut&#39;&quot;</span> <span class="se">\</span>
-  --o-filtered-table subject-1-non-gut-filtered-table
+  --o-filtered-table subject-1-non-gut-filtered-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -225,12 +225,16 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
 </div>
 
 
-    </div>
-    
-
-    
-    <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+      </div>
       
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu dropdown-menu-right"></ul>
+        </div>
+        
 <h3><a href="../../">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
@@ -266,14 +270,16 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table
     </form>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
     </div>
-    
-  </div>
-</div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, QIIME 2 Development Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
     </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
   </body>
 </html>

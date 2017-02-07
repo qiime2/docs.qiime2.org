@@ -52,19 +52,19 @@
   />
 </a>
 
-<div id="wrapper" class="container clearfix">
-  <div id="header">
-    <a href="/">
-      <img
-        class="img-responsive"
-        src="../../_static/logo400.png" alt="QIIME 2"
-      />
-    </a>
-  </div>
-  <div id="content">
-    
-    <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/logo400.png" alt="QIIME 2"
+        />
+      </a>
+    </div>
+    <div id="content">
       
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
   <div class="section" id="importing-data">
 <h1>Importing data<a class="headerlink" href="#importing-data" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
@@ -82,7 +82,7 @@
   --input-path feature-table.biom <span class="se">\</span>
   --type <span class="s2">&quot;FeatureTable[Frequency]&quot;</span> <span class="se">\</span>
   --source-format BIOMV100Format <span class="se">\</span>
-  --output-path feature-table
+  --output-path feature-table.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -91,14 +91,10 @@
 <li><code class="file docutils literal"><span class="pre">feature-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Fimport%2Ffeature-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/import/feature-table.qza">download</a></li>
 </ul>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">We didn&#8217;t specify a file extension for the output file (<code class="docutils literal"><span class="pre">--output-path</span> <span class="pre">feature-table</span></code>). The command-line interface will automatically append the <code class="docutils literal"><span class="pre">.qza</span></code> file extension (if it isn&#8217;t present) to output artifacts, and the <code class="docutils literal"><span class="pre">.qzv</span></code> file extension to visualizations.</p>
-</div>
 <p>We now have a QIIME 2 artifact called <code class="docutils literal"><span class="pre">feature-table.qza</span></code> that we can start using in QIIME 2 analyses! For example, we can create a summary of the feature table as follows:</p>
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table summarize <span class="se">\</span>
   --i-table feature-table.qza <span class="se">\</span>
-  --o-visualization table-summary
+  --o-visualization table-summary.qzv
 </pre></div>
 </div>
 <div class="admonition">
@@ -112,12 +108,16 @@
 </div>
 
 
-    </div>
-    
-
-    
-    <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+      </div>
       
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu dropdown-menu-right"></ul>
+        </div>
+        
 <h3><a href="../../">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
@@ -153,14 +153,16 @@
     </form>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
     </div>
-    
-  </div>
-</div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, QIIME 2 Development Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
     </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
   </body>
 </html>

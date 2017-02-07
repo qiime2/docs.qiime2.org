@@ -52,19 +52,19 @@
   />
 </a>
 
-<div id="wrapper" class="container clearfix">
-  <div id="header">
-    <a href="/">
-      <img
-        class="img-responsive"
-        src="../../_static/logo400.png" alt="QIIME 2"
-      />
-    </a>
-  </div>
-  <div id="content">
-    
-    <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/logo400.png" alt="QIIME 2"
+        />
+      </a>
+    </div>
+    <div id="content">
       
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
   <div class="section" id="fecal-microbiota-transplant-fmt-study-an-exercise">
 <h1>Fecal microbiota transplant (FMT) study: an exercise<a class="headerlink" href="#fecal-microbiota-transplant-fmt-study-an-exercise" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
@@ -110,11 +110,11 @@ curl -sLO https://data.qiime2.org/2.0.6/tutorials/fmt/fmt-tutorial-demux-2-10p.q
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime dada2 plot-qualities <span class="se">\</span>
   --i-demultiplexed-seqs fmt-tutorial-demux-1-10p.qza <span class="se">\</span>
   --p-n <span class="m">10</span> <span class="se">\</span>
-  --o-visualization demux-qual-plots-1
+  --o-visualization demux-qual-plots-1.qzv
 qiime dada2 plot-qualities <span class="se">\</span>
   --i-demultiplexed-seqs fmt-tutorial-demux-2-10p.qza <span class="se">\</span>
   --p-n <span class="m">10</span> <span class="se">\</span>
-  --o-visualization demux-qual-plots-2
+  --o-visualization demux-qual-plots-2.qzv
 </pre></div>
 </div>
 <div class="admonition">
@@ -133,14 +133,14 @@ qiime dada2 plot-qualities <span class="se">\</span>
   --p-trim-left <span class="m">10</span> <span class="se">\</span>
   --p-trunc-len <span class="m">130</span> <span class="se">\</span>
   --i-demultiplexed-seqs fmt-tutorial-demux-1-10p.qza <span class="se">\</span>
-  --o-representative-sequences rep-seqs-1 <span class="se">\</span>
-  --o-table table-1
+  --o-representative-sequences rep-seqs-1.qza <span class="se">\</span>
+  --o-table table-1.qza
 qiime dada2 denoise <span class="se">\</span>
   --p-trim-left <span class="m">10</span> <span class="se">\</span>
   --p-trunc-len <span class="m">130</span> <span class="se">\</span>
   --i-demultiplexed-seqs fmt-tutorial-demux-2-10p.qza <span class="se">\</span>
-  --o-representative-sequences rep-seqs-2 <span class="se">\</span>
-  --o-table table-2
+  --o-representative-sequences rep-seqs-2.qza <span class="se">\</span>
+  --o-table table-2.qza
 </pre></div>
 </div>
 <div class="admonition">
@@ -148,8 +148,8 @@ qiime dada2 denoise <span class="se">\</span>
 <ul class="last simple">
 <li><code class="file docutils literal"><span class="pre">rep-seqs-1.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ffmt%2Frep-seqs-1.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/fmt/rep-seqs-1.qza">download</a></li>
 <li><code class="file docutils literal"><span class="pre">rep-seqs-2.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ffmt%2Frep-seqs-2.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/fmt/rep-seqs-2.qza">download</a></li>
-<li><code class="file docutils literal"><span class="pre">table-1.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ffmt%2Ftable-1.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/fmt/table-1.qza">download</a></li>
 <li><code class="file docutils literal"><span class="pre">table-2.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ffmt%2Ftable-2.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/fmt/table-2.qza">download</a></li>
+<li><code class="file docutils literal"><span class="pre">table-1.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ffmt%2Ftable-1.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/fmt/table-1.qza">download</a></li>
 </ul>
 </div>
 </div>
@@ -169,14 +169,14 @@ qiime feature-table merge-seq-data <span class="se">\</span>
 <div class="admonition">
 <p class="first"><strong>Output artifacts:</strong></p>
 <ul class="last simple">
-<li><code class="file docutils literal"><span class="pre">rep-seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ffmt%2Frep-seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/fmt/rep-seqs.qza">download</a></li>
 <li><code class="file docutils literal"><span class="pre">table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ffmt%2Ftable.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/fmt/table.qza">download</a></li>
+<li><code class="file docutils literal"><span class="pre">rep-seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ffmt%2Frep-seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/fmt/rep-seqs.qza">download</a></li>
 </ul>
 </div>
 <p>Next, we&#8217;ll generate a summary of the merged <code class="docutils literal"><span class="pre">FeatureTable[Frequency]</span></code> artifact.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table summarize <span class="se">\</span>
   --i-table table.qza <span class="se">\</span>
-  --o-visualization table
+  --o-visualization table.qzv
 </pre></div>
 </div>
 <div class="admonition">
@@ -196,7 +196,7 @@ qiime feature-table merge-seq-data <span class="se">\</span>
 <p>We&#8217;ll also generate a summary of the merged <code class="docutils literal"><span class="pre">FeatureData[Sequence]</span></code> artifact. You can use this summary to obtain additional information about specific features of interest as you proceed through the analysis.</p>
 <div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table tabulate-seqs <span class="se">\</span>
   --i-data rep-seqs.qza <span class="se">\</span>
-  --o-visualization rep-seqs
+  --o-visualization rep-seqs.qzv
 </pre></div>
 </div>
 <div class="admonition">
@@ -240,12 +240,16 @@ qiime feature-table merge-seq-data <span class="se">\</span>
 </div>
 
 
-    </div>
-    
-
-    
-    <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+      </div>
       
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu dropdown-menu-right"></ul>
+        </div>
+        
 <h3><a href="../../">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
@@ -281,14 +285,16 @@ qiime feature-table merge-seq-data <span class="se">\</span>
     </form>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
     </div>
-    
-  </div>
-</div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, QIIME 2 Development Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
     </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
   </body>
 </html>
