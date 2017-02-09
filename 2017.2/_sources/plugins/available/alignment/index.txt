@@ -1,0 +1,53 @@
+alignment
+=========
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.2.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-alignment">https://github.com/qiime2/q2-alignment</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           No user support information available. See plugin website: <a href="https://github.com/qiime2/q2-alignment">https://github.com/qiime2/q2-alignment</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           No citation available. Cite plugin website: <a href="https://github.com/qiime2/q2-alignment">https://github.com/qiime2/q2-alignment</a><br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   mafft
+   
+   mask
+   
+
+
+Visualizers
+-----------
+
+
+This plugin does not have any visualizers.
