@@ -1,0 +1,169 @@
+mask: Positional conservation and gap filtering.
+================================================
+
+Mask (i.e., filter) unconserved and highly gapped columns from an alignment. 
+
+.. raw:: html
+
+   <table class="table action-signature">
+     
+     <thead>
+       <tr>
+         <th colspan="4">Inputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">alignment</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">FeatureData[AlignedSequence]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The alignment to be masked.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="4">Parameters</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">max_gap_frequency</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Float</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">1.0</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The maximum relative frequency of gap characters in a column for the column to be retained. This relative frequency must be a number between 0.0 and 1.0 (inclusive), where 0.0 retains only those columns without gap characters, and 1.0 retains all columns regardless of gap character frequency.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">min_conservation</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Float</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">0.4</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The minimum relative frequency of at least one non-gap character in a column for that column to be retained. This relative frequency must be a number between 0.0 and 1.0 (inclusive). For example, if a value of 0.4 is provided, a column will only be retained if it contains at least one character that is present in at least 40% of the sequences.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="4">Outputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">masked_alignment</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">FeatureData[AlignedSequence]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">N/A</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The masked alignment.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+   </table>

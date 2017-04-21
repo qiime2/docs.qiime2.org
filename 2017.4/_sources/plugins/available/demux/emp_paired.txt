@@ -1,0 +1,196 @@
+emp_paired: Demultiplex paired-end sequence data generated with the EMP protocol.
+=================================================================================
+
+Demultiplex paired-end sequence data (i.e., map barcode reads to sample ids) for data generated with the Earth Microbiome Project (EMP) amplicon sequencing protocol. Details about this protocol can be found at http://www.earthmicrobiome.org/protocols-and-standards/
+
+.. raw:: html
+
+   <table class="table action-signature">
+     
+     <thead>
+       <tr>
+         <th colspan="4">Inputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">seqs</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">EMPPairedEndSequences</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The paired-end sequences to be demultiplexed.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="4">Parameters</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">barcodes</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">MetadataCategory</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The sample metadata category listing the per-sample barcodes.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">rev_comp_barcodes</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Bool</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">False</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           If provided, the barcode sequence reads will be reverse complemented prior to demultiplexing.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">rev_comp_mapping_barcodes</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Bool</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">False</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           If provided, the barcode sequences in the sample metadata will be reverse complemented prior to demultiplexing.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="4">Outputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">per_sample_sequences</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">SampleData[PairedEndSequencesWithQuality]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">N/A</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The resulting demultiplexed sequences.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+   </table>

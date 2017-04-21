@@ -1,0 +1,66 @@
+dada2
+=====
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+         	
+         	No description available. See plugin website: <a href="http://benjjneb.github.io/dada2/">http://benjjneb.github.io/dada2/</a><br/>
+         	
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.4.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="http://benjjneb.github.io/dada2/">http://benjjneb.github.io/dada2/</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           To get help with DADA2, post to the DADA2 issue tracker: <a href="https://github.com/benjjneb/dada2/issues">https://github.com/benjjneb/dada2/issues</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           DADA2: High-resolution sample inference from Illumina amplicon data. Benjamin J Callahan, Paul J McMurdie, Michael J Rosen, Andrew W Han, Amy Jo A Johnson, Susan P Holmes. Nature Methods 13, 581–583 (2016) doi:10.1038/nmeth.3869.<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   denoise_paired
+   
+   denoise_single
+   
+
+
+Visualizers
+-----------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   plot_qualities
+   

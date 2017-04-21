@@ -1,0 +1,385 @@
+denoise_single: Denoise and dereplicate single-end sequences
+============================================================
+
+This method denoises single-end sequences, dereplicates them, and filters chimeras.
+
+.. raw:: html
+
+   <table class="table action-signature">
+     
+     <thead>
+       <tr>
+         <th colspan="4">Inputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">demultiplexed_seqs</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">SampleData[PairedEndSequencesWithQuality | SequencesWithQuality]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The single-end demultiplexed sequences to be denoised.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="4">Parameters</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">trunc_len</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           Position at which sequences should be truncated due to decrease in quality. This truncates the 3&#39; end of the of the input sequences, which will be the bases that were sequenced in the last cycles. Reads that are shorter than this value will be discarded.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">trim_left</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">0</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           Position at which sequences should be trimmed due to low quality. This trims the 5&#39; end of the of the input sequences, which will be the bases that were sequenced in the first cycles.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">max_ee</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Float</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">2.0</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           Reads with number of expected errors higher than this value will be discarded.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">trunc_q</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">2</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           Reads are truncated at the first instance of a quality score less than or equal to this value. If the resulting read is then shorter than `trunc_len`, it is discarded.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">chimera_method</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Str % Choices({'consensus', 'none', 'pooled'})</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">pooled</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The method used to remove chimeras. &#34;none&#34;: No chimera removal is performed. &#34;pooled&#34;: All reads are pooled prior to chimera detection. &#34;consensus&#34;: Chimeras are detected in samples individually, and sequences found chimeric in a sufficient fraction of samples are removed.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">min_fold_parent_over_abundance</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Float</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">1.0</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The minimum abundance of potential parents of a sequence being tested as chimeric, expressed as a fold-change versus the abundance of the sequence being tested. Values should be greater than or equal to 1 (i.e. parents should be more abundant than the sequence being tested). This parameter has no effect if chimera_method is &#34;none&#34;.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">n_threads</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">1</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The number of threads to use for multithreaded processing. If 0 is provided, all available cores will be used.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">n_reads_learn</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Int</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">1000000</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The number of reads to use when training the error model. Smaller numbers will result in a shorter run time but a less reliable error model.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">hashed_feature_ids</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Bool</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">True</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           If true, the feature ids in the resulting table will be presented as hashes of the sequences defining each feature. The hash will always be the same for the same sequence so this allows feature tables to be merged across runs of this method. You should only merge tables if the exact same parameters are used for each run.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="4">Outputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">table</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">FeatureTable[Frequency]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">N/A</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The resulting feature table.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">representative_sequences</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">FeatureData[Sequence]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">N/A</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The resulting feature sequences. Each feature in the feature table will be represented by exactly one sequence.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+   </table>

@@ -1,0 +1,63 @@
+emperor
+=======
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+         	
+         	No description available. See plugin website: <a href="https://emperor.microbio.me">https://emperor.microbio.me</a><br/>
+         	
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.4.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://emperor.microbio.me">https://emperor.microbio.me</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           To get help with Emperor, please post to the Emperor issue tracker: <a href="https://github.com/biocore/emperor/issues">https://github.com/biocore/emperor/issues</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           EMPeror: a tool for visualizing high-throughput microbial community data.<br/>
+           
+           Vazquez-Baeza Y, Pirrung M, Gonzalez A, Knight R.<br/>
+           
+           Gigascience. 2013 Nov 26;2(1):16.<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+This plugin does not have any methods.
+
+
+Visualizers
+-----------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   plot
+   
