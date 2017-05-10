@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /2.0.5/
+Disallow: /2.0.6/
+Disallow: /2017.2/
