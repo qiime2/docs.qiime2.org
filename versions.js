@@ -27,10 +27,31 @@
     if (key == activeVersion) {
       $('#version-div button').html('Version: ' + data.name + ' <span class="caret"></span>');
       if (data.deprecated) {
-        $('<div/>', {
-          "text": defaultText,
-          "class": "alert alert-warning text-center",
-        }).prependTo($('#content'))
+        var content = $('#content');
+        var hideableContent = content.children();
+        hideableContent.hide();
+        var warningDiv = $('<div/>', {
+          class: 'alert alert-warning text-center',
+        });
+        $('<p/>', { text: defaultText }).appendTo(warningDiv);
+        var buttonGroup = $('<div/>', { class: 'btn-group' });
+        buttonGroup.appendTo(warningDiv);
+        var latestLink = $('<a>', {
+          class: 'btn btn-success',
+          html: 'Latest Docs',
+          href: 'https://docs.qiime2.org/',
+        });
+        latestLink.appendTo(buttonGroup);
+        var showContent = $('<button>', {
+          class: 'btn btn-danger',
+          html: 'Show me the content on this page',
+        });
+        showContent.on('click', function() {
+          hideableContent.show();
+          buttonGroup.remove();
+        });
+        showContent.appendTo(buttonGroup);
+        warningDiv.prependTo(content);
       }
     }
   });
