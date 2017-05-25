@@ -1,0 +1,64 @@
+quality-filter
+==============
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+         	
+         	This QIIME 2 plugin supports filtering and trimming of sequence reads based on PHRED scores and ambiguous nucleotide characters.<br/>
+         	
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.5.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/wasade/q2-quality-filter" rel="noopener">https://github.com/wasade/q2-quality-filter</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           Quality-filtering vastly improves diversity estimates from Illumina amplicon sequencing. Nicholas A Bokulich, Sathish Subramanian, Jeremiah J Faith, Dirk Gevers, Jeffrey I Gordon, Rob Knight, David A Mills &amp; J Gregory Caporaso. Nature Methods 10, 57–59 (2013) doi:10.1038/nmeth.2276<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   q_score
+   
+
+
+Visualizers
+-----------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   visualize_stats
+   

@@ -1,0 +1,61 @@
+alignment
+=========
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+         	
+         	This QIIME 2 plugin provides support for generating and manipulating sequence alignments.<br/>
+         	
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.5.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-alignment" rel="noopener">https://github.com/qiime2/q2-alignment</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           MAFFT multiple sequence alignment software version 7: improvements in performance and usability. Katoh K, Standley DM. Mol Biol Evol. 2013 Apr;30(4):772-80. doi: 10.1093/molbev/mst010.<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   mafft
+   
+   mask
+   
+
+
+Visualizers
+-----------
+
+
+This plugin does not have any visualizers.
