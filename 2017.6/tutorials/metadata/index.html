@@ -87,7 +87,7 @@
 <p>Metadata is typically defined in a sample (or feature; more on that below) metadata mapping file. The QIIME 2 development team hasn&#8217;t adopted a standard set of criteria for the sample metadata mapping file, but at present the following minimum requirements are enforced:</p>
 <ul class="simple">
 <li>The file must be a tab-separated text file</li>
-<li>Comment lines (e.g. lines that begin with <code class="docutils literal"><span class="pre">#</span></code>) are <strong>not allowed</strong> with the exception of a header starting with <code class="docutils literal"><span class="pre">#SampleID</span></code></li>
+<li>Comment lines (e.g. lines that begin with <code class="docutils literal"><span class="pre">#</span></code>) are <strong>not supported</strong> and will be treated as data rows</li>
 <li>The column label values must be unique (i.e. no duplicate values)</li>
 <li>There must be at least one line of data following the column label line</li>
 <li>The first column in the table is the &#8220;identifier&#8221; column (either sample ID or feature ID, depending on the axis)</li>
