@@ -12,6 +12,10 @@ QIIME 2 microbiome analysis functionality is made available to users via plugins
    
    
    
+   composition: Plugin for compositional data analysis. <composition/index>
+   
+   
+   
    dada2: Plugin for sequence quality control with DADA2. <dada2/index>
    
    
