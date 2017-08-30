@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorials &#8212; QIIME 2 2017.8.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2017.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about/" />
+    <link rel="top" title="QIIME 2 2017.8.0 documentation" href="../" />
+    <link rel="next" title="“Moving Pictures” tutorial" href="moving-pictures/" />
+    <link rel="prev" title="Installing QIIME 2 using Docker" href="../install/virtual/docker/" />
+  <script src="../_static/bootstrap.min.js"></script>
+  <link rel="icon" href="../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="tutorials">
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The tutorials assume you have installed the QIIME 2 Core distribution using one of the procedures in the <a class="reference internal" href="../install/"><span class="doc">install documents</span></a>. The tutorials make extensive use of the QIIME 2 command-line interface so reviewing the <a class="reference internal" href="../interfaces/q2cli/"><span class="doc">q2cli docs</span></a> is recommended.</p>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="moving-pictures/">&#8220;Moving Pictures&#8221; tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#sample-metadata">Sample metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#obtaining-and-importing-data">Obtaining and importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#demultiplexing-sequences">Demultiplexing sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#sequence-quality-control-and-feature-table-construction">Sequence quality control and feature table construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#featuretable-and-featuredata-summaries">FeatureTable and FeatureData summaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#generate-a-tree-for-phylogenetic-diversity-analyses">Generate a tree for phylogenetic diversity analyses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#alpha-and-beta-diversity-analysis">Alpha and beta diversity analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#taxonomic-analysis">Taxonomic analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#differential-abundance-testing-with-ancom">Differential abundance testing with ANCOM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fmt/">Fecal microbiota transplant (FMT) study: an exercise</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#obtain-data-files">Obtain data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#sequence-quality-control">Sequence quality control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#merging-denoised-data">Merging denoised data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#diversity-analysis">Diversity analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atacama-soils/">&#8220;Atacama soil microbiome&#8221; tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/#obtain-the-data">Obtain the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/#paired-end-read-analysis-commands">Paired-end read analysis commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/#questions-to-guide-data-analysis">Questions to guide data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gneiss/">Differential abundance analysis with gneiss</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/#building-linear-models-using-balances">Building linear models using balances</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="importing/">Importing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="importing/#sequence-data-with-sequence-quality-information">Sequence data with sequence quality information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#feature-table-data">Feature table data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#per-feature-unaligned-sequence-data-i-e-representative-sequences">Per-feature unaligned sequence data (i.e., representative sequences)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#per-feature-aligned-sequence-data-i-e-aligned-representative-sequences">Per-feature aligned sequence data (i.e., aligned representative sequences)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#phylogenetic-trees-unrooted">Phylogenetic trees (unrooted)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exporting/">Exporting data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="exporting/#exporting-a-feature-table">Exporting a feature table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exporting/#exporting-a-phylogenetic-tree">Exporting a phylogenetic tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exporting/#exporting-versus-extracting">Exporting versus extracting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata/">Metadata in QIIME 2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#metadata-from-a-text-file">Metadata from a text file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#metadata-from-a-qiime-2-artifact">Metadata from a QIIME 2 artifact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#combining-metadata">Combining metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#exploring-feature-metadata">Exploring feature metadata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filtering/">Filtering data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filtering/#obtain-the-data">Obtain the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering/#filtering-feature-tables">Filtering feature tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering/#filtering-distance-matrices">Filtering distance matrices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feature-classifier/">Training feature classifiers with q2-feature-classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#obtaining-and-importing-reference-data-sets">Obtaining and importing reference data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#extract-reference-reads">Extract reference reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#train-the-classifier">Train the classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#test-the-classifier">Test the classifier</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/#predicting-categorical-sample-data">Predicting categorical sample data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/#predicting-continuous-i-e-numerical-sample-data">Predicting continuous (i.e., numerical) sample data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#pairwise-difference-comparisons">Pairwise difference comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#pairwise-distance-comparisons">Pairwise distance comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#linear-mixed-effect-models">Linear mixed effect models</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/">&#8220;Moving Pictures&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/">&#8220;Atacama soil microbiome&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2017, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>maturity_index: Microbial maturity index prediction. &#8212; QIIME 2 2017.8.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2017.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="top" title="QIIME 2 2017.8.0 documentation" href="../../../../" />
+    <link rel="up" title="sample-classifier" href="../" />
+    <link rel="next" title="regress_samples: Supervised learning regressor." href="../regress_samples/" />
+    <link rel="prev" title="classify_samples: Supervised learning classifier." href="../classify_samples/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="maturity-index-microbial-maturity-index-prediction">
+<h1>maturity_index: Microbial maturity index prediction.<a class="headerlink" href="#maturity-index-microbial-maturity-index-prediction" title="Permalink to this headline">¶</a></h1>
+<p>Calculates a &#8220;microbial maturity&#8221; index from a regression model trained on feature data to predict a given continuous metadata category, e.g., to predict age as a function of microbiota composition. The model is trained on a subset of control group samples, then predicts the category value for all samples. This visualization computes maturity index z-scores to compare relative &#8220;maturity&#8221; between each group, as described in doi:10.1038/nature13421. This method can be used to predict between-group differences in relative trajectory across any type of continuous metadata gradient, e.g., intestinal microbiome development by age, microbial succession during wine fermentation, or microbial community differences along environmental gradients, as a function of two or more different &#8220;treatment&#8221; groups.</p>
+<table class="table action-signature">
+
+  <thead>
+    <tr>
+      <th colspan="4">Inputs</th>
+    </tr>
+
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">table</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">FeatureTable[Frequency]</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Required</span>
+        </code>
+      </td>
+
+      <td>
+
+        Feature table containing all features that should be used for target prediction.<br/>
+
+      </td>
+    </tr>
+
+  </tbody>
+
+  <thead>
+    <tr>
+      <th colspan="4">Parameters</th>
+    </tr>
+
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">metadata</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Metadata</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Required</span>
+        </code>
+      </td>
+
+      <td>
+
+        Sample metadata to use as prediction targets.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">category</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Str</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Required</span>
+        </code>
+      </td>
+
+      <td>
+
+        Metadata category to use for training and prediction.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">group_by</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Str</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Required</span>
+        </code>
+      </td>
+
+      <td>
+
+        Metadata category to use for plotting and significance testing between main treatment groups.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">control</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Str</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Required</span>
+        </code>
+      </td>
+
+      <td>
+
+        Value of group_by to use as control group. The regression  model will be trained using only control group data, and the maturity scores of other groups consequently will be assessed relative to this group.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">estimator</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Str % Choices({'ElasticNet', 'ExtraTreesRegressor', 'GradientBoostingRegressor', 'Lasso', 'RandomForestRegressor', 'Ridge', 'SVR'})</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">RandomForestRegressor</span>
+        </code>
+      </td>
+
+      <td>
+
+        Regression model to use for prediction.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">n_estimators</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Int % Range(1)</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">100</span>
+        </code>
+      </td>
+
+      <td>
+
+        Number of trees to grow for estimation. More trees will improve predictive accuracy up to a threshold level, but will also increase time and memory requirements. This parameter only affects ensemble estimators, such as Random Forest, AdaBoost, ExtraTrees, and GradientBoosting.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">test_size</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Float % Range(0.0, 1.0, inclusive_start=False)</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">0.2</span>
+        </code>
+      </td>
+
+      <td>
+
+        Fraction of input samples to exclude from training set and use for classifier testing.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">step</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Float % Range(0.0, 1.0, inclusive_start=False)</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">0.05</span>
+        </code>
+      </td>
+
+      <td>
+
+        If optimize_feature_selection is True, step is the percentage of features to remove at each iteration.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">cv</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Int % Range(1)</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">5</span>
+        </code>
+      </td>
+
+      <td>
+
+        Number of k-fold cross-validations to perform.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">random_state</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Int</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">None</span>
+        </code>
+      </td>
+
+      <td>
+
+        Seed used by random number generator.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">n_jobs</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Int</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">1</span>
+        </code>
+      </td>
+
+      <td>
+
+        Number of jobs to run in parallel.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">parameter_tuning</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Bool</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">True</span>
+        </code>
+      </td>
+
+      <td>
+
+        Automatically tune hyperparameters using random grid search.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">optimize_feature_selection</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Bool</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">True</span>
+        </code>
+      </td>
+
+      <td>
+
+        Automatically optimize input feature selection using recursive feature elimination.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">stratify</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Bool</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">False</span>
+        </code>
+      </td>
+
+      <td>
+
+        Evenly stratify training and test data among metadata categories. If True, all values in category must match at least two samples.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">maz_stats</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Bool</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">True</span>
+        </code>
+      </td>
+
+      <td>
+
+        Calculate anova and pairwise tests on MAZ scores.<br/>
+
+      </td>
+    </tr>
+
+  </tbody>
+
+  <thead>
+    <tr>
+      <th colspan="4">Outputs</th>
+    </tr>
+
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">visualization</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Visualization</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">N/A</span>
+        </code>
+      </td>
+
+      <td>
+
+        No description<br/>
+
+      </td>
+    </tr>
+
+  </tbody>
+
+</table></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2017, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>
