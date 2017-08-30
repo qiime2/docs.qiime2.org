@@ -5,3 +5,4 @@ Disallow: /2017.2/
 Disallow: /2017.4/
 Disallow: /2017.5/
 Disallow: /2017.6/
+Disallow: /2017.7/
