@@ -1,0 +1,132 @@
+beta-phylogenetic-alt: Beta diversity (phylogenetic) - High Performance Computation
+===================================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime diversity beta-phylogenetic-alt [OPTIONS]
+
+     Computes a user-specified phylogenetic beta diversity metric for all pairs
+     of samples in a feature table. This implementation is recommended for
+     large datasets, otherwise the results are identical to beta_phylogenetic.
+
+     This method is an implementation of the Strided State UniFrac algorithm.
+     Multiple variants of the UniFrac metric are available, including
+     Generalized UniFrac (Chen et al. 2012), Variance Adjusted UniFrac (Chang
+     et al. 2011), as well as Weighted normalized and unnormalized UniFrac
+     (Lozupone et al. 2007) and unweighted UniFrac (Lozupone et al. 2005)
+
+   Options:
+     --i-table PATH                  Artifact: FeatureTable[Frequency]
+                                     [required]
+                                     The feature table containing the
+                                     samples over which beta diversity should be
+                                     computed.
+     --i-phylogeny PATH              Artifact: Phylogeny[Rooted]  [required]
+                                     Phylogenetic tree containing tip identifiers
+                                     that correspond to the feature identifiers
+                                     in the table. This tree can contain tip ids
+                                     that are not present in the table, but all
+                                     feature ids in the table must be present in
+                                     this tree.
+     --p-metric [weighted_normalized_unifrac|generalized_unifrac|weighted_unifrac|unweighted_unifrac]
+                                     [required]
+                                     The beta diversity metric to be
+                                     computed.
+     --p-n-jobs INTEGER              [default: 1]
+                                     The number of workers to use.
+     --p-variance-adjusted / --p-no-variance-adjusted
+                                     [default: False]
+                                     Perform variance adjustment
+                                     based on Chang et al. BMC Bioinformatics
+                                     2011. Weights distances based on the
+                                     proportion of the relative abundance
+                                     represented between the samples at a given
+                                     node under evaluation.
+     --p-alpha FLOAT                 [optional]
+                                     This parameter is only used when
+                                     the choice of metric is generalized_unifrac.
+                                     The value of alpha controls importance of
+                                     sample proportions. 1.0 is weighted
+                                     normalized UniFrac. 0.0 is close to
+                                     unweighted UniFrac, but only if the sample
+                                     proportions are dichotomized.
+     --p-bypass-tips / --p-no-bypass-tips
+                                     [default: False]
+                                     In a bifurcating tree, the
+                                     tips make up about 50% of the nodes in a
+                                     tree. By ignoring them, specificity can be
+                                     traded for reduced compute time. This has
+                                     the effect of collapsing the phylogeny, and
+                                     is analogous (in concept) to moving from 99%
+                                     to 97% OTUs
+     --o-distance-matrix PATH        Artifact: DistanceMatrix %
+                                     Properties(['phylogenetic']) [required if
+                                     not passing --output-dir]
+                                     The resulting
+                                     distance matrix.
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Beta diversity (phylogenetic) - High Performance Computation
+
+   Computes a user-specified phylogenetic beta diversity metric for all pairs
+   of samples in a feature table. This implementation is recommended for large
+   datasets, otherwise the results are identical to beta_phylogenetic.  This
+   method is an implementation of the Strided State UniFrac algorithm.
+   Multiple variants of the UniFrac metric are available, including
+   Generalized UniFrac (Chen et al. 2012), Variance Adjusted UniFrac (Chang et
+   al. 2011), as well as Weighted normalized and unnormalized UniFrac
+   (Lozupone et al. 2007) and unweighted UniFrac (Lozupone et al. 2005)
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table containing the samples over which beta diversity
+       should be computed.
+   phylogeny : Phylogeny[Rooted]
+       Phylogenetic tree containing tip identifiers that correspond to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree.
+   metric : Str % Choices({'generalized_unifrac', 'unweighted_unifrac', 'weighted_normalized_unifrac', 'weighted_unifrac'})
+       The beta diversity metric to be computed.
+   n_jobs : Int, optional
+       The number of workers to use.
+   variance_adjusted : Bool, optional
+       Perform variance adjustment based on Chang et al. BMC Bioinformatics
+       2011. Weights distances based on the proportion of the relative
+       abundance represented between the samples at a given node under
+       evaluation.
+   alpha : Float % Range(0, 1, inclusive_end=True), optional
+       This parameter is only used when the choice of metric is
+       generalized_unifrac. The value of alpha controls importance of sample
+       proportions. 1.0 is weighted normalized UniFrac. 0.0 is close to
+       unweighted UniFrac, but only if the sample proportions are
+       dichotomized.
+   bypass_tips : Bool, optional
+       In a bifurcating tree, the tips make up about 50% of the nodes in a
+       tree. By ignoring them, specificity can be traded for reduced compute
+       time. This has the effect of collapsing the phylogeny, and is analogous
+       (in concept) to moving from 99% to 97% OTUs
+
+   Returns
+   -------
+   distance_matrix : DistanceMatrix % Properties(['phylogenetic'])
+       The resulting distance matrix.</pre>
+       </div>
+     </div>
+   </div>

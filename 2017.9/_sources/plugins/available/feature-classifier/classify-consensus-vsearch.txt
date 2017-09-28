@@ -1,0 +1,97 @@
+classify-consensus-vsearch: VSEARCH consensus taxonomy classifier
+=================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime feature-classifier classify-consensus-vsearch 
+              [OPTIONS]
+
+     Assign taxonomy to query sequences using VSEARCH. Performs VSEARCH global
+     alignment between query and reference_reads, then assigns consensus
+     taxonomy to each query sequence from among maxaccepts top hits,
+     min_consensus of which share that taxonomic assignment.
+
+   Options:
+     --i-query PATH                Artifact: FeatureData[Sequence]  [required]
+                                   Sequences to classify taxonomically.
+     --i-reference-reads PATH      Artifact: FeatureData[Sequence]  [required]
+                                   reference sequences.
+     --i-reference-taxonomy PATH   Artifact: FeatureData[Taxonomy]  [required]
+                                   reference taxonomy labels.
+     --p-maxaccepts INTEGER RANGE  [default: 10]
+                                   Maximum number of hits to keep
+                                   for each query. Must be in range [0,
+                                   infinity].
+     --p-perc-identity FLOAT       [default: 0.8]
+                                   Reject match if percent
+                                   identity to query is lower. Must be in range
+                                   [0.0, 1.0].
+     --p-strand [both|plus]        [default: both]
+                                   Align against reference
+                                   sequences in forward ("plus") or both
+                                   directions ("both").
+     --p-min-consensus FLOAT       [default: 0.51]
+                                   Minimum fraction of
+                                   assignments must match top hit to be accepted
+                                   as consensus assignment. Must be in range
+                                   (0.5, 1.0].
+     --p-unassignable-label TEXT   [default: Unassigned]
+     --p-threads INTEGER           [default: 1]
+     --o-classification PATH       Artifact: FeatureData[Taxonomy] [required if
+                                   not passing --output-dir]
+                                   The resulting
+                                   taxonomy classifications.
+     --output-dir DIRECTORY        Output unspecified results to a directory
+     --cmd-config PATH             Use config file for command options
+     --verbose                     Display verbose output to stdout and/or stderr
+                                   during execution of this action.  [default:
+                                   False]
+     --quiet                       Silence output if execution is successful
+                                   (silence is golden).  [default: False]
+     --help                        Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>VSEARCH consensus taxonomy classifier
+
+   Assign taxonomy to query sequences using VSEARCH. Performs VSEARCH global
+   alignment between query and reference_reads, then assigns consensus
+   taxonomy to each query sequence from among maxaccepts top hits,
+   min_consensus of which share that taxonomic assignment.
+
+   Parameters
+   ----------
+   query : FeatureData[Sequence]
+       Sequences to classify taxonomically.
+   reference_reads : FeatureData[Sequence]
+       reference sequences.
+   reference_taxonomy : FeatureData[Taxonomy]
+       reference taxonomy labels.
+   maxaccepts : Int % Range(1), optional
+       Maximum number of hits to keep for each query. Must be in range [0,
+       infinity].
+   perc_identity : Float % Range(0.0, 1.0, inclusive_end=True), optional
+       Reject match if percent identity to query is lower. Must be in range
+       [0.0, 1.0].
+   strand : Str % Choices({'both', 'plus'}), optional
+       Align against reference sequences in forward ("plus") or both
+       directions ("both").
+   min_consensus : Float % Range(0.5, 1.0, inclusive_start=False, inclusive_end=True), optional
+       Minimum fraction of assignments must match top hit to be accepted as
+       consensus assignment. Must be in range (0.5, 1.0].
+   unassignable_label : Str, optional
+   threads : Int, optional
+
+   Returns
+   -------
+   classification : FeatureData[Taxonomy]
+       The resulting taxonomy classifications.</pre>
+       </div>
+     </div>
+   </div>

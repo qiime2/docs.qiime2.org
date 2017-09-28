@@ -1,0 +1,63 @@
+emperor
+=======
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin wraps Emperor and supports interactive visualization of ordination plots.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.9.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="http://emperor.microbio.me" rel="noopener">http://emperor.microbio.me</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           EMPeror: a tool for visualizing high-throughput microbial community data.<br/>
+           
+           Vazquez-Baeza Y, Pirrung M, Gonzalez A, Knight R.<br/>
+           
+           Gigascience. 2013 Nov 26;2(1):16.<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+This plugin does not have any methods.
+
+
+Visualizers
+-----------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   plot
+   

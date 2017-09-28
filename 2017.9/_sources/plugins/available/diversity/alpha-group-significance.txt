@@ -1,0 +1,51 @@
+alpha-group-significance: Alpha diversity comparisons
+=====================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime diversity alpha-group-significance [OPTIONS]
+
+     Visually and statistically compare groups of alpha diversity values.
+
+   Options:
+     --i-alpha-diversity PATH  Artifact: SampleData[AlphaDiversity]  [required]
+                               Vector of alpha diversity values by sample.
+     --m-metadata-file PATH    Metadata file or artifact viewable as metadata.
+                               This option may be supplied multiple times to
+                               merge metadata  [required]
+                               The sample metadata.
+     --o-visualization PATH    Visualization [required if not passing --output-
+                               dir]
+     --output-dir DIRECTORY    Output unspecified results to a directory
+     --cmd-config PATH         Use config file for command options
+     --verbose                 Display verbose output to stdout and/or stderr
+                               during execution of this action.  [default: False]
+     --quiet                   Silence output if execution is successful (silence
+                               is golden).  [default: False]
+     --help                    Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Alpha diversity comparisons
+
+   Visually and statistically compare groups of alpha diversity values.
+
+   Parameters
+   ----------
+   alpha_diversity : SampleData[AlphaDiversity]
+       Vector of alpha diversity values by sample.
+   metadata : Metadata
+       The sample metadata.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>
