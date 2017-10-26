@@ -1,0 +1,96 @@
+cluster-features-de-novo: De novo clustering of features.
+=========================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime vsearch cluster-features-de-novo [OPTIONS]
+
+     Given a feature table and the associated feature sequences, cluster the
+     features based on user-specified percent identity threshold of their
+     sequences. This is not a general-purpose de novo clustering method, but
+     rather is intended to be used for clustering the results of quality-
+     filtering/dereplication methods, such as DADA2, or for re-clustering a
+     FeatureTable at a lower percent identity than it was originally clustered
+     at. When a group of features in the input table are clustered into a
+     single feature, the frequency of that single feature in a given sample is
+     the sum of the frequencies of the features that were clustered in that
+     sample. Feature identifiers and sequences will be inherited from the
+     centroid feature of each cluster. See the vsearch documentation for
+     details on how sequence clustering is performed.
+
+   Options:
+     --i-sequences PATH            Artifact: FeatureData[Sequence]  [required]
+                                   The sequences corresponding to the features in
+                                   table.
+     --i-table PATH                Artifact: FeatureTable[Frequency]  [required]
+                                   The feature table to be clustered.
+     --p-perc-identity FLOAT       [required]
+                                   The percent identity at which
+                                   clustering should be performed. This parameter
+                                   maps to vsearch's --id parameter.
+     --p-threads INTEGER RANGE     [default: 1]
+                                   The number of threads to use for
+                                   computation. Passing 0 will launch one thread
+                                   per CPU core.
+     --o-clustered-table PATH      Artifact: FeatureTable[Frequency] [required if
+                                   not passing --output-dir]
+                                   The table following
+                                   clustering of features.
+     --o-clustered-sequences PATH  Artifact: FeatureData[Sequence] [required if
+                                   not passing --output-dir]
+                                   Sequences
+                                   representing clustered features.
+     --output-dir DIRECTORY        Output unspecified results to a directory
+     --cmd-config PATH             Use config file for command options
+     --verbose                     Display verbose output to stdout and/or stderr
+                                   during execution of this action.  [default:
+                                   False]
+     --quiet                       Silence output if execution is successful
+                                   (silence is golden).  [default: False]
+     --help                        Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>De novo clustering of features.
+
+   Given a feature table and the associated feature sequences, cluster the
+   features based on user-specified percent identity threshold of their
+   sequences. This is not a general-purpose de novo clustering method, but
+   rather is intended to be used for clustering the results of quality-
+   filtering/dereplication methods, such as DADA2, or for re-clustering a
+   FeatureTable at a lower percent identity than it was originally clustered
+   at. When a group of features in the input table are clustered into a single
+   feature, the frequency of that single feature in a given sample is the sum
+   of the frequencies of the features that were clustered in that sample.
+   Feature identifiers and sequences will be inherited from the centroid
+   feature of each cluster. See the vsearch documentation for details on how
+   sequence clustering is performed.
+
+   Parameters
+   ----------
+   sequences : FeatureData[Sequence]
+       The sequences corresponding to the features in table.
+   table : FeatureTable[Frequency]
+       The feature table to be clustered.
+   perc_identity : Float % Range(0, 1, inclusive_start=False, inclusive_end=True)
+       The percent identity at which clustering should be performed. This
+       parameter maps to vsearch's --id parameter.
+   threads : Int % Range(0, 256, inclusive_end=True), optional
+       The number of threads to use for computation. Passing 0 will launch one
+       thread per CPU core.
+
+   Returns
+   -------
+   clustered_table : FeatureTable[Frequency]
+       The table following clustering of features.
+   clustered_sequences : FeatureData[Sequence]
+       Sequences representing clustered features.</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,78 @@
+beta-group-significance: Beta diversity group significance
+==========================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime diversity beta-group-significance [OPTIONS]
+
+     Determine whether groups of samples are significantly different from one
+     another using a permutation-based statistical test.
+
+   Options:
+     --i-distance-matrix PATH        Artifact: DistanceMatrix  [required]
+                                     Matrix
+                                     of distances between pairs of samples.
+     --m-metadata-file PATH          Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata  [required]
+     --m-metadata-category TEXT      Category from metadata file or artifact
+                                     viewable as metadata  [required]
+                                     The sample
+                                     metadata.
+     --p-method [permanova|anosim]   [default: permanova]
+                                     The group significance
+                                     test to be applied.
+     --p-pairwise / --p-no-pairwise  [default: False]
+                                     Perform pairwise tests
+                                     between all pairs of groups in addition to
+                                     the test across all groups. This can be very
+                                     slow if there are a lot of groups in the
+                                     category.
+     --p-permutations INTEGER        [default: 999]
+                                     The number of permutations to
+                                     be run when computing p-values.
+     --o-visualization PATH          Visualization [required if not passing
+                                     --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Beta diversity group significance
+
+   Determine whether groups of samples are significantly different from one
+   another using a permutation-based statistical test.
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   metadata : MetadataCategory
+       The sample metadata.
+   method : Str % Choices({'anosim', 'permanova'}), optional
+       The group significance test to be applied.
+   pairwise : Bool, optional
+       Perform pairwise tests between all pairs of groups in addition to the
+       test across all groups. This can be very slow if there are a lot of
+       groups in the category.
+   permutations : Int, optional
+       The number of permutations to be run when computing p-values.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,113 @@
+beta-rarefaction: Beta diversity rarefaction
+============================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime diversity beta-rarefaction [OPTIONS]
+
+     Repeatedly rarefy a feature table to compare beta diversity results across
+     and within rarefaction depths.
+
+     This visualizer provides a heatmap showing the correlation between beta
+     diversity distance matrices computed by repeatedly rarefying at a given
+     sampling depth.
+
+     Note: currently only a single sampling depth is supported. A range of
+     sampling depths (e.g. similar to `alpha_rarefaction`) will be supported in
+     the future to allow comparison between sampling depths. Additional
+     visualizations will be supported, such as Emperor plots and UPGMA trees.
+
+   Options:
+     --i-table PATH                  Artifact: FeatureTable[Frequency]
+                                     [required]
+                                     Feature table upon which to
+                                     perform beta diversity rarefaction analyses.
+     --p-metric [unweighted_unifrac|seuclidean|sokalmichener|weighted_unifrac|chebyshev|euclidean|sokalsneath|dice|rogerstanimoto|cityblock|hamming|matching|cosine|kulsinski|sqeuclidean|wminkowski|mahalanobis|jaccard|yule|correlation|canberra|braycurtis|russellrao]
+                                     [required]
+                                     The beta diversity metric to be
+                                     computed.
+     --p-sampling-depth INTEGER RANGE
+                                     [required]
+                                     The total frequency that each
+                                     sample should be rarefied to prior to
+                                     computing diversity metrics.
+     --p-iterations INTEGER RANGE    [default: 10]
+                                     Number of times to rarefy the
+                                     feature table at a given sampling depth.
+     --i-phylogeny PATH              Artifact: Phylogeny[Rooted]  [optional]
+                                     Phylogenetic tree containing tip identifiers
+                                     that correspond to the feature identifiers
+                                     in the table. This tree can contain tip ids
+                                     that are not present in the table, but all
+                                     feature ids in the table must be present in
+                                     this tree. [required for phylogenetic
+                                     metrics]
+     --p-correlation-method [spearman|pearson]
+                                     [default: spearman]
+                                     The Mantel correlation
+                                     test to be applied when computing
+                                     correlation between beta diversity distance
+                                     matrices.
+     --p-color-scheme [RdYlBu_r|PiYG_r|RdYlGn_r|PuOr_r|RdBu|PRGn|RdBu_r|RdYlBu|PiYG|PuOr|RdGy_r|PRGn_r|RdYlGn|BrBG|RdGy|BrBG_r]
+                                     [default: BrBG]
+                                     The matplotlib color scheme
+                                     to generate the heatmap with.
+     --o-visualization PATH          Visualization [required if not passing
+                                     --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Beta diversity rarefaction
+
+   Repeatedly rarefy a feature table to compare beta diversity results across
+   and within rarefaction depths.  This visualizer provides a heatmap showing
+   the correlation between beta diversity distance matrices computed by
+   repeatedly rarefying at a given sampling depth.  Note: currently only a
+   single sampling depth is supported. A range of sampling depths (e.g.
+   similar to `alpha_rarefaction`) will be supported in the future to allow
+   comparison between sampling depths. Additional visualizations will be
+   supported, such as Emperor plots and UPGMA trees.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table upon which to perform beta diversity rarefaction
+       analyses.
+   phylogeny : Phylogeny[Rooted], optional
+       Phylogenetic tree containing tip identifiers that correspond to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree. [required for phylogenetic metrics]
+   metric : Str % Choices({'braycurtis', 'canberra', 'chebyshev', 'cityblock', 'correlation', 'cosine', 'dice', 'euclidean', 'hamming', 'jaccard', 'kulsinski', 'mahalanobis', 'matching', 'rogerstanimoto', 'russellrao', 'seuclidean', 'sokalmichener', 'sokalsneath', 'sqeuclidean', 'unweighted_unifrac', 'weighted_unifrac', 'wminkowski', 'yule'})
+       The beta diversity metric to be computed.
+   sampling_depth : Int % Range(1, None)
+       The total frequency that each sample should be rarefied to prior to
+       computing diversity metrics.
+   iterations : Int % Range(2, None), optional
+       Number of times to rarefy the feature table at a given sampling depth.
+   correlation_method : Str % Choices({'pearson', 'spearman'}), optional
+       The Mantel correlation test to be applied when computing correlation
+       between beta diversity distance matrices.
+   color_scheme : Str % Choices({'BrBG', 'BrBG_r', 'PRGn', 'PRGn_r', 'PiYG', 'PiYG_r', 'PuOr', 'PuOr_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r'}), optional
+       The matplotlib color scheme to generate the heatmap with.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>
