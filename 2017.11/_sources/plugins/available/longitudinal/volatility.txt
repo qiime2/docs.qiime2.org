@@ -1,0 +1,123 @@
+volatility: Volatility analysis
+===============================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime longitudinal volatility [OPTIONS]
+
+     Plot control chart of a single dependent variable, "metric", across
+     multiple groups contained in sample metadata column "group_column".
+
+   Options:
+     --m-metadata-file PATH          Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata  [required]
+                                     Sample metadata file containing
+                                     individual_id_column.
+     --p-group-column TEXT           [required]
+                                     Metadata column on which to
+                                     separate groups for comparison
+     --p-metric TEXT                 [required]
+                                     Numerical metadata or artifact
+                                     column to test.
+     --p-state-column TEXT           [required]
+                                     Metadata column containing state
+                                     (e.g., Time) across which samples are
+                                     paired.
+     --p-individual-id-column TEXT   [required]
+                                     Metadata column containing IDs
+                                     for individual subjects.
+     --i-table PATH                  Artifact: FeatureTable[RelativeFrequency]
+                                     [optional]
+                                     Feature table to optionally use
+                                     for paired comparisons.
+     --p-palette [Pastel2|viridis|tab20b|tab20c|magma|inferno|Paired|Set1|Accent|tab20|Set3|Pastel1|Set2|plasma|terrain|Dark2|rainbow|tab10]
+                                     [default: Set1]
+                                     Color palette to use for
+                                     generating boxplots.
+     --p-ci FLOAT                    [default: 95]
+                                     Size of the confidence
+                                     interval to plot on control chart.
+     --p-plot-control-limits / --p-no-plot-control-limits
+                                     [default: True]
+                                     Plot global mean and control
+                                     limits (2X and 3X standard deviations).
+     --p-xtick-interval INTEGER      [optional]
+                                     Interval between major tick marks
+                                     on x axis. Defaults to 1, or autoscales to
+                                     show up to 30 ticks if data contain more
+                                     than 30 x-axis values.
+     --p-yscale [symlog|log|logit|linear]
+                                     [default: linear]
+                                     y-axis scaling strategy to
+                                     apply.
+     --p-spaghetti [mean|no|yes]     [default: no]
+                                     Co-plot spaghetti plot of per-
+                                     individual trajectories. If replicates exist
+                                     for an individual at the same state, "mean"
+                                     will plot the mean of replicates; "yes" will
+                                     plot all replicates on the same line,
+                                     creating jagged spaghetti.
+     --o-visualization PATH          Visualization [required if not passing
+                                     --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Volatility analysis
+
+   Plot control chart of a single dependent variable, "metric", across
+   multiple groups contained in sample metadata column "group_column".
+
+   Parameters
+   ----------
+   table : FeatureTable[RelativeFrequency], optional
+       Feature table to optionally use for paired comparisons.
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   group_column : Str
+       Metadata column on which to separate groups for comparison
+   metric : Str
+       Numerical metadata or artifact column to test.
+   state_column : Str
+       Metadata column containing state (e.g., Time) across which samples are
+       paired.
+   individual_id_column : Str
+       Metadata column containing IDs for individual subjects.
+   palette : Str % Choices({'Accent', 'Dark2', 'Paired', 'Pastel1', 'Pastel2', 'Set1', 'Set2', 'Set3', 'inferno', 'magma', 'plasma', 'rainbow', 'tab10', 'tab20', 'tab20b', 'tab20c', 'terrain', 'viridis'}), optional
+       Color palette to use for generating boxplots.
+   ci : Float % Range(0, 100), optional
+       Size of the confidence interval to plot on control chart.
+   plot_control_limits : Bool, optional
+       Plot global mean and control limits (2X and 3X standard deviations).
+   xtick_interval : Int, optional
+       Interval between major tick marks on x axis. Defaults to 1, or
+       autoscales to show up to 30 ticks if data contain more than 30 x-axis
+       values.
+   yscale : Str % Choices({'linear', 'log', 'logit', 'symlog'}), optional
+       y-axis scaling strategy to apply.
+   spaghetti : Str % Choices({'mean', 'no', 'yes'}), optional
+       Co-plot spaghetti plot of per-individual trajectories. If replicates
+       exist for an individual at the same state, "mean" will plot the mean of
+       replicates; "yes" will plot all replicates on the same line, creating
+       jagged spaghetti.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

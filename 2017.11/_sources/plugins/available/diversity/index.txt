@@ -1,0 +1,108 @@
+diversity
+=========
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin supports metrics for calculating and exploring community alpha and beta diversity through statistics and visualizations in the context of sample metadata.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.11.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-diversity" rel="noopener">https://github.com/qiime2/q2-diversity</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           Unweighted UniFrac: Lozupone and Knight 2005 Appl Environ Microbiol; DOI: 10.1128/AEM.71.12.8228-8235.2005.<br/>
+           
+           Weighted UniFrac: Lozupone et al. 2007 Appl Environ Microbiol; DOI: 10.1128/AEM.01996-06.<br/>
+           
+           Variance adjusted UniFrac: Chang et al. BMC Bioinformatics 2011 <a href="https://doi.org/10.1186/1471-2105-12-118" rel="noopener">https://doi.org/10.1186/1471-2105-12-118</a>.<br/>
+           
+           Generalized UniFrac: Chen et al. 2012 Bioinformatics; DOI: 10.1093/bioinformatics/bts342<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+Pipelines
+---------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   core-metrics
+   
+   core-metrics-phylogenetic
+   
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   alpha
+   
+   alpha-phylogenetic
+   
+   beta
+   
+   beta-phylogenetic
+   
+   beta-phylogenetic-alt
+   
+   filter-distance-matrix
+   
+   pcoa
+   
+
+
+
+Visualizers
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   alpha-correlation
+   
+   alpha-group-significance
+   
+   alpha-rarefaction
+   
+   beta-group-significance
+   
+   beta-rarefaction
+   
+   bioenv
+   
+   mantel
+   

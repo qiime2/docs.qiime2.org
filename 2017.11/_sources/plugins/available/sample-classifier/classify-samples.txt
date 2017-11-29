@@ -1,0 +1,144 @@
+classify-samples: Supervised learning classifier.
+=================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime sample-classifier classify-samples [OPTIONS]
+
+     Predicts a categorical sample metadata category using a supervised
+     learning classifier. Splits input data into training and test sets. The
+     training set is used to train and test the estimator using a stratified
+     k-fold cross-validation scheme. This includes optional steps for automated
+     feature extraction and hyperparameter optimization. The test set validates
+     classification accuracy of the optimized estimator. Outputs classification
+     results for test set. For more details on the learning  algorithm, see
+     http://scikit-learn.org/stable/supervised_learning.html
+
+   Options:
+     --i-table PATH                  Artifact: FeatureTable[Frequency]
+                                     [required]
+                                     Feature table containing all
+                                     features that should be used for target
+                                     prediction.
+     --m-metadata-file PATH          Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata  [required]
+     --m-metadata-category TEXT      Category from metadata file or artifact
+                                     viewable as metadata  [required]
+                                     Sample
+                                     metadata category to use as prediction
+                                     target.
+     --p-test-size FLOAT             [default: 0.2]
+                                     Fraction of input samples to
+                                     exclude from training set and use for
+                                     classifier testing.
+     --p-step FLOAT                  [default: 0.05]
+                                     If
+                                     optimize_feature_selection is True, step is
+                                     the percentage of features to remove at each
+                                     iteration.
+     --p-cv INTEGER RANGE            [default: 5]
+                                     Number of k-fold cross-
+                                     validations to perform.
+     --p-random-state INTEGER        [optional]
+                                     Seed used by random number
+                                     generator.
+     --p-n-jobs INTEGER              [default: 1]
+                                     Number of jobs to run in
+                                     parallel.
+     --p-n-estimators INTEGER RANGE  [default: 100]
+                                     Number of trees to grow for
+                                     estimation. More trees will improve
+                                     predictive accuracy up to a threshold level,
+                                     but will also increase time and memory
+                                     requirements. This parameter only affects
+                                     ensemble estimators, such as Random Forest,
+                                     AdaBoost, ExtraTrees, and GradientBoosting.
+     --p-estimator [RandomForestClassifier|GradientBoostingClassifier|ExtraTreesClassifier|AdaBoostClassifier|LinearSVC|KNeighborsClassifier|SVC]
+                                     [default: RandomForestClassifier]
+                                     Estimator
+                                     method to use for sample prediction.
+     --p-optimize-feature-selection / --p-no-optimize-feature-selection
+                                     [default: False]
+                                     Automatically optimize
+                                     input feature selection using recursive
+                                     feature elimination.
+     --p-parameter-tuning / --p-no-parameter-tuning
+                                     [default: False]
+                                     Automatically tune
+                                     hyperparameters using random grid search.
+     --p-palette [OrangeRed|GreenBlue|drifting|daydream|copper|enigma|mysteriousstains|PurpleBlue|PurpleRed|melancholy|solano|inferno|ambition|greyscale|eros|spectre|navarro|verve|plasma|sirocco|BluePurple|deepblue|YellowOrangeRed|viridis|dandelions|magma|YellowGreen|RedPurple|summer|YellowOrangeBrown]
+                                     [default: sirocco]
+                                     The color palette to use
+                                     for plotting.
+     --o-visualization PATH          Visualization [required if not passing
+                                     --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Supervised learning classifier.
+
+   Predicts a categorical sample metadata category using a supervised learning
+   classifier. Splits input data into training and test sets. The training set
+   is used to train and test the estimator using a stratified k-fold cross-
+   validation scheme. This includes optional steps for automated feature
+   extraction and hyperparameter optimization. The test set validates
+   classification accuracy of the optimized estimator. Outputs classification
+   results for test set. For more details on the learning  algorithm, see
+   http://scikit-learn.org/stable/supervised_learning.html
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table containing all features that should be used for target
+       prediction.
+   metadata : MetadataCategory
+       Sample metadata category to use as prediction target.
+   test_size : Float % Range(0.0, 1.0, inclusive_start=False), optional
+       Fraction of input samples to exclude from training set and use for
+       classifier testing.
+   step : Float % Range(0.0, 1.0, inclusive_start=False), optional
+       If optimize_feature_selection is True, step is the percentage of
+       features to remove at each iteration.
+   cv : Int % Range(1, None), optional
+       Number of k-fold cross-validations to perform.
+   random_state : Int, optional
+       Seed used by random number generator.
+   n_jobs : Int, optional
+       Number of jobs to run in parallel.
+   n_estimators : Int % Range(1, None), optional
+       Number of trees to grow for estimation. More trees will improve
+       predictive accuracy up to a threshold level, but will also increase
+       time and memory requirements. This parameter only affects ensemble
+       estimators, such as Random Forest, AdaBoost, ExtraTrees, and
+       GradientBoosting.
+   estimator : Str % Choices({'AdaBoostClassifier', 'ExtraTreesClassifier', 'GradientBoostingClassifier', 'KNeighborsClassifier', 'LinearSVC', 'RandomForestClassifier', 'SVC'}), optional
+       Estimator method to use for sample prediction.
+   optimize_feature_selection : Bool, optional
+       Automatically optimize input feature selection using recursive feature
+       elimination.
+   parameter_tuning : Bool, optional
+       Automatically tune hyperparameters using random grid search.
+   palette : Str % Choices({'BluePurple', 'GreenBlue', 'OrangeRed', 'PurpleBlue', 'PurpleRed', 'RedPurple', 'YellowGreen', 'YellowOrangeBrown', 'YellowOrangeRed', 'ambition', 'copper', 'dandelions', 'daydream', 'deepblue', 'drifting', 'enigma', 'eros', 'greyscale', 'inferno', 'magma', 'melancholy', 'mysteriousstains', 'navarro', 'plasma', 'sirocco', 'solano', 'spectre', 'summer', 'verve', 'viridis'}), optional
+       The color palette to use for plotting.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>
