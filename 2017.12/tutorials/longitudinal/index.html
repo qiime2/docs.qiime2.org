@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Performing longitudinal and paired sample comparisons with q2-longitudinal &#8212; QIIME 2 2017.12.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2017.12.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="top" title="QIIME 2 2017.12.0 documentation" href="../../" />
+    <link rel="up" title="Tutorials" href="../" />
+    <link rel="next" title="Interfaces" href="../../interfaces/" />
+    <link rel="prev" title="Predicting sample metadata values with q2-sample-classifier" href="../sample-classifier/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="performing-longitudinal-and-paired-sample-comparisons-with-q2-longitudinal">
+<h1>Performing longitudinal and paired sample comparisons with q2-longitudinal<a class="headerlink" href="#performing-longitudinal-and-paired-sample-comparisons-with-q2-longitudinal" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a>.</p>
+</div>
+<p>This tutorial will demonstrate the various features of <code class="docutils literal"><span class="pre">q2-longitudinal</span></code>, a plugin that supports statistical and visual comparisons of longitudinal study designs and paired samples, to determine if/how samples change between observational &#8220;states&#8221;. &#8220;States&#8221; will most commonly be related to time or an environmental gradient, and for paired analyses (<code class="docutils literal"><span class="pre">pairwise-distances</span></code> and <code class="docutils literal"><span class="pre">pairwise-differences</span></code>) the sample pairs should typically consist of the same individual subject observed at two different time points. For example, patients in a clinical study whose stool samples are collected before and after receiving treatment.</p>
+<p>&#8220;States&#8221; can also commonly be methodological, in which case sample pairs will usually be the same individual at the same time with two different methods. For example, q2-longitudinal could compare the effects of different collection methods, storage methods, DNA extraction methods, or any bioinformatic processing steps on the feature composition of individual samples.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Many of the actions in q2-longitudinal take a <code class="docutils literal"><span class="pre">metric</span></code> value as input, which is usually a column name in a metadata file or a metadata-transformable artifact (including alpha diversity vectors, PCoA results, and many other QIIME 2 artifacts), or a feature ID in a feature table. The names of valid <code class="docutils literal"><span class="pre">metric</span></code> values in metadata files and metadata-transformable artifacts can be checked with the <a class="reference internal" href="../metadata/"><span class="doc">metadata tabulate</span></a> command. Valid feature names (to use as <code class="docutils literal"><span class="pre">metric</span></code> values associated with a feature table) can be checked with the <code class="docutils literal"><span class="pre">feature-data</span> <span class="pre">summarize</span></code> command.</p>
+</div>
+<p>In the examples below, we use data from the <a class="reference external" href="https://doi.org/10.1126/scitranslmed.aad7121">ECAM study</a>, a longitudinal study of infants&#8217; and mothers&#8217; microbiota from birth through 2 years of life. First let&#8217;s create a new directory and download the relevant tutorial data.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>mkdir longitudinal-tutorial
+<span class="nb">cd</span> longitudinal-tutorial
+</pre></div>
+</div>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2017.12/tutorials/longitudinal/sample_metadata.tsv">
+            https://data.qiime2.org/2017.12/tutorials/longitudinal/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ecam-sample-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget -O "ecam-sample-metadata.tsv" "https://data.qiime2.org/2017.12/tutorials/longitudinal/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL "https://data.qiime2.org/2017.12/tutorials/longitudinal/sample_metadata.tsv" > "ecam-sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2017.12/tutorials/longitudinal/ecam_shannon.qza">
+            https://data.qiime2.org/2017.12/tutorials/longitudinal/ecam_shannon.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> shannon.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget -O "shannon.qza" "https://data.qiime2.org/2017.12/tutorials/longitudinal/ecam_shannon.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL "https://data.qiime2.org/2017.12/tutorials/longitudinal/ecam_shannon.qza" > "shannon.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2017.12/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza">
+            https://data.qiime2.org/2017.12/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> unweighted_unifrac_distance_matrix.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget -O "unweighted_unifrac_distance_matrix.qza" "https://data.qiime2.org/2017.12/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL "https://data.qiime2.org/2017.12/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza" > "unweighted_unifrac_distance_matrix.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="section" id="pairwise-difference-comparisons">
+<h2>Pairwise difference comparisons<a class="headerlink" href="#pairwise-difference-comparisons" title="Permalink to this headline">¶</a></h2>
+<p>Pairwise difference tests determine whether the value of a specific metric changed significantly between pairs of paired samples (e.g., pre- and post-treatment).</p>
+<p>This visualizer currently supports comparison of feature abundance (e.g., microbial sequence variants or taxa) in a feature table, or of metadata values in a sample metadata file. Alpha diversity values (e.g., observed sequence variants) and beta diversity values (e.g., principal coordinates) are useful metrics for comparison with these tests, and should be contained in one of the metadata files given as input. In the example below, we will test whether alpha diversity (Shannon diversity index) changed significantly between two different time points in the ECAM data according to delivery mode.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal pairwise-differences <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file shannon.qza <span class="se">\</span>
+  --p-metric shannon <span class="se">\</span>
+  --p-group-column delivery <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-state-1 <span class="m">0</span> <span class="se">\</span>
+  --p-state-2 <span class="m">12</span> <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --o-visualization pairwise-differences.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><code class="file docutils literal"><span class="pre">shannon.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fshannon.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/shannon.qza">download</a></li>
+<li><code class="file docutils literal"><span class="pre">unweighted_unifrac_distance_matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Funweighted_unifrac_distance_matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza">download</a></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">pairwise-differences.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fpairwise-differences.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/pairwise-differences.qzv">download</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="pairwise-distance-comparisons">
+<h2>Pairwise distance comparisons<a class="headerlink" href="#pairwise-distance-comparisons" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">pairwise-distances</span></code> visualizer also assesses changes between paired samples from two different &#8220;states&#8221;, but instead of taking a metadata column or artifact as input, it operates on a distance matrix to assess the distance between &#8220;pre&#8221; and &#8220;post&#8221; sample pairs, and tests whether these paired differences are significantly different between different groups, as specified by the <code class="docutils literal"><span class="pre">group-column</span></code> parameter. Here we use this action to compare the stability of the microbiota compositions of vaginally born and cesarean-delivered infants over a 12-month time frame in the ECAM data set.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal pairwise-distances <span class="se">\</span>
+  --i-distance-matrix unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-group-column delivery <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-state-1 <span class="m">0</span> <span class="se">\</span>
+  --p-state-2 <span class="m">12</span> <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --o-visualization pairwise-distances.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">pairwise-distances.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fpairwise-distances.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/pairwise-distances.qzv">download</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="linear-mixed-effect-models">
+<h2>Linear mixed effect models<a class="headerlink" href="#linear-mixed-effect-models" title="Permalink to this headline">¶</a></h2>
+<p>Linear mixed effects (LME) models test the relationship between a single response variable and one or more independent variables, where observations are made across dependent samples, e.g., in repeated-measures sampling experiments. This implementation takes at least one numeric <code class="docutils literal"><span class="pre">state-column</span></code> (e.g., Time) and one or more comma-separated <code class="docutils literal"><span class="pre">group-categories</span></code> (which may be categorical or numeric; these are the fixed effects) as independent variables in a LME model, and plots regression plots of the response variable (&#8220;metric&#8221;) as a function of the state caregory and each group column. Additionally, the <code class="docutils literal"><span class="pre">individual-id-column</span></code> parameter should be a metadata column that indicates the individual subject/site that was sampled repeatedly. The response variable may either be a sample metadata mapping file column or a feature ID in the feature table. A comma-separated list of random effects can also be input to this action; a random intercept for each individual is included by default, but another common random effect that users may wish to use is a random slope for each individual, which can be set by using the <code class="docutils literal"><span class="pre">state-column</span></code> value as input to the <code class="docutils literal"><span class="pre">random-effects</span></code> parameter. Here we use LME to test whether alpha diversity (Shannon diversity index) changed over time and in response to delivery mode, diet, and sex in the ECAM data set.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal linear-mixed-effects <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file shannon.qza <span class="se">\</span>
+  --p-metric shannon <span class="se">\</span>
+  --p-group-categories delivery,diet,sex <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --o-visualization linear-mixed-effects.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">linear-mixed-effects.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Flinear-mixed-effects.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/linear-mixed-effects.qzv">download</a></li>
+</ul>
+</div>
+<p>The visualizer produced by this command contains several results. First, the input parameters are shown at the top of the visualization for convenience (e.g., when flipping through multiple visualizations it is useful to have a summary). Next, the &#8220;model summary&#8221; shows some descriptive information about the LME model that was trained. This just shows descriptive information about the &#8220;groups&#8221;;&nbsp;in this case, groups will be individuals (as set by the <code class="docutils literal"><span class="pre">--p-individual-id-column</span></code>). The main results to examine will be the &#8220;model results&#8221; below the &#8220;model summary&#8221;. These results summarize the effects of each fixed effect (and their interactions) on the dependent variable (shannon diversity). This table shows parameter estimates, estimate standard errors, z scores, P values (P&gt;|z|), and 95% confidence interval upper and lower bounds for each parameter. We see in this table that shannon diversity is significantly impacted by month of life and by diet, as well as several interacting factors. More information about LME models and the interpretation of these data can be found on the <a class="reference external" href="http://www.statsmodels.org/dev/mixed_linear.html">statsmodels LME description page</a>, which provides a number of useful technical references for further reading.</p>
+<p>Finally, scatter plots categorized by each &#8220;group column&#8221; are shown at the bottom of the visualization, with linear regression lines (plus 95% confidence interval in grey) for each group. If <code class="docutils literal"><span class="pre">--p-lowess</span></code> is enabled, instead locally weighted averages are shown for each group.</p>
+</div>
+<div class="section" id="volatility-analysis">
+<h2>Volatility analysis<a class="headerlink" href="#volatility-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Volatility analysis is a method for generating control charts to assess how volatile a dependent variable is over time (or a gradient) in one or more groups. Any metadata (including alpha and beta diversity artifacts) or <code class="docutils literal"><span class="pre">FeatureTable[RelativeFrequency]</span></code> feature can be used as the dependent variable (&#8220;metric&#8221;).</p>
+<p>Here we examine how variance in Shannon diversity changes across time in the ECAM cohort.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal volatility <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file shannon.qza <span class="se">\</span>
+  --p-metric shannon <span class="se">\</span>
+  --p-group-column delivery <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --o-visualization volatility.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">volatility.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fvolatility.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/volatility.qzv">download</a></li>
+</ul>
+</div>
+<p>The resulting visualization contains some basic results. First, the &#8220;Volatility test parameters&#8221; summarizes some key parameters, as well as global mean and standard deviation —&nbsp;these are measured across all samples, regardless of which group they are in.</p>
+<p>Second, control charts display the mean value of &#8220;metric&#8221; at each &#8220;state&#8221;. The first plot shown contains all samples, categorized by group (as defined by <code class="docutils literal"><span class="pre">group-column</span></code>); the following plots show each individual group, in order to show their individual control characteristics as described in the rest of this paragraph. The mean for all samples in each plot is shown as a black line. The &#8220;control limits&#8221;, 3 standard deviations above and below the mean, are shown as dashed lines. The &#8220;warning limits&#8221;, 2 standard deviations above and below the mean, are shown as dotted lines. The idea behind this plot is to show how a variable is changing over time (or a gradient) in relation to the mean. Large departures from the mean values can cross the warning/control limits, indicating a major disruption at that state; for example, antibiotic use or other disturbances impacting diversity could be tracked with these plots.</p>
+<p>Longitudinal values for each individual can also be plotted as spaghetti plots by setting the <code class="docutils literal"><span class="pre">spaghetti</span></code> parameter to &#8220;yes&#8221; or &#8220;mean&#8221;. If replicate samples are collected from an individual at any time point, &#8220;yes&#8221; causes replicates for each value to be plotted; &#8220;mean&#8221; plots the mean value for that individual at that time point.</p>
+<p>This visualizer currently only generates control and spaghetti charts, which are a useful <strong>qualitative</strong> approach for visually identifying abnormal time points; accompanying statistical tests may be added in future releases.</p>
+</div>
+<div class="section" id="first-differencing-to-track-rate-of-change">
+<h2>First differencing to track rate of change<a class="headerlink" href="#first-differencing-to-track-rate-of-change" title="Permalink to this headline">¶</a></h2>
+<p>Another way to view time series data is by assessing how the rate of change differs over time. We can do this through calculating first differences, which is the magnitude of change between successive time points. If <span class="math">\(Y_\text{t}\)</span> is the value of metric <span class="math">\(Y\)</span> at time <span class="math">\(t\)</span>, the first difference at time <span class="math">\(t\)</span>, <span class="math">\({\Delta}Y_\text{t} = Y_\text{t} - Y_\text{t-1}\)</span>. This transformation is performed in the <code class="docutils literal"><span class="pre">first-differences</span></code> method in <code class="docutils literal"><span class="pre">q2-longitudinal</span></code>.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal first-differences <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file shannon.qza <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-metric shannon <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --o-first-differences shannon-first-differences.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">shannon-first-differences.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fshannon-first-differences.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/shannon-first-differences.qza">download</a></li>
+</ul>
+</div>
+<p>This outputs a <code class="docutils literal"><span class="pre">SampleData[FirstDifferences]</span></code> artifact, which can then be viewed, e.g., with the <code class="docutils literal"><span class="pre">volatility</span></code> visualizer or analyzed with <code class="docutils literal"><span class="pre">linear-mixed-effects</span></code> or other methods.</p>
+<p>A similar method is <code class="docutils literal"><span class="pre">first-distances</span></code>, which instead identifies the beta diversity distances between successive samples from the same subject. The pairwise distance between all samples can already be calculated by the <code class="docutils literal"><span class="pre">beta</span></code> or <code class="docutils literal"><span class="pre">core-metrics</span></code> methods in <code class="docutils literal"><span class="pre">q2-diversity</span></code>, so this method simply identifies the distances between successive samples collected from the same subject and outputs this series of values as metadata that can be consumed by other methods.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal first-distances <span class="se">\</span>
+  --i-distance-matrix unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --o-first-distances first-distances.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">first-distances.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Ffirst-distances.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/first-distances.qza">download</a></li>
+</ul>
+</div>
+<p>This output can be used in the same way as the output of <code class="docutils literal"><span class="pre">first-differences</span></code>. The output of <code class="docutils literal"><span class="pre">first-distances</span></code> is particularly empowering, though, because it allows us to analyze longitudinal changes in beta diversity using actions that cannot operate directly on a distance matrix, such as <code class="docutils literal"><span class="pre">linear-mixed-effects</span></code>.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal linear-mixed-effects <span class="se">\</span>
+  --m-metadata-file first-distances.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-metric Distance <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-group-categories delivery,diet <span class="se">\</span>
+  --o-visualization first-distances-LME.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">first-distances-LME.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Ffirst-distances-LME.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/first-distances-LME.qzv">download</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="tracking-rate-of-change-from-static-timepoints">
+<h2>Tracking rate of change from static timepoints<a class="headerlink" href="#tracking-rate-of-change-from-static-timepoints" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">first-differences</span></code> and <code class="docutils literal"><span class="pre">first-distances</span></code> methods both have an optional &#8220;baseline&#8221; parameter to instead calculate differences from a static point (e.g., baseline or a time point when a treatment is administered: <span class="math">\({\Delta}Y_\text{t} = Y_\text{t} - Y_\text{0}\)</span>). Calculating baseline differences can help tease apart noisy longitudinal data to reveal underlying trends in individual subjects or highlight significant experimental factors related to changes in diversity or other dependent variables.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal first-distances <span class="se">\</span>
+  --i-distance-matrix unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --p-baseline <span class="m">0</span> <span class="se">\</span>
+  --o-first-distances first-distances-baseline-0.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">first-distances-baseline-0.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Ffirst-distances-baseline-0.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/first-distances-baseline-0.qza">download</a></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>Fun fact!</strong> We can also use the <code class="docutils literal"><span class="pre">first-distances</span></code> method to track longitudinal change in the proportion of features that are shared between an individual’s samples. This can be performed by calculating pairwise Jaccard distance (proportion of features that are not shared) between each pair of samples and using this as input to <code class="docutils literal"><span class="pre">first-distances</span></code>. This is particularly useful for pairing with the <code class="docutils literal"><span class="pre">baseline</span></code> parameter, e.g., to determine how unique features are lost/gained over the course of an experiment.</p>
+</div>
+</div>
+<div class="section" id="non-parametric-microbial-interdependence-test-nmit">
+<h2>Non-parametric microbial interdependence test (NMIT)<a class="headerlink" href="#non-parametric-microbial-interdependence-test-nmit" title="Permalink to this headline">¶</a></h2>
+<p>Within microbial communities, microbial populations do not exist in isolation but instead form complex ecological interaction webs. Whether these interdependence networks display the same temporal characteristics within subjects from the same group may indicate divergent temporal trajectories. NMIT evaluates how interdependencies of features (e.g., microbial taxa, sequence variants, or OTUs) within a community might differ over time between sample groups. NMIT performs a nonparametric microbial interdependence test to determine longitudinal sample similarity as a function of temporal microbial composition. For each subject, NMIT computes pairwise correlations between each pair of features. Between-subject distances are then computed based on a distance norm between each subject&#8217;s microbial interdependence correlation matrix. For more details and citation, please see <a class="reference external" href="https://doi.org/10.1002/gepi.22065">Zhang et al., 2017</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">NMIT, as with most longitudinal methods, largely depends on the quality of the input data. This method will only work for longitudinal data (i.e., the same subjects are sampled repeatedly over time). To make the method robust, we suggest a minimum of 5-6 samples (time points) per subject, but the more the merrier. NMIT does not require that samples are collected at identical time points (and hence is robust to missing samples) but this may impact data quality if highly undersampled subjects are included, or if subjects&#8217; sampling times do not overlap in biologically meaningful ways. It is up to the users to ensure that their data are high quality and the methods are used in a biologically relevant fashion.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">NMIT can take a long time to run on very large feature tables. Removing low-abundance features and collapsing feature tables on taxonomy (e.g., to genus level) will improve runtime.</p>
+</div>
+<p>First let&#8217;s download a feature table to test. Here we will test genus-level taxa that exhibit a relative abundance &gt; 0.1% in more than 15% of the total samples.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2017.12/tutorials/longitudinal/ecam_table_taxa.qza">
+            https://data.qiime2.org/2017.12/tutorials/longitudinal/ecam_table_taxa.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ecam-table-taxa.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget -O "ecam-table-taxa.qza" "https://data.qiime2.org/2017.12/tutorials/longitudinal/ecam_table_taxa.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL "https://data.qiime2.org/2017.12/tutorials/longitudinal/ecam_table_taxa.qza" > "ecam-table-taxa.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Now we are ready run NMIT. The output of this command is a distance matrix that we can pass to other QIIME2 commands for significance testing and visualization.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime longitudinal nmit <span class="se">\</span>
+  --i-table ecam-table-taxa.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-corr-method pearson <span class="se">\</span>
+  --o-distance-matrix nmit-dm.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">ecam-table-taxa.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fecam-table-taxa.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/ecam-table-taxa.qza">download</a></li>
+<li><code class="file docutils literal"><span class="pre">nmit-dm.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fnmit-dm.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/nmit-dm.qza">download</a></li>
+</ul>
+</div>
+<p>Now let&#8217;s put that distance matrix to work. First we will perform PERMANOVA tests to evaluate whether between-group distances are larger than within-group distance.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">NMIT computes between-subject distances across all time points, so each subject (as defined the <code class="docutils literal"><span class="pre">--p-individual-id-column</span></code> parameter used above) gets compressed into a single &#8220;sample&#8221; representing that subject&#8217;s longitudinal microbial interdependence. This new &#8220;sample&#8221; will be labeled with the <code class="docutils literal"><span class="pre">SampleID</span></code> of one of the subjects with a matching <code class="docutils literal"><span class="pre">individual-id</span></code>; this is done for the convenience of passing this distance matrix to downstream steps without needing to generate a new sample metadata file but it means that you must <strong>pay attention</strong>. <strong>For significance testing and visualization, only use group categories that are uniform across each</strong> <code class="docutils literal"><span class="pre">individual-id</span></code>. <strong>DO NOT ATTEMPT TO USE METADATA CATEGORIES THAT VARY OVER TIME OR BAD THINGS WILL HAPPEN.</strong> For example, in the tutorial metadata a patient is labeled <code class="docutils literal"><span class="pre">antiexposedall==y</span></code> only after antibiotics have been used; this is a category that you should not use, as it varies over time. Now have fun and be responsible.</p>
+</div>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime diversity beta-group-significance <span class="se">\</span>
+  --i-distance-matrix nmit-dm.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-category delivery <span class="se">\</span>
+  --o-visualization nmit.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">nmit.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fnmit.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/nmit.qzv">download</a></li>
+</ul>
+</div>
+<p>Finally, we can compute principal coordinates and use Emperor to visualize similarities among <strong>subjects</strong> (not individual samples; see the note above).</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime diversity pcoa <span class="se">\</span>
+  --i-distance-matrix nmit-dm.qza <span class="se">\</span>
+  --o-pcoa nmit-pc.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">nmit-pc.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fnmit-pc.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/nmit-pc.qza">download</a></li>
+</ul>
+</div>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime emperor plot <span class="se">\</span>
+  --i-pcoa nmit-pc.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --o-visualization nmit-emperor.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">nmit-emperor.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2017.12%2Fdata%2Ftutorials%2Flongitudinal%2Fnmit-emperor.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2017.12/data/tutorials/longitudinal/nmit-emperor.qzv">download</a></li>
+</ul>
+</div>
+<p>So there it is. We can use PERMANOVA test or other distance-based statistical tests to determine whether groups exhibit different longitudinal microbial interdependence relationships, and PCoA/emperor to visualize the relationships among groups of subjects. <strong>Don&#8217;t forget the caveats mentioned above about using and interpreting NMIT</strong>. Now be safe and have fun.</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">&#8220;Moving Pictures&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">&#8220;Atacama soil microbiome&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2017, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

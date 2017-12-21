@@ -1,0 +1,72 @@
+barplot: Visualize taxonomy with an interactive bar plot
+========================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime taxa barplot [OPTIONS]
+
+     This visualizer produces an interactive barplot visualization of
+     taxonomies. Interactive features include multi-level sorting, plot
+     recoloring, category selection/highlighting, sample relabeling, and SVG
+     figure export.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     Feature table to visualize at various
+                                     taxonomic levels.  [required]
+     --i-taxonomy ARTIFACT PATH FeatureData[Taxonomy]
+                                     Taxonomic annotations for features in the
+                                     provided feature table. All features in the
+                                     feature table must have a corresponding
+                                     taxonomic annotation. Taxonomic annotations
+                                     that are not present in the feature table
+                                     will be ignored.  [required]
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. The sample
+                                     metadata.  [required]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Visualize taxonomy with an interactive bar plot
+
+   This visualizer produces an interactive barplot visualization of
+   taxonomies. Interactive features include multi-level sorting, plot
+   recoloring, category selection/highlighting, sample relabeling, and SVG
+   figure export.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table to visualize at various taxonomic levels.
+   taxonomy : FeatureData[Taxonomy]
+       Taxonomic annotations for features in the provided feature table. All
+       features in the feature table must have a corresponding taxonomic
+       annotation. Taxonomic annotations that are not present in the feature
+       table will be ignored.
+   metadata : Metadata
+       The sample metadata.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

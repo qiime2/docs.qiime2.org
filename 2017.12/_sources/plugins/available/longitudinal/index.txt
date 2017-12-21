@@ -1,0 +1,76 @@
+longitudinal
+============
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin supports methods for analysis of time series analysis, involving either paired sample comparisons or longitudinal study designs.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.12.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-longitudinal" rel="noopener">https://github.com/qiime2/q2-longitudinal</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           q2-longitudinal: a QIIME 2 plugin for longitudinal and paired-sample analyses of microbiome data. Nicholas Bokulich, Yilong Zhang, Matthew Dillon, Jai Ram Rideout, Evan Bolyen, Huilin Li, Paul Albert, J Gregory Caporaso. bioRxiv 223974; doi: <a href="https://doi.org/10.1101/223974" rel="noopener">https://doi.org/10.1101/223974</a><br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   first-differences
+   
+   first-distances
+   
+   nmit
+   
+
+
+
+Visualizers
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   linear-mixed-effects
+   
+   pairwise-differences
+   
+   pairwise-distances
+   
+   volatility
+   
