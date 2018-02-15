@@ -1,0 +1,64 @@
+assign-ids: Assigns ids on internal nodes in the tree, and makes sure that they are consistent with the table columns.
+======================================================================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime gneiss assign-ids [OPTIONS]
+
+     Assigns UUIDs to uniquely identify internal nodes in the tree.  Also
+     corrects for polytomies to create strictly bifurcating trees and aligns
+     the table columns with the tree tip names
+
+   Options:
+     --i-input-table ARTIFACT PATH FeatureTable[Frequency]
+                                     The input table of counts.  [required]
+     --i-input-tree ARTIFACT PATH Phylogeny[Rooted]
+                                     The input tree with potential missing ids.
+                                     [required]
+     --o-output-table ARTIFACT PATH FeatureTable[Frequency]
+                                     A table with features matching the tree
+                                     tips.  [required if not passing --output-
+                                     dir]
+     --o-output-tree ARTIFACT PATH Hierarchy
+                                     A tree with uniquely identifying ids.
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Assigns ids on internal nodes in the tree, and makes sure that they are
+   consistent with the table columns.
+
+   Assigns UUIDs to uniquely identify internal nodes in the tree.  Also
+   corrects for polytomies to create strictly bifurcating trees and aligns the
+   table columns with the tree tip names
+
+   Parameters
+   ----------
+   input_table : FeatureTable[Frequency]
+       The input table of counts.
+   input_tree : Phylogeny[Rooted]
+       The input tree with potential missing ids.
+
+   Returns
+   -------
+   output_table : FeatureTable[Frequency]
+       A table with features matching the tree tips.
+   output_tree : Hierarchy
+       A tree with uniquely identifying ids.</pre>
+       </div>
+     </div>
+   </div>

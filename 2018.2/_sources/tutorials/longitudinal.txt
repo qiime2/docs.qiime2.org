@@ -1,0 +1,242 @@
+Performing longitudinal and paired sample comparisons with q2-longitudinal
+==========================================================================
+
+.. note:: This guide assumes you have installed QIIME 2 using one of the procedures in the :doc:`install documents <../install/index>`.
+
+This tutorial will demonstrate the various features of ``q2-longitudinal``, a plugin that supports statistical and visual comparisons of longitudinal study designs and paired samples, to determine if/how samples change between observational "states". "States" will most commonly be related to time or an environmental gradient, and for paired analyses (``pairwise-distances`` and ``pairwise-differences``) the sample pairs should typically consist of the same individual subject observed at two different time points. For example, patients in a clinical study whose stool samples are collected before and after receiving treatment.
+
+"States" can also commonly be methodological, in which case sample pairs will usually be the same individual at the same time with two different methods. For example, q2-longitudinal could compare the effects of different collection methods, storage methods, DNA extraction methods, or any bioinformatic processing steps on the feature composition of individual samples.
+
+.. note:: Many of the actions in q2-longitudinal take a ``metric`` value as input, which is usually a column name in a metadata file or a metadata-transformable artifact (including alpha diversity vectors, PCoA results, and many other QIIME 2 artifacts), or a feature ID in a feature table. The names of valid ``metric`` values in metadata files and metadata-transformable artifacts can be checked with the :doc:`metadata tabulate <metadata>` command. Valid feature names (to use as ``metric`` values associated with a feature table) can be checked with the ``feature-data summarize`` command.
+
+In the examples below, we use data from the `ECAM study`_, a longitudinal study of infants' and mothers' microbiota from birth through 2 years of life. First let's create a new directory and download the relevant tutorial data.
+
+.. command-block::
+   :no-exec:
+
+   mkdir longitudinal-tutorial
+   cd longitudinal-tutorial
+
+.. download::
+   :url: https://data.qiime2.org/2018.2/tutorials/longitudinal/sample_metadata.tsv
+   :saveas: ecam-sample-metadata.tsv
+
+.. download::
+   :url: https://data.qiime2.org/2018.2/tutorials/longitudinal/ecam_shannon.qza
+   :saveas: shannon.qza
+
+.. download::
+   :url: https://data.qiime2.org/2018.2/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza
+   :saveas: unweighted_unifrac_distance_matrix.qza
+
+
+Pairwise difference comparisons
+-------------------------------
+
+Pairwise difference tests determine whether the value of a specific metric changed significantly between pairs of paired samples (e.g., pre- and post-treatment).
+
+This visualizer currently supports comparison of feature abundance (e.g., microbial sequence variants or taxa) in a feature table, or of metadata values in a sample metadata file. Alpha diversity values (e.g., observed sequence variants) and beta diversity values (e.g., principal coordinates) are useful metrics for comparison with these tests, and should be contained in one of the metadata files given as input. In the example below, we will test whether alpha diversity (Shannon diversity index) changed significantly between two different time points in the ECAM data according to delivery mode.
+
+.. command-block::
+
+   qiime longitudinal pairwise-differences \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --m-metadata-file shannon.qza \
+     --p-metric shannon \
+     --p-group-column delivery \
+     --p-state-column month \
+     --p-state-1 0 \
+     --p-state-2 12 \
+     --p-individual-id-column studyid \
+     --p-replicate-handling random \
+     --o-visualization pairwise-differences.qzv
+
+
+Pairwise distance comparisons
+-----------------------------
+
+The ``pairwise-distances`` visualizer also assesses changes between paired samples from two different "states", but instead of taking a metadata column or artifact as input, it operates on a distance matrix to assess the distance between "pre" and "post" sample pairs, and tests whether these paired differences are significantly different between different groups, as specified by the ``group-column`` parameter. Here we use this action to compare the stability of the microbiota compositions of vaginally born and cesarean-delivered infants over a 12-month time frame in the ECAM data set.
+
+.. command-block::
+
+   qiime longitudinal pairwise-distances \
+     --i-distance-matrix unweighted_unifrac_distance_matrix.qza \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --p-group-column delivery \
+     --p-state-column month \
+     --p-state-1 0 \
+     --p-state-2 12 \
+     --p-individual-id-column studyid \
+     --p-replicate-handling random \
+     --o-visualization pairwise-distances.qzv
+
+
+Linear mixed effect models
+--------------------------
+
+Linear mixed effects (LME) models test the relationship between a single response variable and one or more independent variables, where observations are made across dependent samples, e.g., in repeated-measures sampling experiments. This implementation takes at least one numeric ``state-column`` (e.g., Time) and one or more comma-separated ``group-columns`` (which may be categorical or numeric metadata columns; these are the fixed effects) as independent variables in a LME model, and plots regression plots of the response variable ("metric") as a function of the state column and each group column. Additionally, the ``individual-id-column`` parameter should be a metadata column that indicates the individual subject/site that was sampled repeatedly. The response variable may either be a sample metadata mapping file column or a feature ID in the feature table. A comma-separated list of random effects can also be input to this action; a random intercept for each individual is included by default, but another common random effect that users may wish to use is a random slope for each individual, which can be set by using the ``state-column`` value as input to the ``random-effects`` parameter. Here we use LME to test whether alpha diversity (Shannon diversity index) changed over time and in response to delivery mode, diet, and sex in the ECAM data set.
+
+.. command-block::
+
+   qiime longitudinal linear-mixed-effects \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --m-metadata-file shannon.qza \
+     --p-metric shannon \
+     --p-group-columns delivery,diet,sex \
+     --p-state-column month \
+     --p-individual-id-column studyid \
+     --o-visualization linear-mixed-effects.qzv
+
+The visualizer produced by this command contains several results. First, the input parameters are shown at the top of the visualization for convenience (e.g., when flipping through multiple visualizations it is useful to have a summary). Next, the "model summary" shows some descriptive information about the LME model that was trained. This just shows descriptive information about the "groups"; in this case, groups will be individuals (as set by the ``--p-individual-id-column``). The main results to examine will be the "model results" below the "model summary". These results summarize the effects of each fixed effect (and their interactions) on the dependent variable (shannon diversity). This table shows parameter estimates, estimate standard errors, z scores, P values (P>|z|), and 95% confidence interval upper and lower bounds for each parameter. We see in this table that shannon diversity is significantly impacted by month of life and by diet, as well as several interacting factors. More information about LME models and the interpretation of these data can be found on the `statsmodels LME description page`_, which provides a number of useful technical references for further reading.
+
+Finally, scatter plots categorized by each "group column" are shown at the bottom of the visualization, with linear regression lines (plus 95% confidence interval in grey) for each group. If ``--p-lowess`` is enabled, instead locally weighted averages are shown for each group.
+
+
+Volatility analysis
+-------------------
+
+Volatility analysis is a method for generating control charts to assess how volatile a dependent variable is over time (or a gradient) in one or more groups. Any metadata (including alpha and beta diversity artifacts) or ``FeatureTable[RelativeFrequency]`` feature can be used as the dependent variable ("metric").
+
+Here we examine how variance in Shannon diversity changes across time in the ECAM cohort.
+
+.. command-block::
+
+   qiime longitudinal volatility \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --m-metadata-file shannon.qza \
+     --p-metric shannon \
+     --p-group-column delivery \
+     --p-state-column month \
+     --p-individual-id-column studyid \
+     --o-visualization volatility.qzv
+
+
+The resulting visualization contains some basic results. First, the "Volatility test parameters" summarizes some key parameters, as well as global mean and standard deviation — these are measured across all samples, regardless of which group they are in.
+
+Second, control charts display the mean value of "metric" at each "state". The first plot shown contains all samples, categorized by group (as defined by ``group-column``); the following plots show each individual group, in order to show their individual control characteristics as described in the rest of this paragraph. The mean for all samples in each plot is shown as a black line. The "control limits", 3 standard deviations above and below the mean, are shown as dashed lines. The "warning limits", 2 standard deviations above and below the mean, are shown as dotted lines. The idea behind this plot is to show how a variable is changing over time (or a gradient) in relation to the mean. Large departures from the mean values can cross the warning/control limits, indicating a major disruption at that state; for example, antibiotic use or other disturbances impacting diversity could be tracked with these plots.
+
+Longitudinal values for each individual can also be plotted as spaghetti plots by setting the ``spaghetti`` parameter to "yes" or "mean". If replicate samples are collected from an individual at any time point, "yes" causes replicates for each value to be plotted; "mean" plots the mean value for that individual at that time point.
+
+This visualizer currently only generates control and spaghetti charts, which are a useful **qualitative** approach for visually identifying abnormal time points; accompanying statistical tests may be added in future releases.
+
+
+First differencing to track rate of change
+------------------------------------------
+Another way to view time series data is by assessing how the rate of change differs over time. We can do this through calculating first differences, which is the magnitude of change between successive time points. If :math:`Y_\text{t}` is the value of metric :math:`Y` at time :math:`t`, the first difference at time :math:`t`, :math:`{\Delta}Y_\text{t} = Y_\text{t} - Y_\text{t-1}`. This transformation is performed in the ``first-differences`` method in ``q2-longitudinal``.
+
+.. command-block::
+
+   qiime longitudinal first-differences \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --m-metadata-file shannon.qza \
+     --p-state-column month \
+     --p-metric shannon \
+     --p-individual-id-column studyid \
+     --p-replicate-handling random \
+     --o-first-differences shannon-first-differences.qza
+
+This outputs a ``SampleData[FirstDifferences]`` artifact, which can then be viewed, e.g., with the ``volatility`` visualizer or analyzed with ``linear-mixed-effects`` or other methods.
+
+A similar method is ``first-distances``, which instead identifies the beta diversity distances between successive samples from the same subject. The pairwise distance between all samples can already be calculated by the ``beta`` or ``core-metrics`` methods in ``q2-diversity``, so this method simply identifies the distances between successive samples collected from the same subject and outputs this series of values as metadata that can be consumed by other methods.
+
+.. command-block::
+
+   qiime longitudinal first-distances \
+     --i-distance-matrix unweighted_unifrac_distance_matrix.qza \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --p-state-column month \
+     --p-individual-id-column studyid \
+     --p-replicate-handling random \
+     --o-first-distances first-distances.qza
+
+This output can be used in the same way as the output of ``first-differences``. The output of ``first-distances`` is particularly empowering, though, because it allows us to analyze longitudinal changes in beta diversity using actions that cannot operate directly on a distance matrix, such as ``linear-mixed-effects``.
+
+.. command-block::
+
+   qiime longitudinal linear-mixed-effects \
+     --m-metadata-file first-distances.qza \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --p-metric Distance \
+     --p-state-column month \
+     --p-individual-id-column studyid \
+     --p-group-columns delivery,diet \
+     --o-visualization first-distances-LME.qzv
+
+
+Tracking rate of change from static timepoints
+----------------------------------------------
+The ``first-differences`` and ``first-distances`` methods both have an optional "baseline" parameter to instead calculate differences from a static point (e.g., baseline or a time point when a treatment is administered: :math:`{\Delta}Y_\text{t} = Y_\text{t} - Y_\text{0}`). Calculating baseline differences can help tease apart noisy longitudinal data to reveal underlying trends in individual subjects or highlight significant experimental factors related to changes in diversity or other dependent variables.
+
+
+.. command-block::
+
+   qiime longitudinal first-distances \
+     --i-distance-matrix unweighted_unifrac_distance_matrix.qza \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --p-state-column month \
+     --p-individual-id-column studyid \
+     --p-replicate-handling random \
+     --p-baseline 0 \
+     --o-first-distances first-distances-baseline-0.qza
+
+.. note:: **Fun fact!** We can also use the ``first-distances`` method to track longitudinal change in the proportion of features that are shared between an individual’s samples. This can be performed by calculating pairwise Jaccard distance (proportion of features that are not shared) between each pair of samples and using this as input to ``first-distances``. This is particularly useful for pairing with the ``baseline`` parameter, e.g., to determine how unique features are lost/gained over the course of an experiment.
+
+
+Non-parametric microbial interdependence test (NMIT)
+----------------------------------------------------
+Within microbial communities, microbial populations do not exist in isolation but instead form complex ecological interaction webs. Whether these interdependence networks display the same temporal characteristics within subjects from the same group may indicate divergent temporal trajectories. NMIT evaluates how interdependencies of features (e.g., microbial taxa, sequence variants, or OTUs) within a community might differ over time between sample groups. NMIT performs a nonparametric microbial interdependence test to determine longitudinal sample similarity as a function of temporal microbial composition. For each subject, NMIT computes pairwise correlations between each pair of features. Between-subject distances are then computed based on a distance norm between each subject's microbial interdependence correlation matrix. For more details and citation, please see `Zhang et al., 2017`_.
+
+.. note:: NMIT, as with most longitudinal methods, largely depends on the quality of the input data. This method will only work for longitudinal data (i.e., the same subjects are sampled repeatedly over time). To make the method robust, we suggest a minimum of 5-6 samples (time points) per subject, but the more the merrier. NMIT does not require that samples are collected at identical time points (and hence is robust to missing samples) but this may impact data quality if highly undersampled subjects are included, or if subjects' sampling times do not overlap in biologically meaningful ways. It is up to the users to ensure that their data are high quality and the methods are used in a biologically relevant fashion.
+
+.. note:: NMIT can take a long time to run on very large feature tables. Removing low-abundance features and collapsing feature tables on taxonomy (e.g., to genus level) will improve runtime.
+
+First let's download a feature table to test. Here we will test genus-level taxa that exhibit a relative abundance > 0.1% in more than 15% of the total samples.
+
+.. download::
+   :url: https://data.qiime2.org/2018.2/tutorials/longitudinal/ecam_table_taxa.qza
+   :saveas: ecam-table-taxa.qza
+
+Now we are ready run NMIT. The output of this command is a distance matrix that we can pass to other QIIME2 commands for significance testing and visualization.
+
+.. command-block::
+
+   qiime longitudinal nmit \
+     --i-table ecam-table-taxa.qza \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --p-individual-id-column studyid \
+     --p-corr-method pearson \
+     --o-distance-matrix nmit-dm.qza
+
+
+Now let's put that distance matrix to work. First we will perform PERMANOVA tests to evaluate whether between-group distances are larger than within-group distance.
+
+.. note:: NMIT computes between-subject distances across all time points, so each subject (as defined the ``--p-individual-id-column`` parameter used above) gets compressed into a single "sample" representing that subject's longitudinal microbial interdependence. This new "sample" will be labeled with the ``SampleID`` of one of the subjects with a matching ``individual-id``; this is done for the convenience of passing this distance matrix to downstream steps without needing to generate a new sample metadata file but it means that you must **pay attention**. **For significance testing and visualization, only use group columns that are uniform across each** ``individual-id``. **DO NOT ATTEMPT TO USE METADATA COLUMNS THAT VARY OVER TIME OR BAD THINGS WILL HAPPEN.** For example, in the tutorial metadata a patient is labeled ``antiexposedall==y`` only after antibiotics have been used; this is a column that you should not use, as it varies over time. Now have fun and be responsible.
+
+.. command-block::
+
+   qiime diversity beta-group-significance \
+     --i-distance-matrix nmit-dm.qza \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --m-metadata-column delivery \
+     --o-visualization nmit.qzv
+
+Finally, we can compute principal coordinates and use Emperor to visualize similarities among **subjects** (not individual samples; see the note above).
+
+.. command-block::
+
+   qiime diversity pcoa \
+     --i-distance-matrix nmit-dm.qza \
+     --o-pcoa nmit-pc.qza
+
+.. command-block::
+
+   qiime emperor plot \
+     --i-pcoa nmit-pc.qza \
+     --m-metadata-file ecam-sample-metadata.tsv \
+     --o-visualization nmit-emperor.qzv
+
+So there it is. We can use PERMANOVA test or other distance-based statistical tests to determine whether groups exhibit different longitudinal microbial interdependence relationships, and PCoA/emperor to visualize the relationships among groups of subjects. **Don't forget the caveats mentioned above about using and interpreting NMIT**. Now be safe and have fun.
+
+.. _ECAM study: https://doi.org/10.1126/scitranslmed.aad7121
+.. _statsmodels LME description page: http://www.statsmodels.org/dev/mixed_linear.html
+.. _Zhang et al., 2017: https://doi.org/10.1002/gepi.22065
