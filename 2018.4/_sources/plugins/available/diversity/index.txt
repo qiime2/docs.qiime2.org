@@ -1,0 +1,101 @@
+diversity
+=========
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin supports metrics for calculating and exploring community alpha and beta diversity through statistics and visualizations in the context of sample metadata.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2018.4.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-diversity" rel="noopener">https://github.com/qiime2/q2-diversity</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+Pipelines
+---------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   core-metrics
+   
+   core-metrics-phylogenetic
+   
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   alpha
+   
+   alpha-phylogenetic
+   
+   beta
+   
+   beta-phylogenetic
+   
+   beta-phylogenetic-alt
+   
+   filter-distance-matrix
+   
+   pcoa
+   
+   procrustes-analysis
+   
+
+
+
+Visualizers
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   alpha-correlation
+   
+   alpha-group-significance
+   
+   alpha-rarefaction
+   
+   beta-group-significance
+   
+   beta-rarefaction
+   
+   bioenv
+   
+   mantel
+   

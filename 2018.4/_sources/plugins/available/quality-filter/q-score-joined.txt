@@ -1,0 +1,88 @@
+q-score-joined: Quality filter based on joined sequence quality scores.
+=======================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime quality-filter q-score-joined [OPTIONS]
+
+     This method filters joined sequence based on quality scores and the
+     presence of ambiguous base calls.
+
+   Options:
+     --i-demux ARTIFACT PATH SampleData[JoinedSequencesWithQuality]
+                                     The demultiplexed sequence data to be
+                                     quality filtered.  [required]
+     --p-min-quality INTEGER         The minimum acceptable PHRED score. All
+                                     PHRED scores less that this value are
+                                     considered to be low PHRED scores.
+                                     [default: 4]
+     --p-quality-window INTEGER      The maximum number of low PHRED scores that
+                                     can be observed in direct succession before
+                                     truncating a sequence read.  [default: 3]
+     --p-min-length-fraction FLOAT   The minimum length that a sequence read can
+                                     be following truncation and still be
+                                     retained. This length should be provided as
+                                     a fraction of the input sequence length.
+                                     [default: 0.75]
+     --p-max-ambiguous INTEGER       The maximum number of ambiguous (i.e., N)
+                                     base calls. This is applied after trimming
+                                     sequences based on `min_length_fraction`.
+                                     [default: 0]
+     --o-filtered-sequences ARTIFACT PATH SampleData[JoinedSequencesWithQuality]
+                                     The resulting quality-filtered sequences.
+                                     [required if not passing --output-dir]
+     --o-filter-stats ARTIFACT PATH QualityFilterStats
+                                     Summary statistics of the filtering process.
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Quality filter based on joined sequence quality scores.
+
+   This method filters joined sequence based on quality scores and the
+   presence of ambiguous base calls.
+
+   Parameters
+   ----------
+   demux : SampleData[JoinedSequencesWithQuality]
+       The demultiplexed sequence data to be quality filtered.
+   min_quality : Int, optional
+       The minimum acceptable PHRED score. All PHRED scores less that this
+       value are considered to be low PHRED scores.
+   quality_window : Int, optional
+       The maximum number of low PHRED scores that can be observed in direct
+       succession before truncating a sequence read.
+   min_length_fraction : Float, optional
+       The minimum length that a sequence read can be following truncation and
+       still be retained. This length should be provided as a fraction of the
+       input sequence length.
+   max_ambiguous : Int, optional
+       The maximum number of ambiguous (i.e., N) base calls. This is applied
+       after trimming sequences based on `min_length_fraction`.
+
+   Returns
+   -------
+   filtered_sequences : SampleData[JoinedSequencesWithQuality]
+       The resulting quality-filtered sequences.
+   filter_stats : QualityFilterStats
+       Summary statistics of the filtering process.</pre>
+       </div>
+     </div>
+   </div>
