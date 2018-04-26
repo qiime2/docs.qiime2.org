@@ -11,3 +11,4 @@ Disallow: /2017.9/
 Disallow: /2017.10/
 Disallow: /2017.11/
 Disallow: /2017.12/
+Disallow: /2018.2/
