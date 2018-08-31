@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>confusion-matrix: Make a confusion matrix from sample classifier predictions. &#8212; QIIME 2 2018.8.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2018.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="top" title="QIIME 2 2018.8.0 documentation" href="../../../../" />
+    <link rel="up" title="sample-classifier" href="../" />
+    <link rel="next" title="scatterplot: Make 2D scatterplot and linear regression of regressor predictions." href="../scatterplot/" />
+    <link rel="prev" title="split-table: Split a feature table into training and testing sets." href="../split-table/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <script src="../../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="confusion-matrix-make-a-confusion-matrix-from-sample-classifier-predictions">
+<h1>confusion-matrix: Make a confusion matrix from sample classifier predictions.<a class="headerlink" href="#confusion-matrix-make-a-confusion-matrix-from-sample-classifier-predictions" title="Permalink to this headline">¶</a></h1>
+<div class="tabbed">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+    <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="cli" class="tab-pane fade in active">
+      <h4>Docstring:</h4>
+      <pre>Usage: qiime sample-classifier confusion-matrix [OPTIONS]
+
+  Make a confusion matrix and calculate accuracy of predicted vs. true
+  values for a set of samples classified using a sample classifier.
+
+Options:
+  --i-predictions ARTIFACT PATH SampleData[ClassifierPredictions]
+                                  Predicted values to plot on x axis. Should
+                                  be predictions of categorical data produced
+                                  by a sample classifier.  [required]
+  --m-truth-file MULTIPLE PATH    Metadata file or artifact viewable as
+                                  metadata. This option may be supplied
+                                  multiple times to merge metadata.
+                                  [required]
+  --m-truth-column MetadataColumn[Categorical]
+                                  Column from metadata file or artifact
+                                  viewable as metadata. Metadata column (true
+                                  values) to plot on y axis.  [required]
+  --p-missing-samples [error|ignore]
+                                  How to handle missing samples in metadata.
+                                  "error" will fail if missing samples are
+                                  detected. "ignore" will cause the feature
+                                  table and metadata to be filtered, so that
+                                  only samples found in both files are
+                                  retained.  [default: error]
+  --p-palette [verve|deepblue|drifting|BluePurple|solano|greyscale|mysteriousstains|YellowOrangeRed|dandelions|enigma|plasma|PurpleRed|spectre|copper|daydream|viridis|navarro|eros|melancholy|OrangeRed|summer|RedPurple|inferno|ambition|sirocco|YellowOrangeBrown|GreenBlue|magma|PurpleBlue|YellowGreen]
+                                  The color palette to use for plotting.
+                                  [default: sirocco]
+  --o-visualization VISUALIZATION PATH
+                                  [required if not passing --output-dir]
+  --output-dir DIRECTORY          Output unspecified results to a directory
+  --cmd-config PATH               Use config file for command options
+  --verbose                       Display verbose output to stdout and/or
+                                  stderr during execution of this action.
+                                  [default: False]
+  --quiet                         Silence output if execution is successful
+                                  (silence is golden).  [default: False]
+  --citations                     Show citations and exit.
+  --help                          Show this message and exit.</pre>
+    </div>
+    <div id="api" class="tab-pane fade">
+    <h4>Import:</h4><div class="highlight-shell"><div class="highlight"><pre><span></span>from qiime2.plugins.sample_classifier.visualizers import confusion_matrix
+</pre></div>
+</div>
+    <h4>Docstring:</h4>
+      <pre>Make a confusion matrix from sample classifier predictions.
+
+Make a confusion matrix and calculate accuracy of predicted vs. true values
+for a set of samples classified using a sample classifier.
+
+Parameters
+----------
+predictions : SampleData[ClassifierPredictions]
+    Predicted values to plot on x axis. Should be predictions of
+    categorical data produced by a sample classifier.
+truth : MetadataColumn[Categorical]
+    Metadata column (true values) to plot on y axis.
+missing_samples : Str % Choices({'error', 'ignore'}), optional
+    How to handle missing samples in metadata. "error" will fail if missing
+    samples are detected. "ignore" will cause the feature table and
+    metadata to be filtered, so that only samples found in both files are
+    retained.
+palette : Str % Choices({'BluePurple', 'GreenBlue', 'OrangeRed', 'PurpleBlue', 'PurpleRed', 'RedPurple', 'YellowGreen', 'YellowOrangeBrown', 'YellowOrangeRed', 'ambition', 'copper', 'dandelions', 'daydream', 'deepblue', 'drifting', 'enigma', 'eros', 'greyscale', 'inferno', 'magma', 'melancholy', 'mysteriousstains', 'navarro', 'plasma', 'sirocco', 'solano', 'spectre', 'summer', 'verve', 'viridis'}), optional
+    The color palette to use for plotting.
+
+Returns
+-------
+visualization : Visualization</pre>
+    </div>
+  </div>
+</div></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2018, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

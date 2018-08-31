@@ -1,0 +1,163 @@
+feature-volatility: Feature volatility analysis
+===============================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime longitudinal feature-volatility [OPTIONS]
+
+     Identify features that are predictive of a numeric metadata column,
+     state_column (e.g., time), and plot their relative frequencies across
+     states using interactive feature volatility plots. A supervised learning
+     regressor is used to identify important features and assess their ability
+     to predict sample states. state_column will typically be a measure of
+     time, but any numeric metadata column can be used.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     Feature table containing all features that
+                                     should be used for target prediction.
+                                     [required]
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. Sample
+                                     metadata file containing
+                                     individual_id_column.  [required]
+     --p-state-column TEXT           Metadata containing collection time (state)
+                                     values for each sample. Must contain
+                                     exclusively numeric values.  [required]
+     --p-individual-id-column TEXT   Metadata column containing IDs for
+                                     individual subjects.  [optional]
+     --p-cv INTEGER RANGE            Number of k-fold cross-validations to
+                                     perform.  [default: 5]
+     --p-random-state INTEGER        Seed used by random number generator.
+                                     [optional]
+     --p-n-jobs INTEGER              Number of jobs to run in parallel.
+                                     [default: 1]
+     --p-n-estimators INTEGER RANGE  Number of trees to grow for estimation. More
+                                     trees will improve predictive accuracy up to
+                                     a threshold level, but will also increase
+                                     time and memory requirements. This parameter
+                                     only affects ensemble estimators, such as
+                                     Random Forest, AdaBoost, ExtraTrees, and
+                                     GradientBoosting.  [default: 100]
+     --p-estimator [Lasso|RandomForestRegressor|Ridge|LinearSVR|ElasticNet|AdaBoostRegressor|GradientBoostingRegressor|KNeighborsRegressor|ExtraTreesRegressor|SVR]
+                                     Estimator method to use for sample
+                                     prediction.  [default:
+                                     RandomForestRegressor]
+     --p-parameter-tuning / --p-no-parameter-tuning
+                                     Automatically tune hyperparameters using
+                                     random grid search.  [default: False]
+     --p-missing-samples [error|ignore]
+                                     How to handle missing samples in metadata.
+                                     "error" will fail if missing samples are
+                                     detected. "ignore" will cause the feature
+                                     table and metadata to be filtered, so that
+                                     only samples found in both files are
+                                     retained.  [default: error]
+     --o-filtered-table ARTIFACT PATH FeatureTable[RelativeFrequency]
+                                     Feature table containing only important
+                                     features.  [required if not passing
+                                     --output-dir]
+     --o-feature-importance ARTIFACT PATH FeatureData[Importance]
+                                     Importance of each input feature to model
+                                     accuracy.  [required if not passing
+                                     --output-dir]
+     --o-volatility-plot VISUALIZATION PATH
+                                     Interactive volatility plot visualization.
+                                     [required if not passing --output-dir]
+     --o-accuracy-results VISUALIZATION PATH
+                                     Accuracy results visualization.  [required
+                                     if not passing --output-dir]
+     --o-sample-estimator ARTIFACT PATH SampleEstimator[Regressor]
+                                     Trained sample regressor.  [required if not
+                                     passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.longitudinal.pipelines import feature_volatility
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Feature volatility analysis
+
+   Identify features that are predictive of a numeric metadata column,
+   state_column (e.g., time), and plot their relative frequencies across
+   states using interactive feature volatility plots. A supervised learning
+   regressor is used to identify important features and assess their ability
+   to predict sample states. state_column will typically be a measure of time,
+   but any numeric metadata column can be used.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table containing all features that should be used for target
+       prediction.
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   state_column : Str
+       Metadata containing collection time (state) values for each sample.
+       Must contain exclusively numeric values.
+   individual_id_column : Str, optional
+       Metadata column containing IDs for individual subjects.
+   cv : Int % Range(1, None), optional
+       Number of k-fold cross-validations to perform.
+   random_state : Int, optional
+       Seed used by random number generator.
+   n_jobs : Int, optional
+       Number of jobs to run in parallel.
+   n_estimators : Int % Range(1, None), optional
+       Number of trees to grow for estimation. More trees will improve
+       predictive accuracy up to a threshold level, but will also increase
+       time and memory requirements. This parameter only affects ensemble
+       estimators, such as Random Forest, AdaBoost, ExtraTrees, and
+       GradientBoosting.
+   estimator : Str % Choices({'AdaBoostRegressor', 'ElasticNet', 'ExtraTreesRegressor', 'GradientBoostingRegressor', 'KNeighborsRegressor', 'Lasso', 'LinearSVR', 'RandomForestRegressor', 'Ridge', 'SVR'}), optional
+       Estimator method to use for sample prediction.
+   parameter_tuning : Bool, optional
+       Automatically tune hyperparameters using random grid search.
+   missing_samples : Str % Choices({'error', 'ignore'}), optional
+       How to handle missing samples in metadata. "error" will fail if missing
+       samples are detected. "ignore" will cause the feature table and
+       metadata to be filtered, so that only samples found in both files are
+       retained.
+
+   Returns
+   -------
+   filtered_table : FeatureTable[RelativeFrequency]
+       Feature table containing only important features.
+   feature_importance : FeatureData[Importance]
+       Importance of each input feature to model accuracy.
+   volatility_plot : Visualization
+       Interactive volatility plot visualization.
+   accuracy_results : Visualization
+       Accuracy results visualization.
+   sample_estimator : SampleEstimator[Regressor]
+       Trained sample regressor.</pre>
+       </div>
+     </div>
+   </div>

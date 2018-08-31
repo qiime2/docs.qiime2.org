@@ -1,0 +1,68 @@
+tabulate: Interactively explore Metadata in an HTML table
+=========================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime metadata tabulate [OPTIONS]
+
+     Generate a tabular view of Metadata. The output visualization supports
+     interactive filtering, sorting, and exporting to common file formats.
+
+   Options:
+     --m-input-file MULTIPLE PATH    Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. The
+                                     metadata to tabulate.  [required]
+     --p-page-size INTEGER           The maximum number of Metadata records to
+                                     display per page  [default: 100]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.metadata.visualizers import tabulate
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Interactively explore Metadata in an HTML table
+
+   Generate a tabular view of Metadata. The output visualization supports
+   interactive filtering, sorting, and exporting to common file formats.
+
+   Parameters
+   ----------
+   input : Metadata
+       The metadata to tabulate.
+   page_size : Int, optional
+       The maximum number of Metadata records to display per page
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

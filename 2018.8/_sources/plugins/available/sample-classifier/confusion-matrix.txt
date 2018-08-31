@@ -1,0 +1,92 @@
+confusion-matrix: Make a confusion matrix from sample classifier predictions.
+=============================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime sample-classifier confusion-matrix [OPTIONS]
+
+     Make a confusion matrix and calculate accuracy of predicted vs. true
+     values for a set of samples classified using a sample classifier.
+
+   Options:
+     --i-predictions ARTIFACT PATH SampleData[ClassifierPredictions]
+                                     Predicted values to plot on x axis. Should
+                                     be predictions of categorical data produced
+                                     by a sample classifier.  [required]
+     --m-truth-file MULTIPLE PATH    Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata.
+                                     [required]
+     --m-truth-column MetadataColumn[Categorical]
+                                     Column from metadata file or artifact
+                                     viewable as metadata. Metadata column (true
+                                     values) to plot on y axis.  [required]
+     --p-missing-samples [error|ignore]
+                                     How to handle missing samples in metadata.
+                                     "error" will fail if missing samples are
+                                     detected. "ignore" will cause the feature
+                                     table and metadata to be filtered, so that
+                                     only samples found in both files are
+                                     retained.  [default: error]
+     --p-palette [verve|deepblue|drifting|BluePurple|solano|greyscale|mysteriousstains|YellowOrangeRed|dandelions|enigma|plasma|PurpleRed|spectre|copper|daydream|viridis|navarro|eros|melancholy|OrangeRed|summer|RedPurple|inferno|ambition|sirocco|YellowOrangeBrown|GreenBlue|magma|PurpleBlue|YellowGreen]
+                                     The color palette to use for plotting.
+                                     [default: sirocco]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.sample_classifier.visualizers import confusion_matrix
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Make a confusion matrix from sample classifier predictions.
+
+   Make a confusion matrix and calculate accuracy of predicted vs. true values
+   for a set of samples classified using a sample classifier.
+
+   Parameters
+   ----------
+   predictions : SampleData[ClassifierPredictions]
+       Predicted values to plot on x axis. Should be predictions of
+       categorical data produced by a sample classifier.
+   truth : MetadataColumn[Categorical]
+       Metadata column (true values) to plot on y axis.
+   missing_samples : Str % Choices({'error', 'ignore'}), optional
+       How to handle missing samples in metadata. "error" will fail if missing
+       samples are detected. "ignore" will cause the feature table and
+       metadata to be filtered, so that only samples found in both files are
+       retained.
+   palette : Str % Choices({'BluePurple', 'GreenBlue', 'OrangeRed', 'PurpleBlue', 'PurpleRed', 'RedPurple', 'YellowGreen', 'YellowOrangeBrown', 'YellowOrangeRed', 'ambition', 'copper', 'dandelions', 'daydream', 'deepblue', 'drifting', 'enigma', 'eros', 'greyscale', 'inferno', 'magma', 'melancholy', 'mysteriousstains', 'navarro', 'plasma', 'sirocco', 'solano', 'spectre', 'summer', 'verve', 'viridis'}), optional
+       The color palette to use for plotting.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>
