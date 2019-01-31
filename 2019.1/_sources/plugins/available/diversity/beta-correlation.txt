@@ -1,0 +1,124 @@
+beta-correlation: Beta diversity correlation
+============================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity beta-correlation [OPTIONS]
+
+     Create a distance matrix from a numeric metadata column and apply a two-
+     sided Mantel test to identify correlation between two distance matrices.
+     Actions used internally: `distance-matrix` from q2-metadata and `mantel`
+     from q2-diversity.
+
+   Options:
+     --m-metadata-file MULTIPLE FILE
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata.
+                                     [required]
+     --m-metadata-column MetadataColumn[Numeric]
+                                     Column from metadata file or artifact
+                                     viewable as metadata. Numeric metadata
+                                     column from which to compute pairwise
+                                     Euclidean distances  [required]
+     --i-distance-matrix ARTIFACT PATH DistanceMatrix
+                                     Matrix of distances between pairs of
+                                     samples.  [required]
+     --p-method [pearson|spearman]   The correlation test to be applied in the
+                                     Mantel test.  [default: spearman]
+     --p-permutations INTEGER RANGE  The number of permutations to be run when
+                                     computing p-values. Supplying a value of
+                                     zero will disable permutation testing and
+                                     p-values will not be calculated (this
+                                     results in *much* quicker execution time if
+                                     p-values are not desired).  [default: 999]
+     --p-intersect-ids / --p-no-intersect-ids
+                                     If supplied, IDs that are not found in both
+                                     distance matrices will be discarded before
+                                     applying the Mantel test. Default behavior
+                                     is to error on any mismatched IDs.
+                                     [default: False]
+     --p-label1 TEXT                 Label for `distance_matrix` in the output
+                                     visualization.  [default: Metadata]
+     --p-label2 TEXT                 Label for `metadata_distance_matrix` in the
+                                     output visualization.  [default: Distance
+                                     Matrix]
+     --o-metadata-distance-matrix ARTIFACT PATH DistanceMatrix
+                                     The Distance Matrix produced from the
+                                     metadata column and used in the mantel test
+                                     [required if not passing --output-dir]
+     --o-mantel-scatter-visualization VISUALIZATION PATH
+                                     Scatter plot rendering of the manteltest
+                                     results  [required if not passing --output-
+                                     dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config FILE               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.pipelines import beta_correlation
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Beta diversity correlation
+
+   Create a distance matrix from a numeric metadata column and apply a two-
+   sided Mantel test to identify correlation between two distance matrices.
+   Actions used internally: `distance-matrix` from q2-metadata and `mantel`
+   from q2-diversity.
+
+   Parameters
+   ----------
+   metadata : MetadataColumn[Numeric]
+       Numeric metadata column from which to compute pairwise Euclidean
+       distances
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   method : Str % Choices({'pearson', 'spearman'}), optional
+       The correlation test to be applied in the Mantel test.
+   permutations : Int % Range(0, None), optional
+       The number of permutations to be run when computing p-values. Supplying
+       a value of zero will disable permutation testing and p-values will not
+       be calculated (this results in *much* quicker execution time if
+       p-values are not desired).
+   intersect_ids : Bool, optional
+       If supplied, IDs that are not found in both distance matrices will be
+       discarded before applying the Mantel test. Default behavior is to error
+       on any mismatched IDs.
+   label1 : Str, optional
+       Label for `distance_matrix` in the output visualization.
+   label2 : Str, optional
+       Label for `metadata_distance_matrix` in the output visualization.
+
+   Returns
+   -------
+   metadata_distance_matrix : DistanceMatrix
+       The Distance Matrix produced from the metadata column and used in the
+       mantel test
+   mantel_scatter_visualization : Visualization
+       Scatter plot rendering of the manteltest results</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,132 @@
+adonis: Beta diversity group significance
+=========================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:adonis.bib
+   :all:
+   :keyprefix: diversity:adonis:
+   :labelprefix: diversity:adonis:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity adonis [OPTIONS]
+
+     Determine whether groups of samples are significantly different from one
+     another using the ADONIS permutation-based statistical test in vegan-R.
+     The function partitions sums of squares of a multivariate data set, and is
+     directly analogous to MANOVA (multivariate analysis of variance). This
+     action differs from beta_group_signficance in that it accepts R formulae
+     to perform multi-way ADONIS tests; beta_group_signficance only performs
+     one-way tests. For more details see
+     http://cc.oulu.fi/~jarioksa/softhelp/vegan/html/adonis.html
+
+   Options:
+     --i-distance-matrix ARTIFACT PATH DistanceMatrix
+                                     Matrix of distances between pairs of
+                                     samples.  [required]
+     --m-metadata-file MULTIPLE FILE
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. Sample
+                                     metadata containing formula terms.
+                                     [required]
+     --p-formula TEXT                Model formula containing only independent
+                                     terms contained in the sample metadata.
+                                     These can be continuous variables or
+                                     factors, and they can have interactions as
+                                     in a typical R formula. E.g., the formula
+                                     "treatment+block" would test whether the
+                                     input distance matrix partitions based on
+                                     "treatment" and "block" sample metadata. The
+                                     formula "treatment*block" would test both of
+                                     those effects as well as their interaction.
+                                     Enclose formulae in quotes to avoid
+                                     unpleasant surprises.  [required]
+     --p-permutations INTEGER RANGE  The number of permutations to be run when
+                                     computing p-values.  [default: 999]
+     --p-n-jobs INTEGER RANGE        Number of parallel processes to run.
+                                     [default: 1]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config FILE               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import adonis
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Beta diversity group significance
+
+   Determine whether groups of samples are significantly different from one
+   another using the ADONIS permutation-based statistical test in vegan-R. The
+   function partitions sums of squares of a multivariate data set, and is
+   directly analogous to MANOVA (multivariate analysis of variance). This
+   action differs from beta_group_signficance in that it accepts R formulae to
+   perform multi-way ADONIS tests; beta_group_signficance only performs one-
+   way tests. For more details see
+   http://cc.oulu.fi/~jarioksa/softhelp/vegan/html/adonis.html
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   metadata : Metadata
+       Sample metadata containing formula terms.
+   formula : Str
+       Model formula containing only independent terms contained in the sample
+       metadata. These can be continuous variables or factors, and they can
+       have interactions as in a typical R formula. E.g., the formula
+       "treatment+block" would test whether the input distance matrix
+       partitions based on "treatment" and "block" sample metadata. The
+       formula "treatment*block" would test both of those effects as well as
+       their interaction. Enclose formulae in quotes to avoid unpleasant
+       surprises.
+   permutations : Int % Range(1, None), optional
+       The number of permutations to be run when computing p-values.
+   n_jobs : Int % Range(1, None), optional
+       Number of parallel processes to run.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>
