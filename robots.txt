@@ -15,3 +15,4 @@ Disallow: /2018.2/
 Disallow: /2018.4/
 Disallow: /2018.6/
 Disallow: /2018.8/
+Disallow: /2018.11/
