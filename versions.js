@@ -7,7 +7,7 @@
     },
     "2018.11": {
       "name": "2018.11",
-      "deprecated": true
+      "deprecated": false
     },
     "2018.8": {
       "name": "2018.8",
