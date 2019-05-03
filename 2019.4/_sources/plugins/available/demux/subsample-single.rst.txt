@@ -1,0 +1,76 @@
+subsample-single: Subsample single-end sequences without replacement.
+=====================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime demux subsample-single [OPTIONS]
+
+     Generate a random subsample of single-end sequences containing
+     approximately the fraction of input sequences specified by the fraction
+     parameter. The number of output samples will always be equal to the number
+     of input samples, even if some of those samples contain no sequences after
+     subsampling.
+
+   Inputs:
+     --i-sequences ARTIFACT SampleData[SequencesWithQuality |
+       PairedEndSequencesWithQuality]
+                             The demultiplexed sequences to be subsampled.
+                                                                       [required]
+   Parameters:
+     --p-fraction PROPORTION Range(0, 1, inclusive_start=False)
+                             The fraction of sequences to retain in subsample.
+                                                                       [required]
+   Outputs:
+     --o-subsampled-sequences ARTIFACT SampleData[SequencesWithQuality]
+                             The subsampled sequences.                 [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.demux.methods import subsample_single
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Subsample single-end sequences without replacement.
+
+   Generate a random subsample of single-end sequences containing
+   approximately the fraction of input sequences specified by the fraction
+   parameter. The number of output samples will always be equal to the number
+   of input samples, even if some of those samples contain no sequences after
+   subsampling.
+
+   Parameters
+   ----------
+   sequences : SampleData[SequencesWithQuality | PairedEndSequencesWithQuality]
+       The demultiplexed sequences to be subsampled.
+   fraction : Float % Range(0, 1, inclusive_start=False)
+       The fraction of sequences to retain in subsample.
+
+   Returns
+   -------
+   subsampled_sequences : SampleData[SequencesWithQuality]
+       The subsampled sequences.</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,108 @@
+beta-group-significance: Beta diversity group significance
+==========================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:beta-group-significance.bib
+   :list: bullet
+   :all:
+   :keyprefix: diversity:beta-group-significance:
+   :labelprefix: diversity:beta-group-significance:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity beta-group-significance [OPTIONS]
+
+     Determine whether groups of samples are significantly different from one
+     another using a permutation-based statistical test.
+
+   Inputs:
+     --i-distance-matrix ARTIFACT
+       DistanceMatrix     Matrix of distances between pairs of samples.
+                                                                       [required]
+   Parameters:
+     --m-metadata-file METADATA
+     --m-metadata-column COLUMN  MetadataColumn[Categorical]
+                          Categorical sample metadata column.          [required]
+     --p-method TEXT Choices('permanova', 'anosim', 'permdisp')
+                          The group significance test to be applied.
+                                                           [default: 'permanova']
+     --p-pairwise / --p-no-pairwise
+                          Perform pairwise tests between all pairs of groups in
+                          addition to the test across all groups. This can be
+                          very slow if there are a lot of groups in the metadata
+                          column.                                [default: False]
+     --p-permutations INTEGER
+                          The number of permutations to be run when computing
+                          p-values.                                [default: 999]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import beta_group_significance
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Beta diversity group significance
+
+   Determine whether groups of samples are significantly different from one
+   another using a permutation-based statistical test.
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   metadata : MetadataColumn[Categorical]
+       Categorical sample metadata column.
+   method : Str % Choices('permanova', 'anosim', 'permdisp'), optional
+       The group significance test to be applied.
+   pairwise : Bool, optional
+       Perform pairwise tests between all pairs of groups in addition to the
+       test across all groups. This can be very slow if there are a lot of
+       groups in the metadata column.
+   permutations : Int, optional
+       The number of permutations to be run when computing p-values.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

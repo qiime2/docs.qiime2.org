@@ -1,0 +1,100 @@
+filter-seqs: Filter features from sequences
+===========================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table filter-seqs [OPTIONS]
+
+     Filter features from sequences based on a feature table or metadata. See
+     the filtering tutorial on https://docs.qiime2.org for additional details.
+     This method can filter based on ids in a table or a metadata file, but not
+     both (i.e., the table and metadata options are mutually exclusive).
+
+   Inputs:
+     --i-data ARTIFACT FeatureData[Sequence]
+                          The sequences from which features should be filtered.
+                                                                       [required]
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          Table containing feature ids used for id-based
+                          filtering.                                   [optional]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple          Feature metadata used for id-based filtering, with
+        arguments will    `where` parameter when selecting features to retain, or
+        be merged)        with `exclude-ids` when selecting features to discard.
+                                                                       [optional]
+     --p-where TEXT       SQLite WHERE clause specifying feature metadata
+                          criteria that must be met to be included in the
+                          filtered feature table. If not provided, all features
+                          in `metadata` that are also in the sequences will be
+                          retained.                                    [optional]
+     --p-exclude-ids / --p-no-exclude-ids
+                          If true, the features selected by the `metadata` (with
+                          or without the `where` parameter) or `table` parameter
+                          will be excluded from the filtered sequences instead of
+                          being retained.                        [default: False]
+   Outputs:
+     --o-filtered-data ARTIFACT FeatureData[Sequence]
+                          The resulting filtered sequences.            [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.methods import filter_seqs
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Filter features from sequences
+
+   Filter features from sequences based on a feature table or metadata. See
+   the filtering tutorial on https://docs.qiime2.org for additional details.
+   This method can filter based on ids in a table or a metadata file, but not
+   both (i.e., the table and metadata options are mutually exclusive).
+
+   Parameters
+   ----------
+   data : FeatureData[Sequence]
+       The sequences from which features should be filtered.
+   table : FeatureTable[Frequency], optional
+       Table containing feature ids used for id-based filtering.
+   metadata : Metadata, optional
+       Feature metadata used for id-based filtering, with `where` parameter
+       when selecting features to retain, or with `exclude_ids` when selecting
+       features to discard.
+   where : Str, optional
+       SQLite WHERE clause specifying feature metadata criteria that must be
+       met to be included in the filtered feature table. If not provided, all
+       features in `metadata` that are also in the sequences will be retained.
+   exclude_ids : Bool, optional
+       If true, the features selected by the `metadata` (with or without the
+       `where` parameter) or `table` parameter will be excluded from the
+       filtered sequences instead of being retained.
+
+   Returns
+   -------
+   filtered_data : FeatureData[Sequence]
+       The resulting filtered sequences.</pre>
+       </div>
+     </div>
+   </div>

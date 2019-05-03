@@ -1,0 +1,130 @@
+raxml-rapid-bootstrap: Construct a phylogenetic tree with bootstrap supports using RAxML.
+=========================================================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: phylogeny:raxml-rapid-bootstrap.bib
+   :list: bullet
+   :all:
+   :keyprefix: phylogeny:raxml-rapid-bootstrap:
+   :labelprefix: phylogeny:raxml-rapid-bootstrap:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime phylogeny raxml-rapid-bootstrap [OPTIONS]
+
+     Construct a phylogenetic tree with RAxML with the addition of rapid
+     bootstrapping support values. See:
+     https://sco.h-its.org/exelixis/web/software/raxml/
+
+   Inputs:
+     --i-alignment ARTIFACT FeatureData[AlignedSequence]
+                             Aligned sequences to be used for phylogenetic
+                             reconstruction.                           [required]
+   Parameters:
+     --p-seed INTEGER        Random number seed for the parsimony starting tree.
+                             This allows you to reproduce tree results. If not
+                             supplied then one will be randomly chosen.
+                                                                       [optional]
+     --p-rapid-bootstrap-seed INTEGER
+                             Specify a random seed for rapid bootstrapping. This
+                             allows you to reproduce rapid bootstrap results. If
+                             not supplied then one will be randomly chosen.
+                                                                       [optional]
+     --p-bootstrap-replicates INTEGER
+       Range(10, None)       The number of bootstrap searches to perform.
+                                                                   [default: 100]
+     --p-n-threads INTEGER   The number of threads to use for multithreaded
+       Range(1, None)        processing. Using more than one thread will enable
+                             the PTHREADS version of RAxML.          [default: 1]
+     --p-raxml-version TEXT Choices('Standard', 'SSE3', 'AVX2')
+                             Select a specific CPU optimization of RAxML to use.
+                             The SSE3 versions will run approximately 40% faster
+                             than the standard version. The AVX2 version will run
+                             10-30% faster than the SSE3 version.
+                                                            [default: 'Standard']
+     --p-substitution-model TEXT Choices('GTRGAMMA', 'GTRGAMMAI', 'GTRCAT',
+       'GTRCATI')            Model of Nucleotide Substitution
+                                                            [default: 'GTRGAMMA']
+   Outputs:
+     --o-tree ARTIFACT       The resulting phylogenetic tree.
+       Phylogeny[Unrooted]                                             [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.phylogeny.methods import raxml_rapid_bootstrap
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Construct a phylogenetic tree with bootstrap supports using RAxML.
+
+   Construct a phylogenetic tree with RAxML with the addition of rapid
+   bootstrapping support values. See:
+   https://sco.h-its.org/exelixis/web/software/raxml/
+
+   Parameters
+   ----------
+   alignment : FeatureData[AlignedSequence]
+       Aligned sequences to be used for phylogenetic reconstruction.
+   seed : Int, optional
+       Random number seed for the parsimony starting tree. This allows you to
+       reproduce tree results. If not supplied then one will be randomly
+       chosen.
+   rapid_bootstrap_seed : Int, optional
+       Specify a random seed for rapid bootstrapping. This allows you to
+       reproduce rapid bootstrap results. If not supplied then one will be
+       randomly chosen.
+   bootstrap_replicates : Int % Range(10, None), optional
+       The number of bootstrap searches to perform.
+   n_threads : Int % Range(1, None), optional
+       The number of threads to use for multithreaded processing. Using more
+       than one thread will enable the PTHREADS version of RAxML.
+   raxml_version : Str % Choices('Standard', 'SSE3', 'AVX2'), optional
+       Select a specific CPU optimization of RAxML to use. The SSE3 versions
+       will run approximately 40% faster than the standard version. The AVX2
+       version will run 10-30% faster than the SSE3 version.
+   substitution_model : Str % Choices('GTRGAMMA', 'GTRGAMMAI', 'GTRCAT', 'GTRCATI'), optional
+       Model of Nucleotide Substitution
+
+   Returns
+   -------
+   tree : Phylogeny[Unrooted]
+       The resulting phylogenetic tree.</pre>
+       </div>
+     </div>
+   </div>

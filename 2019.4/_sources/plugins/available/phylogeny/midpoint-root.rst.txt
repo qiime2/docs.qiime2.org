@@ -1,0 +1,60 @@
+midpoint-root: Midpoint root an unrooted phylogenetic tree.
+===========================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime phylogeny midpoint-root [OPTIONS]
+
+     Midpoint root an unrooted phylogenetic tree.
+
+   Inputs:
+     --i-tree ARTIFACT Phylogeny[Unrooted]
+                          The phylogenetic tree to be rooted.          [required]
+   Outputs:
+     --o-rooted-tree ARTIFACT
+       Phylogeny[Rooted]  The rooted phylogenetic tree.                [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.phylogeny.methods import midpoint_root
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Midpoint root an unrooted phylogenetic tree.
+
+   Midpoint root an unrooted phylogenetic tree.
+
+   Parameters
+   ----------
+   tree : Phylogeny[Unrooted]
+       The phylogenetic tree to be rooted.
+
+   Returns
+   -------
+   rooted_tree : Phylogeny[Rooted]
+       The rooted phylogenetic tree.</pre>
+       </div>
+     </div>
+   </div>

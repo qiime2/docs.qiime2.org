@@ -1,0 +1,114 @@
+Available plugins
+=================
+
+QIIME 2 microbiome analysis functionality is made available to users via plugins. The following official plugins are currently included in QIIME 2 train releases:
+
+.. toctree::
+   :maxdepth: 3
+
+   
+   
+   
+   alignment: Plugin for generating and manipulating alignments. <alignment/index>
+   
+   
+   
+   
+   composition: Plugin for compositional data analysis. <composition/index>
+   
+   
+   
+   
+   cutadapt: Plugin for removing adapter sequences, primers, and other unwanted sequence from sequence data. <cutadapt/index>
+   
+   
+   
+   
+   dada2: Plugin for sequence quality control with DADA2. <dada2/index>
+   
+   
+   
+   
+   deblur: Plugin for sequence quality control with Deblur. <deblur/index>
+   
+   
+   
+   
+   demux: Plugin for demultiplexing & viewing sequence quality. <demux/index>
+   
+   
+   
+   
+   diversity: Plugin for exploring community diversity. <diversity/index>
+   
+   
+   
+   
+   emperor: Plugin for ordination plotting with Emperor. <emperor/index>
+   
+   
+   
+   
+   feature-classifier: Plugin for taxonomic classification. <feature-classifier/index>
+   
+   
+   
+   
+   feature-table: Plugin for working with sample by feature tables. <feature-table/index>
+   
+   
+   
+   
+   fragment-insertion: Plugin for extending phylogenies. <fragment-insertion/index>
+   
+   
+   
+   
+   gneiss: Plugin for building compositional models. <gneiss/index>
+   
+   
+   
+   
+   longitudinal: Plugin for paired sample and time series analyses. <longitudinal/index>
+   
+   
+   
+   
+   metadata: Plugin for working with Metadata. <metadata/index>
+   
+   
+   
+   
+   phylogeny: Plugin for generating and manipulating phylogenies. <phylogeny/index>
+   
+   
+   
+   
+   quality-control: Plugin for quality control of feature and sequence data. <quality-control/index>
+   
+   
+   
+   
+   quality-filter: Plugin for PHRED-based filtering and trimming. <quality-filter/index>
+   
+   
+   
+   
+   sample-classifier: Plugin for machine learning prediction of sample metadata. <sample-classifier/index>
+   
+   
+   
+   
+   taxa: Plugin for working with feature taxonomy annotations. <taxa/index>
+   
+   
+   
+   
+   types: Plugin defining types for microbiome analysis. <types/index>
+   
+   
+   
+   
+   vsearch: Plugin for clustering and dereplicating with vsearch. <vsearch/index>
+   
+   

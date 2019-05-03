@@ -1,0 +1,68 @@
+merge: Combine multiple tables
+==============================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table merge [OPTIONS]
+
+     Combines feature tables using the `overlap_method` provided.
+
+   Inputs:
+     --i-tables ARTIFACTS... List[FeatureTable[Frequency]]
+                          The collection of feature tables to be merged.
+                                                                       [required]
+   Parameters:
+     --p-overlap-method TEXT Choices('error_on_overlapping_sample',
+       'error_on_overlapping_feature', 'sum')
+                          Method for handling overlapping ids.
+                                         [default: 'error_on_overlapping_sample']
+   Outputs:
+     --o-merged-table ARTIFACT FeatureTable[Frequency]
+                          The resulting merged feature table.          [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.methods import merge
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Combine multiple tables
+
+   Combines feature tables using the `overlap_method` provided.
+
+   Parameters
+   ----------
+   tables : List[FeatureTable[Frequency]]
+       The collection of feature tables to be merged.
+   overlap_method : Str % Choices('error_on_overlapping_sample', 'error_on_overlapping_feature', 'sum'), optional
+       Method for handling overlapping ids.
+
+   Returns
+   -------
+   merged_table : FeatureTable[Frequency]
+       The resulting merged feature table.</pre>
+       </div>
+     </div>
+   </div>
