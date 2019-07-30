@@ -1,0 +1,85 @@
+predict-classification: Use trained classifier to predict target values for new samples.
+========================================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime sample-classifier predict-classification [OPTIONS]
+
+     Use trained estimator to predict target values for new samples. These will
+     typically be unseen samples, e.g., test data (derived manually or from
+     split_table) or samples with unknown values, but can theoretically be any
+     samples present in a feature table that contain overlapping features with
+     the feature table used to train the estimator.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          Feature table containing all features that should be
+                          used for target prediction.                  [required]
+     --i-sample-estimator ARTIFACT SampleEstimator[Classifier]
+                          Sample classifier trained with fit_classifier.
+                                                                       [required]
+   Parameters:
+     --p-n-jobs INTEGER   Number of jobs to run in parallel.         [default: 1]
+   Outputs:
+     --o-predictions ARTIFACT SampleData[ClassifierPredictions]
+                          Predicted target values for each input sample.
+                                                                       [required]
+     --o-probabilities ARTIFACT SampleData[Probabilities]
+                          Predicted class probabilities for each input sample.
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.sample_classifier.methods import predict_classification
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Use trained classifier to predict target values for new samples.
+
+   Use trained estimator to predict target values for new samples. These will
+   typically be unseen samples, e.g., test data (derived manually or from
+   split_table) or samples with unknown values, but can theoretically be any
+   samples present in a feature table that contain overlapping features with
+   the feature table used to train the estimator.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table containing all features that should be used for target
+       prediction.
+   sample_estimator : SampleEstimator[Classifier]
+       Sample classifier trained with fit_classifier.
+   n_jobs : Int, optional
+       Number of jobs to run in parallel.
+
+   Returns
+   -------
+   predictions : SampleData[ClassifierPredictions]
+       Predicted target values for each input sample.
+   probabilities : SampleData[Probabilities]
+       Predicted class probabilities for each input sample.</pre>
+       </div>
+     </div>
+   </div>

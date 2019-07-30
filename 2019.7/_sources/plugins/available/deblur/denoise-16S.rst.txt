@@ -1,0 +1,130 @@
+denoise-16S: Deblur sequences using a 16S positive filter.
+==========================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime deblur denoise-16S [OPTIONS]
+
+     Perform sequence quality control for Illumina data using the Deblur
+     workflow with a 16S reference as a positive filter. Only forward reads are
+     supported at this time. The specific reference used is the 88% OTUs from
+     Greengenes 13_8. This mode of operation should only be used when data were
+     generated from a 16S amplicon protocol on an Illumina platform. The
+     reference is only used to assess whether each sequence is likely to be 16S
+     by a local alignment using SortMeRNA with a permissive e-value; the
+     reference is not used to characterize the sequences.
+
+   Inputs:
+     --i-demultiplexed-seqs ARTIFACT SampleData[SequencesWithQuality |
+       PairedEndSequencesWithQuality | JoinedSequencesWithQuality]
+                            The demultiplexed sequences to be denoised.
+                                                                       [required]
+   Parameters:
+     --p-trim-length INTEGER
+                            Sequence trim length, specify -1 to disable
+                            trimming.                                  [required]
+     --p-left-trim-len INTEGER
+       Range(0, None)       Sequence trimming from the 5' end. A value of 0 will
+                            disable this trim.                       [default: 0]
+     --p-sample-stats / --p-no-sample-stats
+                            If true, gather stats per sample.    [default: False]
+     --p-mean-error NUMBER  The mean per nucleotide error, used for original
+                            sequence estimate.                   [default: 0.005]
+     --p-indel-prob NUMBER  Insertion/deletion (indel) probability (same for N
+                            indels).                              [default: 0.01]
+     --p-indel-max INTEGER  Maximum number of insertion/deletions.   [default: 3]
+     --p-min-reads INTEGER  Retain only features appearing at least min-reads
+                            times across all samples in the resulting feature
+                            table.                                  [default: 10]
+     --p-min-size INTEGER   In each sample, discard all features with an
+                            abundance less than min-size.            [default: 2]
+     --p-jobs-to-start INTEGER
+                            Number of jobs to start (if to run in parallel).
+                                                                     [default: 1]
+     --p-hashed-feature-ids / --p-no-hashed-feature-ids
+                            If true, hash the feature IDs.        [default: True]
+   Outputs:
+     --o-table ARTIFACT FeatureTable[Frequency]
+                            The resulting denoised feature table.      [required]
+     --o-representative-sequences ARTIFACT FeatureData[Sequence]
+                            The resulting feature sequences.           [required]
+     --o-stats ARTIFACT     Per-sample stats if requested.
+       DeblurStats                                                     [required]
+   Miscellaneous:
+     --output-dir PATH      Output unspecified results to a directory
+     --verbose / --quiet    Display verbose output to stdout and/or stderr
+                            during execution of this action. Or silence output if
+                            execution is successful (silence is golden).
+     --citations            Show citations and exit.
+     --help                 Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.deblur.methods import denoise_16S
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Deblur sequences using a 16S positive filter.
+
+   Perform sequence quality control for Illumina data using the Deblur
+   workflow with a 16S reference as a positive filter. Only forward reads are
+   supported at this time. The specific reference used is the 88% OTUs from
+   Greengenes 13_8. This mode of operation should only be used when data were
+   generated from a 16S amplicon protocol on an Illumina platform. The
+   reference is only used to assess whether each sequence is likely to be 16S
+   by a local alignment using SortMeRNA with a permissive e-value; the
+   reference is not used to characterize the sequences.
+
+   Parameters
+   ----------
+   demultiplexed_seqs : SampleData[SequencesWithQuality | PairedEndSequencesWithQuality | JoinedSequencesWithQuality]
+       The demultiplexed sequences to be denoised.
+   trim_length : Int
+       Sequence trim length, specify -1 to disable trimming.
+   left_trim_len : Int % Range(0, None), optional
+       Sequence trimming from the 5' end. A value of 0 will disable this trim.
+   sample_stats : Bool, optional
+       If true, gather stats per sample.
+   mean_error : Float, optional
+       The mean per nucleotide error, used for original sequence estimate.
+   indel_prob : Float, optional
+       Insertion/deletion (indel) probability (same for N indels).
+   indel_max : Int, optional
+       Maximum number of insertion/deletions.
+   min_reads : Int, optional
+       Retain only features appearing at least min_reads times across all
+       samples in the resulting feature table.
+   min_size : Int, optional
+       In each sample, discard all features with an abundance less than
+       min_size.
+   jobs_to_start : Int, optional
+       Number of jobs to start (if to run in parallel).
+   hashed_feature_ids : Bool, optional
+       If true, hash the feature IDs.
+
+   Returns
+   -------
+   table : FeatureTable[Frequency]
+       The resulting denoised feature table.
+   representative_sequences : FeatureData[Sequence]
+       The resulting feature sequences.
+   stats : DeblurStats
+       Per-sample stats if requested.</pre>
+       </div>
+     </div>
+   </div>

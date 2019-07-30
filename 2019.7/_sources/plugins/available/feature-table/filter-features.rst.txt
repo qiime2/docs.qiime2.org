@@ -1,0 +1,120 @@
+filter-features: Filter features from table
+===========================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table filter-features [OPTIONS]
+
+     Filter features from table based on frequency and/or metadata. Any samples
+     with a frequency of zero after feature filtering will also be removed. See
+     the filtering tutorial on https://docs.qiime2.org for additional details.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          The feature table from which features should be
+                          filtered.                                    [required]
+   Parameters:
+     --p-min-frequency INTEGER
+                          The minimum total frequency that a feature must have
+                          to be retained.                            [default: 0]
+     --p-max-frequency INTEGER
+                          The maximum total frequency that a feature can have to
+                          be retained. If no value is provided this will default
+                          to infinity (i.e., no maximum frequency filter will be
+                          applied).                                    [optional]
+     --p-min-samples INTEGER
+                          The minimum number of samples that a feature must be
+                          observed in to be retained.                [default: 0]
+     --p-max-samples INTEGER
+                          The maximum number of samples that a feature can be
+                          observed in to be retained. If no value is provided
+                          this will default to infinity (i.e., no maximum sample
+                          filter will be applied).                     [optional]
+     --m-metadata-file METADATA...
+       (multiple          Feature metadata used with `where` parameter when
+        arguments will    selecting features to retain, or with `exclude-ids`
+        be merged)        when selecting features to discard.          [optional]
+     --p-where TEXT       SQLite WHERE clause specifying feature metadata
+                          criteria that must be met to be included in the
+                          filtered feature table. If not provided, all features
+                          in `metadata` that are also in the feature table will
+                          be retained.                                 [optional]
+     --p-exclude-ids / --p-no-exclude-ids
+                          If true, the features selected by `metadata` or
+                          `where` parameters will be excluded from the filtered
+                          table instead of being retained.       [default: False]
+   Outputs:
+     --o-filtered-table ARTIFACT FeatureTable[Frequency]
+                          The resulting feature table filtered by feature.
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.methods import filter_features
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Filter features from table
+
+   Filter features from table based on frequency and/or metadata. Any samples
+   with a frequency of zero after feature filtering will also be removed. See
+   the filtering tutorial on https://docs.qiime2.org for additional details.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table from which features should be filtered.
+   min_frequency : Int, optional
+       The minimum total frequency that a feature must have to be retained.
+   max_frequency : Int, optional
+       The maximum total frequency that a feature can have to be retained. If
+       no value is provided this will default to infinity (i.e., no maximum
+       frequency filter will be applied).
+   min_samples : Int, optional
+       The minimum number of samples that a feature must be observed in to be
+       retained.
+   max_samples : Int, optional
+       The maximum number of samples that a feature can be observed in to be
+       retained. If no value is provided this will default to infinity (i.e.,
+       no maximum sample filter will be applied).
+   metadata : Metadata, optional
+       Feature metadata used with `where` parameter when selecting features to
+       retain, or with `exclude_ids` when selecting features to discard.
+   where : Str, optional
+       SQLite WHERE clause specifying feature metadata criteria that must be
+       met to be included in the filtered feature table. If not provided, all
+       features in `metadata` that are also in the feature table will be
+       retained.
+   exclude_ids : Bool, optional
+       If true, the features selected by `metadata` or `where` parameters will
+       be excluded from the filtered table instead of being retained.
+
+   Returns
+   -------
+   filtered_table : FeatureTable[Frequency]
+       The resulting feature table filtered by feature.</pre>
+       </div>
+     </div>
+   </div>

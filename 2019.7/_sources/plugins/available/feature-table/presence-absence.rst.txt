@@ -1,0 +1,64 @@
+presence-absence: Convert to presence/absence
+=============================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table presence-absence [OPTIONS]
+
+     Convert frequencies to binary values indicating presence or absence of a
+     feature in a sample.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency | RelativeFrequency]
+                          The feature table to be converted into
+                          presence/absence abundances.                 [required]
+   Outputs:
+     --o-presence-absence-table ARTIFACT FeatureTable[PresenceAbsence]
+                          The resulting presence/absence feature table.
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.methods import presence_absence
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Convert to presence/absence
+
+   Convert frequencies to binary values indicating presence or absence of a
+   feature in a sample.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency | RelativeFrequency]
+       The feature table to be converted into presence/absence abundances.
+
+   Returns
+   -------
+   presence_absence_table : FeatureTable[PresenceAbsence]
+       The resulting presence/absence feature table.</pre>
+       </div>
+     </div>
+   </div>

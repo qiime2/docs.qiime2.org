@@ -1,0 +1,102 @@
+filter-features: Filter fragments in tree from table.
+=====================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime fragment-insertion filter-features [OPTIONS]
+
+     Filters fragments not inserted into a phylogenetic tree from a feature-
+     table. Some fragments computed by e.g. Deblur or DADA2 are too remote to
+     get inserted by SEPP into a reference phylogeny. To be able to use the
+     feature-table for downstream analyses like computing Faith's PD or
+     UniFrac, the feature-table must be cleared of fragments that are not part
+     of the phylogenetic tree, because their path length can otherwise not be
+     determined. Typically, the number of rejected fragments is low (<= 10),
+     but it might be worth to inspect the ratio of reads assigned to those
+     rejected fragments.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          A feature-table which needs to filtered down to those
+                          fragments that are contained in the tree, e.g. result
+                          of a Deblur or DADA2 run.                    [required]
+     --i-tree ARTIFACT    The tree resulting from inserting fragments into a
+       Phylogeny[Rooted]  reference phylogeny, i.e. the output of function 'sepp'
+                                                                       [required]
+   Outputs:
+     --o-filtered-table ARTIFACT FeatureTable[Frequency]
+                          The input table minus those fragments that were not
+                          part of the tree. This feature-table can be used for
+                          downstream analyses like phylogenetic alpha- or beta-
+                          diversity computation.                       [required]
+     --o-removed-table ARTIFACT FeatureTable[Frequency]
+                          Those fragments that got removed from the input table,
+                          because they were not part of the tree. This table is
+                          mainly used for quality control, e.g. to inspect the
+                          ratio of removed reads per sample from the input table.
+                          You can ignore this table for downstream analyses.
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.fragment_insertion.methods import filter_features
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Filter fragments in tree from table.
+
+   Filters fragments not inserted into a phylogenetic tree from a feature-
+   table. Some fragments computed by e.g. Deblur or DADA2 are too remote to
+   get inserted by SEPP into a reference phylogeny. To be able to use the
+   feature-table for downstream analyses like computing Faith's PD or UniFrac,
+   the feature-table must be cleared of fragments that are not part of the
+   phylogenetic tree, because their path length can otherwise not be
+   determined. Typically, the number of rejected fragments is low (<= 10), but
+   it might be worth to inspect the ratio of reads assigned to those rejected
+   fragments.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       A feature-table which needs to filtered down to those fragments that
+       are contained in the tree, e.g. result of a Deblur or DADA2 run.
+   tree : Phylogeny[Rooted]
+       The tree resulting from inserting fragments into a reference phylogeny,
+       i.e. the output of function 'sepp'
+
+   Returns
+   -------
+   filtered_table : FeatureTable[Frequency]
+       The input table minus those fragments that were not part of the tree.
+       This feature-table can be used for downstream analyses like
+       phylogenetic alpha- or beta- diversity computation.
+   removed_table : FeatureTable[Frequency]
+       Those fragments that got removed from the input table, because they
+       were not part of the tree. This table is mainly used for quality
+       control, e.g. to inspect the ratio of removed reads per sample from the
+       input table. You can ignore this table for downstream analyses.</pre>
+       </div>
+     </div>
+   </div>
