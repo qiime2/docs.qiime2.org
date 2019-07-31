@@ -17,3 +17,4 @@ Disallow: /2018.6/
 Disallow: /2018.8/
 Disallow: /2018.11/
 Disallow: /2019.1/
+Disallow: /2019.4/
