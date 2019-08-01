@@ -82,12 +82,13 @@ Inputs:
 Parameters:
   --p-max-depth INTEGER   The maximum rarefaction depth. Must be greater than
     Range(1, None)        min-depth.                                [required]
-  --p-metrics TEXT... Choices('heip_e', 'fisher_alpha', 'pielou_e',
-    'observed_otus', 'enspie', 'chao1', 'gini_index', 'mcintosh_d', 'doubles',
-    'faith_pd', 'singles', 'goods_coverage', 'shannon', 'robbins',
-    'mcintosh_e', 'ace', 'brillouin_d', 'dominance', 'michaelis_menten_fit',
-    'simpson', 'menhinick', 'simpson_e', 'lladser_pe', 'berger_parker_d',
-    'margalef')           The metrics to be measured. By default computes
+  --p-metrics TEXT... Choices('enspie', 'simpson_e',
+    'michaelis_menten_fit', 'margalef', 'singles', 'simpson', 'chao1',
+    'heip_e', 'doubles', 'mcintosh_d', 'ace', 'menhinick', 'faith_pd',
+    'shannon', 'fisher_alpha', 'brillouin_d', 'lladser_pe', 'observed_otus',
+    'mcintosh_e', 'pielou_e', 'robbins', 'berger_parker_d', 'goods_coverage',
+    'gini_index', 'dominance')
+                          The metrics to be measured. By default computes
                           observed_otus, shannon, and if phylogeny is
                           provided, faith_pd.                       [optional]
   --m-metadata-file METADATA...
@@ -131,7 +132,7 @@ max_depth : Int % Range(1, None)
     The maximum rarefaction depth. Must be greater than min_depth.
 phylogeny : Phylogeny[Rooted], optional
     Optional phylogeny for phylogenetic metrics.
-metrics : Set[Str % Choices('mcintosh_d', 'doubles', 'enspie', 'singles', 'ace', 'fisher_alpha', 'lladser_pe', 'menhinick', 'gini_index', 'heip_e', 'shannon', 'chao1', 'goods_coverage', 'dominance', 'simpson', 'simpson_e', 'michaelis_menten_fit', 'robbins', 'mcintosh_e', 'observed_otus', 'margalef', 'pielou_e', 'brillouin_d', 'faith_pd', 'berger_parker_d')], optional
+metrics : Set[Str % Choices('dominance', 'goods_coverage', 'michaelis_menten_fit', 'observed_otus', 'doubles', 'shannon', 'chao1', 'fisher_alpha', 'simpson', 'lladser_pe', 'ace', 'mcintosh_d', 'pielou_e', 'gini_index', 'heip_e', 'faith_pd', 'berger_parker_d', 'margalef', 'mcintosh_e', 'menhinick', 'robbins', 'singles', 'simpson_e', 'brillouin_d', 'enspie')], optional
     The metrics to be measured. By default computes observed_otus, shannon,
     and if phylogeny is provided, faith_pd.
 metadata : Metadata, optional

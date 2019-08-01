@@ -44,11 +44,11 @@ beta: Beta diversity
                           The feature table containing the samples over which
                           beta diversity should be computed.           [required]
    Parameters:
-     --p-metric TEXT Choices('euclidean', 'yule', 'russellrao', 'hamming',
-       'sokalmichener', 'cosine', 'jaccard', 'canberra_adkins', 'sqeuclidean',
-       'sokalsneath', 'braycurtis', 'canberra', 'cityblock', 'wminkowski',
-       'correlation', 'aitchison', 'mahalanobis', 'seuclidean', 'matching',
-       'chebyshev', 'rogerstanimoto', 'kulsinski', 'dice')
+     --p-metric TEXT Choices('wminkowski', 'sqeuclidean', 'canberra_adkins',
+       'russellrao', 'braycurtis', 'seuclidean', 'jaccard', 'dice', 'hamming',
+       'aitchison', 'chebyshev', 'canberra', 'kulsinski', 'sokalsneath',
+       'cosine', 'matching', 'sokalmichener', 'rogerstanimoto', 'correlation',
+       'yule', 'euclidean', 'mahalanobis', 'cityblock')
                           The beta diversity metric to be computed.    [required]
      --p-pseudocount INTEGER
        Range(1, None)     A pseudocount to handle zeros for compositional
@@ -95,7 +95,7 @@ beta: Beta diversity
    table : FeatureTable[Frequency]
        The feature table containing the samples over which beta diversity
        should be computed.
-   metric : Str % Choices('aitchison', 'hamming', 'canberra_adkins', 'sokalsneath', 'matching', 'jaccard', 'russellrao', 'euclidean', 'sqeuclidean', 'sokalmichener', 'kulsinski', 'mahalanobis', 'cosine', 'yule', 'cityblock', 'correlation', 'canberra', 'chebyshev', 'dice', 'braycurtis', 'rogerstanimoto', 'wminkowski', 'seuclidean')
+   metric : Str % Choices('kulsinski', 'correlation', 'mahalanobis', 'dice', 'hamming', 'cosine', 'euclidean', 'canberra', 'chebyshev', 'braycurtis', 'sokalsneath', 'seuclidean', 'jaccard', 'yule', 'cityblock', 'sqeuclidean', 'aitchison', 'canberra_adkins', 'matching', 'wminkowski', 'sokalmichener', 'rogerstanimoto', 'russellrao')
        The beta diversity metric to be computed.
    pseudocount : Int % Range(1, None), optional
        A pseudocount to handle zeros for compositional metrics.  This is

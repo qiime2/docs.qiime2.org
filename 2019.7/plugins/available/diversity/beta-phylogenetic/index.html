@@ -94,8 +94,8 @@ Inputs:
                           in the table, but all feature ids in the table must
                           be present in this tree.                  [required]
 Parameters:
-  --p-metric TEXT Choices('generalized_unifrac', 'weighted_unifrac',
-    'unweighted_unifrac', 'weighted_normalized_unifrac')
+  --p-metric TEXT Choices('weighted_normalized_unifrac',
+    'weighted_unifrac', 'unweighted_unifrac', 'generalized_unifrac')
                           The beta diversity metric to be computed. [required]
   --p-n-jobs INTEGER      The number of workers to use.           [default: 1]
   --p-variance-adjusted / --p-no-variance-adjusted
@@ -149,7 +149,7 @@ phylogeny : Phylogeny[Rooted]
     feature identifiers in the table. This tree can contain tip ids that
     are not present in the table, but all feature ids in the table must be
     present in this tree.
-metric : Str % Choices('generalized_unifrac', 'weighted_normalized_unifrac', 'unweighted_unifrac', 'weighted_unifrac')
+metric : Str % Choices('weighted_normalized_unifrac', 'generalized_unifrac', 'weighted_unifrac', 'unweighted_unifrac')
     The beta diversity metric to be computed.
 n_jobs : Int, optional
     The number of workers to use.

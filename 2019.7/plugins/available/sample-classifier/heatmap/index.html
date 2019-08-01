@@ -97,51 +97,51 @@ Parameters:
                          Normalize the feature table by adding a psuedocount
                          of 1 and then taking the log10 of the table.
                                                                [default: True]
-  --p-metric TEXT Choices('euclidean', 'yule', 'russellrao', 'hamming',
-    'sokalmichener', 'cosine', 'jaccard', 'sqeuclidean', 'sokalsneath',
-    'braycurtis', 'canberra', 'cityblock', 'correlation', 'mahalanobis',
-    'seuclidean', 'matching', 'chebyshev', 'rogerstanimoto', 'minkowski',
-    'kulsinski', 'dice') Metrics exposed by seaborn (see
+  --p-metric TEXT Choices('sqeuclidean', 'russellrao', 'braycurtis',
+    'seuclidean', 'dice', 'jaccard', 'hamming', 'chebyshev', 'canberra',
+    'kulsinski', 'minkowski', 'sokalsneath', 'cosine', 'matching',
+    'sokalmichener', 'rogerstanimoto', 'correlation', 'yule', 'euclidean',
+    'mahalanobis', 'cityblock')
+                         Metrics exposed by seaborn (see
                          http://seaborn.pydata.org/generated/seaborn.clusterma
                          p.html#seaborn.clustermap for more detail).
                                                        [default: 'braycurtis']
-  --p-method TEXT Choices('weighted', 'centroid', 'complete', 'ward',
-    'median', 'single', 'average')
+  --p-method TEXT Choices('centroid', 'average', 'weighted', 'complete',
+    'single', 'median', 'ward')
                          Clustering methods exposed by seaborn (see
                          http://seaborn.pydata.org/generated/seaborn.clusterma
                          p.html#seaborn.clustermap for more detail).
                                                           [default: 'average']
-  --p-cluster TEXT Choices('features', 'both', 'none', 'samples')
+  --p-cluster TEXT Choices('features', 'both', 'samples', 'none')
                          Specify which axes to cluster.  [default: 'features']
-  --p-color-scheme TEXT Choices('PuBu_r', 'coolwarm', 'jet', 'inferno',
-    'brg', 'icefire', 'Spectral', 'nipy_spectral_r', 'gist_earth_r',
-    'magma_r', 'Oranges_r', 'gnuplot', 'Vega20c', 'OrRd', 'flag_r',
-    'icefire_r', 'gist_yarg_r', 'YlOrBr_r', 'Greens', 'Vega20c_r', 'spring',
-    'BuPu_r', 'Set2_r', 'BrBG_r', 'brg_r', 'terrain', 'winter', 'tab20b_r',
-    'gist_yarg', 'pink_r', 'mako_r', 'gist_rainbow', 'Blues', 'PuBu',
-    'gnuplot2_r', 'gist_gray_r', 'YlGn', 'binary_r', 'inferno_r', 'Blues_r',
-    'gist_earth', 'Vega20_r', 'PuOr', 'cubehelix', 'Vega10', 'hsv_r',
-    'gnuplot_r', 'gist_gray', 'afmhot', 'vlag', 'tab10_r', 'afmhot_r',
-    'RdGy_r', 'YlGn_r', 'tab20b', 'hsv', 'Set3', 'autumn_r', 'tab20c_r',
-    'prism', 'tab20c', 'gray_r', 'Accent', 'RdPu_r', 'vlag_r',
-    'nipy_spectral', 'summer_r', 'Pastel1', 'PRGn_r', 'terrain_r', 'summer',
-    'gist_ncar', 'gist_ncar_r', 'gray', 'Pastel2', 'Set2', 'Greens_r',
-    'YlOrBr', 'Pastel2_r', 'Pastel1_r', 'Greys', 'YlGnBu', 'YlOrRd_r',
-    'RdYlBu', 'gnuplot2', 'winter_r', 'gist_stern', 'Purples', 'autumn',
-    'viridis_r', 'copper_r', 'BuPu', 'seismic', 'ocean', 'Vega20b_r', 'RdBu',
-    'PiYG', 'tab20_r', 'GnBu', 'PuRd_r', 'Set1', 'bwr', 'Wistia_r',
-    'RdYlBu_r', 'PRGn', 'CMRmap', 'Paired', 'PiYG_r', 'Dark2_r', 'copper',
-    'bone', 'pink', 'hot_r', 'rocket_r', 'YlOrRd', 'ocean_r', 'prism_r',
-    'gist_heat_r', 'RdYlGn', 'jet_r', 'cubehelix_r', 'BrBG', 'PuBuGn',
-    'plasma_r', 'tab10', 'BuGn_r', 'mako', 'Set1_r', 'gist_stern_r',
-    'CMRmap_r', 'GnBu_r', 'Vega10_r', 'binary', 'Reds_r', 'Wistia',
-    'gist_rainbow_r', 'RdGy', 'viridis', 'Set3_r', 'bone_r', 'plasma',
-    'tab20', 'RdPu', 'seismic_r', 'RdYlGn_r', 'spectral_r', 'PuBuGn_r',
-    'OrRd_r', 'Paired_r', 'coolwarm_r', 'flag', 'Vega20', 'magma', 'hot',
-    'gist_heat', 'bwr_r', 'Accent_r', 'cool', 'rainbow_r', 'rocket', 'Dark2',
-    'spectral', 'rainbow', 'RdBu_r', 'Purples_r', 'Oranges', 'spring_r',
-    'PuOr_r', 'Spectral_r', 'Vega20b', 'YlGnBu_r', 'BuGn', 'Greys_r', 'Reds',
-    'PuRd', 'cool_r')    Color scheme for heatmap.         [default: 'rocket']
+  --p-color-scheme TEXT Choices('ocean', 'Oranges_r', 'rainbow', 'Vega20c',
+    'rocket', 'RdYlBu', 'Pastel1', 'Spectral', 'gist_earth', 'magma',
+    'tab10_r', 'Vega10_r', 'magma_r', 'tab10', 'tab20c', 'Purples', 'autumn',
+    'BuPu', 'winter', 'gist_gray', 'RdYlGn_r', 'spring_r', 'rocket_r',
+    'hot_r', 'viridis', 'plasma_r', 'tab20', 'binary_r', 'Greys_r', 'PiYG_r',
+    'inferno_r', 'Reds_r', 'icefire', 'terrain_r', 'cool', 'spectral',
+    'PRGn_r', 'OrRd_r', 'PiYG', 'gist_yarg_r', 'winter_r', 'YlOrRd_r', 'OrRd',
+    'copper_r', 'PuBuGn_r', 'BrBG', 'nipy_spectral_r', 'prism', 'Accent_r',
+    'Vega20', 'jet', 'PuOr_r', 'afmhot', 'jet_r', 'rainbow_r', 'coolwarm',
+    'Vega20_r', 'YlOrRd', 'hsv', 'icefire_r', 'PuRd', 'Greens', 'Dark2_r',
+    'PuBuGn', 'flag', 'gist_stern', 'hsv_r', 'Paired_r', 'Wistia_r', 'PRGn',
+    'PuBu', 'cool_r', 'tab20b_r', 'RdGy', 'tab20b', 'viridis_r', 'Set3',
+    'gist_heat_r', 'cubehelix_r', 'seismic', 'seismic_r', 'vlag', 'Oranges',
+    'Set2_r', 'Set1_r', 'RdYlBu_r', 'flag_r', 'Reds', 'summer', 'gnuplot_r',
+    'gnuplot', 'GnBu_r', 'gist_stern_r', 'gist_ncar', 'RdBu', 'Pastel2',
+    'RdYlGn', 'bone', 'BrBG_r', 'brg', 'GnBu', 'bwr', 'Spectral_r', 'mako_r',
+    'gray_r', 'mako', 'plasma', 'CMRmap', 'gist_heat', 'summer_r', 'BuGn',
+    'vlag_r', 'Vega10', 'Purples_r', 'binary', 'YlGn_r', 'PuOr', 'gist_yarg',
+    'spring', 'gist_earth_r', 'coolwarm_r', 'YlOrBr', 'Vega20b_r', 'brg_r',
+    'BuPu_r', 'gist_gray_r', 'spectral_r', 'Vega20c_r', 'Paired', 'gray',
+    'Blues', 'Pastel1_r', 'tab20c_r', 'BuGn_r', 'bone_r', 'inferno', 'Greys',
+    'afmhot_r', 'copper', 'Vega20b', 'pink_r', 'gist_rainbow', 'hot', 'pink',
+    'Pastel2_r', 'ocean_r', 'Greens_r', 'RdBu_r', 'RdPu_r', 'Set3_r',
+    'CMRmap_r', 'YlGn', 'PuRd_r', 'Set1', 'Wistia', 'PuBu_r',
+    'gist_rainbow_r', 'bwr_r', 'Dark2', 'gnuplot2', 'prism_r', 'tab20_r',
+    'Accent', 'nipy_spectral', 'Set2', 'cubehelix', 'Blues_r', 'YlOrBr_r',
+    'gnuplot2_r', 'YlGnBu_r', 'autumn_r', 'gist_ncar_r', 'YlGnBu', 'terrain',
+    'RdGy_r', 'RdPu')    Color scheme for heatmap.         [default: 'rocket']
 Outputs:
   --o-heatmap VISUALIZATION
                          Heatmap of important features.             [required]
@@ -188,15 +188,15 @@ group_samples : Bool, optional
 normalize : Bool, optional
     Normalize the feature table by adding a psuedocount of 1 and then
     taking the log10 of the table.
-metric : Str % Choices('hamming', 'sokalsneath', 'matching', 'jaccard', 'russellrao', 'euclidean', 'sqeuclidean', 'sokalmichener', 'kulsinski', 'mahalanobis', 'minkowski', 'cosine', 'yule', 'cityblock', 'correlation', 'canberra', 'chebyshev', 'dice', 'braycurtis', 'rogerstanimoto', 'seuclidean'), optional
+metric : Str % Choices('kulsinski', 'correlation', 'mahalanobis', 'dice', 'hamming', 'cosine', 'euclidean', 'canberra', 'chebyshev', 'braycurtis', 'sokalsneath', 'seuclidean', 'minkowski', 'jaccard', 'yule', 'cityblock', 'sqeuclidean', 'matching', 'sokalmichener', 'rogerstanimoto', 'russellrao'), optional
     Metrics exposed by seaborn (see http://seaborn.pydata.org/generated/sea
     born.clustermap.html#seaborn.clustermap for more detail).
-method : Str % Choices('complete', 'weighted', 'average', 'centroid', 'median', 'single', 'ward'), optional
+method : Str % Choices('complete', 'average', 'centroid', 'weighted', 'single', 'ward', 'median'), optional
     Clustering methods exposed by seaborn (see http://seaborn.pydata.org/ge
     nerated/seaborn.clustermap.html#seaborn.clustermap for more detail).
-cluster : Str % Choices('both', 'features', 'none', 'samples'), optional
+cluster : Str % Choices('features', 'samples', 'none', 'both'), optional
     Specify which axes to cluster.
-color_scheme : Str % Choices('cubehelix', 'spring', 'hot_r', 'Purples', 'YlOrBr', 'viridis', 'copper', 'rainbow', 'Paired', 'RdGy', 'coolwarm_r', 'winter_r', 'Vega20b_r', 'hsv_r', 'cool', 'RdYlBu_r', 'bone', 'ocean_r', 'Vega20c', 'RdBu', 'PuBuGn', 'Pastel2_r', 'vlag', 'gray_r', 'Set1', 'tab20c_r', 'terrain', 'YlGnBu_r', 'gist_earth_r', 'ocean', 'copper_r', 'tab20_r', 'Greens', 'hot', 'Pastel1', 'YlOrRd', 'Vega20c_r', 'RdYlBu', 'gray', 'nipy_spectral_r', 'rainbow_r', 'RdYlGn_r', 'Paired_r', 'Vega20b', 'gist_heat_r', 'rocket', 'nipy_spectral', 'PRGn', 'Reds', 'tab20b', 'Vega10_r', 'Set3', 'autumn_r', 'cubehelix_r', 'gist_heat', 'Vega20_r', 'PuBu_r', 'Accent', 'Spectral', 'vlag_r', 'YlGn', 'winter', 'Oranges_r', 'BuPu_r', 'YlOrRd_r', 'gist_yarg', 'pink', 'PRGn_r', 'PuOr_r', 'BuGn_r', 'gnuplot', 'BuPu', 'gnuplot2_r', 'seismic', 'OrRd', 'Accent_r', 'icefire_r', 'brg_r', 'prism_r', 'summer', 'Greens_r', 'coolwarm', 'tab20c', 'BrBG_r', 'Pastel2', 'summer_r', 'gist_gray_r', 'jet_r', 'flag_r', 'pink_r', 'spectral_r', 'Blues_r', 'Set1_r', 'BrBG', 'tab10_r', 'plasma_r', 'tab10', 'PuBu', 'magma', 'binary_r', 'CMRmap_r', 'Dark2_r', 'spring_r', 'YlOrBr_r', 'seismic_r', 'viridis_r', 'PuBuGn_r', 'afmhot_r', 'Vega10', 'bone_r', 'terrain_r', 'flag', 'gist_rainbow', 'gist_stern', 'tab20', 'PuRd', 'YlGnBu', 'prism', 'gnuplot2', 'PuRd_r', 'mako', 'RdYlGn', 'Dark2', 'Greys_r', 'rocket_r', 'Vega20', 'Purples_r', 'Blues', 'gnuplot_r', 'inferno', 'inferno_r', 'Wistia_r', 'bwr', 'brg', 'Greys', 'RdPu_r', 'binary', 'BuGn', 'gist_ncar_r', 'Set3_r', 'gist_rainbow_r', 'afmhot', 'CMRmap', 'Spectral_r', 'gist_stern_r', 'OrRd_r', 'Pastel1_r', 'icefire', 'gist_earth', 'PiYG', 'PuOr', 'cool_r', 'Set2', 'Wistia', 'jet', 'Oranges', 'plasma', 'PiYG_r', 'spectral', 'mako_r', 'YlGn_r', 'autumn', 'GnBu_r', 'Reds_r', 'gist_gray', 'tab20b_r', 'RdGy_r', 'gist_yarg_r', 'RdBu_r', 'gist_ncar', 'magma_r', 'GnBu', 'Set2_r', 'RdPu', 'bwr_r', 'hsv'), optional
+color_scheme : Str % Choices('jet_r', 'GnBu_r', 'YlOrRd', 'spring', 'cool', 'Set3', 'rocket_r', 'RdGy_r', 'bwr_r', 'Greys_r', 'seismic', 'Greens_r', 'YlGn_r', 'Vega10', 'autumn_r', 'plasma_r', 'gray', 'hsv', 'gnuplot2', 'PiYG', 'YlOrBr_r', 'gist_earth', 'RdPu_r', 'summer_r', 'tab10_r', 'PRGn', 'cubehelix', 'OrRd', 'RdYlGn', 'plasma', 'icefire_r', 'Purples', 'tab20b_r', 'Set1', 'tab20c_r', 'GnBu', 'gist_yarg_r', 'gist_earth_r', 'Pastel2', 'afmhot_r', 'YlOrRd_r', 'Pastel2_r', 'PuOr_r', 'tab20b', 'coolwarm', 'Accent_r', 'Spectral', 'copper_r', 'Blues', 'PuBuGn', 'gist_rainbow', 'prism', 'tab20c', 'Wistia', 'Dark2', 'YlOrBr', 'rainbow', 'vlag_r', 'winter', 'spectral_r', 'jet', 'Vega10_r', 'PiYG_r', 'Accent', 'cubehelix_r', 'Vega20c_r', 'inferno', 'magma', 'Vega20b_r', 'Paired', 'BrBG', 'Vega20c', 'tab20_r', 'ocean_r', 'Oranges', 'RdGy', 'Blues_r', 'Reds_r', 'vlag', 'mako', 'Set2_r', 'Oranges_r', 'PuOr', 'rocket', 'brg_r', 'Spectral_r', 'gist_ncar_r', 'OrRd_r', 'YlGnBu', 'gist_stern', 'gist_heat', 'spring_r', 'YlGnBu_r', 'cool_r', 'gnuplot', 'terrain_r', 'tab10', 'winter_r', 'gist_ncar', 'PuBu', 'bone_r', 'flag', 'Set2', 'BrBG_r', 'Vega20', 'icefire', 'gray_r', 'Set3_r', 'RdPu', 'BuGn', 'bwr', 'gist_stern_r', 'Paired_r', 'YlGn', 'BuGn_r', 'RdYlGn_r', 'CMRmap_r', 'prism_r', 'PuBu_r', 'gist_gray_r', 'afmhot', 'PuRd_r', 'gnuplot2_r', 'Pastel1_r', 'RdYlBu_r', 'nipy_spectral_r', 'PuBuGn_r', 'brg', 'PuRd', 'hot', 'terrain', 'Vega20_r', 'Purples_r', 'mako_r', 'gnuplot_r', 'pink', 'nipy_spectral', 'Reds', 'Greys', 'rainbow_r', 'coolwarm_r', 'hot_r', 'Greens', 'tab20', 'autumn', 'Pastel1', 'BuPu_r', 'CMRmap', 'RdYlBu', 'hsv_r', 'magma_r', 'bone', 'flag_r', 'gist_rainbow_r', 'Dark2_r', 'ocean', 'spectral', 'BuPu', 'viridis_r', 'binary_r', 'RdBu', 'inferno_r', 'gist_heat_r', 'pink_r', 'binary', 'Vega20b', 'PRGn_r', 'viridis', 'copper', 'summer', 'RdBu_r', 'seismic_r', 'Set1_r', 'Wistia_r', 'gist_gray', 'gist_yarg'), optional
     Color scheme for heatmap.
 
 Returns

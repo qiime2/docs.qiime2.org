@@ -98,15 +98,15 @@ Inputs:
                           be present in this tree. [required for phylogenetic
                           metrics]                                  [optional]
 Parameters:
-  --p-metric TEXT Choices('braycurtis', 'euclidean', 'canberra',
-    'cityblock', 'wminkowski', 'yule', 'correlation', 'aitchison',
-    'weighted_unifrac', 'mahalanobis', 'russellrao', 'seuclidean', 'hamming',
-    'sokalmichener', 'cosine', 'jaccard', 'kulsinski', 'sokalsneath',
-    'matching', 'chebyshev', 'unweighted_unifrac', 'sqeuclidean',
-    'rogerstanimoto', 'generalized_unifrac', 'weighted_normalized_unifrac',
-    'canberra_adkins', 'dice')
+  --p-metric TEXT Choices('aitchison', 'weighted_unifrac', 'chebyshev',
+    'canberra', 'wminkowski', 'kulsinski', 'sokalsneath', 'cosine',
+    'matching', 'sokalmichener', 'weighted_normalized_unifrac',
+    'generalized_unifrac', 'sqeuclidean', 'canberra_adkins', 'rogerstanimoto',
+    'russellrao', 'unweighted_unifrac', 'braycurtis', 'seuclidean',
+    'correlation', 'yule', 'jaccard', 'dice', 'euclidean', 'hamming',
+    'mahalanobis', 'cityblock')
                           The beta diversity metric to be computed. [required]
-  --p-clustering-method TEXT Choices('upgma', 'nj')
+  --p-clustering-method TEXT Choices('nj', 'upgma')
                           Samples can be clustered with neighbor joining or
                           UPGMA. An arbitrary rarefaction trial will be used
                           for the tree, and the remaining trials are used to
@@ -160,7 +160,7 @@ Parameters
 table : FeatureTable[Frequency]
     Feature table upon which to perform beta diversity rarefaction
     analyses.
-metric : Str % Choices('aitchison', 'hamming', 'canberra_adkins', 'yule', 'cityblock', 'correlation', 'canberra', 'unweighted_unifrac', 'sokalsneath', 'chebyshev', 'matching', 'jaccard', 'dice', 'braycurtis', 'generalized_unifrac', 'russellrao', 'weighted_unifrac', 'euclidean', 'rogerstanimoto', 'sqeuclidean', 'sokalmichener', 'kulsinski', 'mahalanobis', 'wminkowski', 'cosine', 'weighted_normalized_unifrac', 'seuclidean')
+metric : Str % Choices('kulsinski', 'correlation', 'mahalanobis', 'seuclidean', 'russellrao', 'dice', 'hamming', 'generalized_unifrac', 'jaccard', 'yule', 'unweighted_unifrac', 'cityblock', 'cosine', 'euclidean', 'sqeuclidean', 'aitchison', 'canberra', 'weighted_unifrac', 'matching', 'wminkowski', 'chebyshev', 'weighted_normalized_unifrac', 'sokalmichener', 'braycurtis', 'sokalsneath', 'rogerstanimoto', 'canberra_adkins')
     The beta diversity metric to be computed.
 clustering_method : Str % Choices('upgma', 'nj')
     Samples can be clustered with neighbor joining or UPGMA. An arbitrary
@@ -178,7 +178,7 @@ phylogeny : Phylogeny[Rooted], optional
     feature identifiers in the table. This tree can contain tip ids that
     are not present in the table, but all feature ids in the table must be
     present in this tree. [required for phylogenetic metrics]
-correlation_method : Str % Choices('spearman', 'pearson'), optional
+correlation_method : Str % Choices('pearson', 'spearman'), optional
     The Mantel correlation test to be applied when computing correlation
     between beta diversity distance matrices.
 color_scheme : Str % Choices('BrBG', 'BrBG_r', 'PRGn', 'PRGn_r', 'PiYG', 'PiYG_r', 'PuOr', 'PuOr_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r'), optional

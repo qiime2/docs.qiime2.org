@@ -64,7 +64,7 @@ denoise-paired: Denoise and dereplicate paired-end sequences
                             the resulting read is then shorter than `trunc-len-f`
                             or `trunc-len-r` (depending on the direction of the
                             read) it is discarded.                   [default: 2]
-     --p-chimera-method TEXT Choices('pooled', 'none', 'consensus')
+     --p-chimera-method TEXT Choices('pooled', 'consensus', 'none')
                             The method used to remove chimeras. "none": No
                             chimera removal is performed. "pooled": All reads are
                             pooled prior to chimera detection. "consensus":
@@ -168,7 +168,7 @@ denoise-paired: Denoise and dereplicate paired-end sequences
        or equal to this value. If the resulting read is then shorter than
        `trunc_len_f` or `trunc_len_r` (depending on the direction of the read)
        it is discarded.
-   chimera_method : Str % Choices('consensus', 'pooled', 'none'), optional
+   chimera_method : Str % Choices('consensus', 'none', 'pooled'), optional
        The method used to remove chimeras. "none": No chimera removal is
        performed. "pooled": All reads are pooled prior to chimera detection.
        "consensus": Chimeras are detected in samples individually, and

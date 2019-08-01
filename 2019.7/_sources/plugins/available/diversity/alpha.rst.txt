@@ -23,13 +23,13 @@ alpha: Alpha diversity
                           The feature table containing the samples for which
                           alpha diversity should be computed.          [required]
    Parameters:
-     --p-metric TEXT Choices('heip_e', 'enspie', 'chao1', 'ace', 'chao1_ci',
-       'michaelis_menten_fit', 'strong', 'fisher_alpha', 'pielou_e',
-       'observed_otus', 'esty_ci', 'gini_index', 'mcintosh_d', 'berger_parker_d',
-       'doubles', 'singles', 'goods_coverage', 'shannon', 'robbins',
-       'mcintosh_e', 'brillouin_d', 'dominance', 'osd', 'simpson', 'simpson_e',
-       'lladser_ci', 'lladser_pe', 'kempton_taylor_q', 'margalef', 'menhinick')
-                          The alpha diversity metric to be computed.   [required]
+     --p-metric TEXT Choices('margalef', 'singles', 'chao1', 'heip_e',
+       'doubles', 'osd', 'shannon', 'mcintosh_e', 'pielou_e', 'berger_parker_d',
+       'goods_coverage', 'menhinick', 'chao1_ci', 'enspie', 'simpson_e',
+       'michaelis_menten_fit', 'lladser_ci', 'simpson', 'esty_ci',
+       'kempton_taylor_q', 'mcintosh_d', 'ace', 'fisher_alpha', 'observed_otus',
+       'lladser_pe', 'robbins', 'brillouin_d', 'gini_index', 'strong',
+       'dominance')       The alpha diversity metric to be computed.   [required]
    Outputs:
      --o-alpha-diversity ARTIFACT SampleData[AlphaDiversity]
                           Vector containing per-sample alpha diversities.
@@ -63,7 +63,7 @@ alpha: Alpha diversity
    table : FeatureTable[Frequency]
        The feature table containing the samples for which alpha diversity
        should be computed.
-   metric : Str % Choices('doubles', 'menhinick', 'strong', 'gini_index', 'kempton_taylor_q', 'shannon', 'chao1', 'goods_coverage', 'dominance', 'simpson_e', 'robbins', 'esty_ci', 'berger_parker_d', 'mcintosh_d', 'enspie', 'singles', 'ace', 'fisher_alpha', 'lladser_pe', 'heip_e', 'chao1_ci', 'simpson', 'michaelis_menten_fit', 'mcintosh_e', 'osd', 'observed_otus', 'margalef', 'lladser_ci', 'pielou_e', 'brillouin_d')
+   metric : Str % Choices('dominance', 'goods_coverage', 'doubles', 'shannon', 'chao1', 'simpson', 'ace', 'lladser_ci', 'simpson_e', 'esty_ci', 'michaelis_menten_fit', 'chao1_ci', 'observed_otus', 'osd', 'fisher_alpha', 'lladser_pe', 'kempton_taylor_q', 'mcintosh_d', 'pielou_e', 'gini_index', 'strong', 'heip_e', 'berger_parker_d', 'margalef', 'mcintosh_e', 'menhinick', 'robbins', 'singles', 'brillouin_d', 'enspie')
        The alpha diversity metric to be computed.
 
    Returns

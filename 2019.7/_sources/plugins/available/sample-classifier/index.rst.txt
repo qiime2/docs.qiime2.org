@@ -15,7 +15,7 @@ sample-classifier
        </tr>
        <tr>
          <th scope="row">Version</th>
-         <td>2019.7.0</td>
+         <td>2019.7.1</td>
        </tr>
        <tr>
          <th scope="row">Website</th>

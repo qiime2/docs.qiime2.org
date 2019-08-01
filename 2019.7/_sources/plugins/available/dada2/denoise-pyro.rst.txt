@@ -44,7 +44,7 @@ denoise-pyro: Denoise and dereplicate single-end pyrosequences
      --p-max-len INTEGER    Remove reads prior to trimming or truncation which
                             are longer than this value. If 0 is provided no reads
                             will be removed based on length.         [default: 0]
-     --p-chimera-method TEXT Choices('pooled', 'none', 'consensus')
+     --p-chimera-method TEXT Choices('pooled', 'consensus', 'none')
                             The method used to remove chimeras. "none": No
                             chimera removal is performed. "pooled": All reads are
                             pooled prior to chimera detection. "consensus":
@@ -133,7 +133,7 @@ denoise-pyro: Denoise and dereplicate single-end pyrosequences
    max_len : Int, optional
        Remove reads prior to trimming or truncation which are longer than this
        value. If 0 is provided no reads will be removed based on length.
-   chimera_method : Str % Choices('consensus', 'pooled', 'none'), optional
+   chimera_method : Str % Choices('consensus', 'none', 'pooled'), optional
        The method used to remove chimeras. "none": No chimera removal is
        performed. "pooled": All reads are pooled prior to chimera detection.
        "consensus": Chimeras are detected in samples individually, and

@@ -82,7 +82,7 @@ Parameters:
                        A column defining the groups. Each unique value will
                        become a new ID for the table on the given `axis`.
                                                                     [required]
-  --p-mode TEXT Choices('median-ceiling', 'mean-ceiling', 'sum')
+  --p-mode TEXT Choices('sum', 'mean-ceiling', 'median-ceiling')
                        How to combine samples or features within a group.
                        `sum` will sum the frequencies across all samples or
                        features within a group; `mean-ceiling` will take the
@@ -122,7 +122,7 @@ axis : Str % Choices('sample', 'feature')
 metadata : MetadataColumn[Categorical]
     A column defining the groups. Each unique value will become a new ID
     for the table on the given `axis`.
-mode : Str % Choices('sum', 'mean-ceiling', 'median-ceiling')
+mode : Str % Choices('median-ceiling', 'mean-ceiling', 'sum')
     How to combine samples or features within a group. `sum` will sum the
     frequencies across all samples or features within a group; `mean-
     ceiling` will take the ceiling of the mean of these frequencies;

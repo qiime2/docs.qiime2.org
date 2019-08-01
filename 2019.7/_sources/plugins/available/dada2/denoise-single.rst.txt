@@ -41,7 +41,7 @@ denoise-single: Denoise and dereplicate single-end sequences
                             quality score less than or equal to this value. If
                             the resulting read is then shorter than `trunc-len`,
                             it is discarded.                         [default: 2]
-     --p-chimera-method TEXT Choices('pooled', 'none', 'consensus')
+     --p-chimera-method TEXT Choices('pooled', 'consensus', 'none')
                             The method used to remove chimeras. "none": No
                             chimera removal is performed. "pooled": All reads are
                             pooled prior to chimera detection. "consensus":
@@ -126,7 +126,7 @@ denoise-single: Denoise and dereplicate single-end sequences
        Reads are truncated at the first instance of a quality score less than
        or equal to this value. If the resulting read is then shorter than
        `trunc_len`, it is discarded.
-   chimera_method : Str % Choices('consensus', 'pooled', 'none'), optional
+   chimera_method : Str % Choices('consensus', 'none', 'pooled'), optional
        The method used to remove chimeras. "none": No chimera removal is
        performed. "pooled": All reads are pooled prior to chimera detection.
        "consensus": Chimeras are detected in samples individually, and
