@@ -1,0 +1,135 @@
+pairwise-distances: Paired pairwise distance testing and boxplots
+=================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime longitudinal pairwise-distances [OPTIONS]
+
+     Performs pairwise distance testing between sample pairs from each subject.
+     Sample pairs may represent a typical intervention study, e.g., samples
+     collected pre- and post-treatment; paired samples from two different
+     timepoints (e.g., in a longitudinal study design), or identical samples
+     receiving different two different treatments. This action tests whether
+     the pairwise distance between each subject pair differs between groups
+     (e.g., groups of subjects receiving different treatments) and produces
+     boxplots of paired distance distributions for each group.
+
+   Inputs:
+     --i-distance-matrix ARTIFACT
+       DistanceMatrix       Matrix of distances between pairs of samples.
+                                                                       [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple            Sample metadata file containing
+        arguments will be   individual-id-column.
+        merged)                                                        [required]
+     --p-group-column TEXT  Metadata column on which to separate groups for
+                            comparison                                 [required]
+     --p-state-column TEXT  Metadata column containing state (e.g., Time) across
+                            which samples are paired.                  [required]
+     --p-state-1 TEXT       Baseline state column value.               [required]
+     --p-state-2 TEXT       State column value to pair with baseline.  [required]
+     --p-individual-id-column TEXT
+                            Metadata column containing subject IDs to use for
+                            pairing samples. WARNING: if replicates exist for an
+                            individual ID at either state-1 or state-2, that
+                            subject will be dropped and reported in standard
+                            output by default. Set replicate_handling="random" to
+                            instead randomly select one member.        [required]
+     --p-parametric / --p-no-parametric
+                            Perform parametric (ANOVA and t-tests) or
+                            non-parametric (Kruskal-Wallis, Wilcoxon, and
+                            Mann-Whitney U tests) statistical tests.
+                                                                 [default: False]
+     --p-palette TEXT Choices('Set1', 'Set2', 'Set3', 'Pastel1', 'Pastel2',
+       'Paired', 'Accent', 'Dark2', 'tab10', 'tab20', 'tab20b', 'tab20c',
+       'viridis', 'plasma', 'inferno', 'magma', 'terrain', 'rainbow', 'cividis')
+                            Color palette to use for generating boxplots.
+                                                                [default: 'Set1']
+     --p-replicate-handling TEXT Choices('error', 'random', 'drop')
+                            Choose how replicate samples are handled. If
+                            replicates are detected, "error" causes method to
+                            fail; "drop" will discard all replicated samples;
+                            "random" chooses one representative at random from
+                            among replicates.                  [default: 'error']
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH      Output unspecified results to a directory
+     --verbose / --quiet    Display verbose output to stdout and/or stderr
+                            during execution of this action. Or silence output if
+                            execution is successful (silence is golden).
+     --citations            Show citations and exit.
+     --help                 Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.longitudinal.visualizers import pairwise_distances
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Paired pairwise distance testing and boxplots
+
+   Performs pairwise distance testing between sample pairs from each subject.
+   Sample pairs may represent a typical intervention study, e.g., samples
+   collected pre- and post-treatment; paired samples from two different
+   timepoints (e.g., in a longitudinal study design), or identical samples
+   receiving different two different treatments. This action tests whether the
+   pairwise distance between each subject pair differs between groups (e.g.,
+   groups of subjects receiving different treatments) and produces boxplots of
+   paired distance distributions for each group.
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   group_column : Str
+       Metadata column on which to separate groups for comparison
+   state_column : Str
+       Metadata column containing state (e.g., Time) across which samples are
+       paired.
+   state_1 : Str
+       Baseline state column value.
+   state_2 : Str
+       State column value to pair with baseline.
+   individual_id_column : Str
+       Metadata column containing subject IDs to use for pairing samples.
+       WARNING: if replicates exist for an individual ID at either state_1 or
+       state_2, that subject will be dropped and reported in standard output
+       by default. Set replicate_handling="random" to instead randomly select
+       one member.
+   parametric : Bool, optional
+       Perform parametric (ANOVA and t-tests) or non-parametric (Kruskal-
+       Wallis, Wilcoxon, and Mann-Whitney U tests) statistical tests.
+   palette : Str % Choices('Set1', 'Set2', 'Set3', 'Pastel1', 'Pastel2', 'Paired', 'Accent', 'Dark2', 'tab10', 'tab20', 'tab20b', 'tab20c', 'viridis', 'plasma', 'inferno', 'magma', 'terrain', 'rainbow', 'cividis'), optional
+       Color palette to use for generating boxplots.
+   replicate_handling : Str % Choices('error', 'random', 'drop'), optional
+       Choose how replicate samples are handled. If replicates are detected,
+       "error" causes method to fail; "drop" will discard all replicated
+       samples; "random" chooses one representative at random from among
+       replicates.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

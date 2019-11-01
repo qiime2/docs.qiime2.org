@@ -1,0 +1,115 @@
+beta-correlation: Beta diversity correlation
+============================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity beta-correlation [OPTIONS]
+
+     Create a distance matrix from a numeric metadata column and apply a two-
+     sided Mantel test to identify correlation between two distance matrices.
+     Actions used internally: `distance-matrix` from q2-metadata and `mantel`
+     from q2-diversity.
+
+   Inputs:
+     --i-distance-matrix ARTIFACT
+       DistanceMatrix     Matrix of distances between pairs of samples.
+                                                                       [required]
+   Parameters:
+     --m-metadata-file METADATA
+     --m-metadata-column COLUMN  MetadataColumn[Numeric]
+                          Numeric metadata column from which to compute pairwise
+                          Euclidean distances                          [required]
+     --p-method TEXT Choices('spearman', 'pearson')
+                          The correlation test to be applied in the Mantel test.
+                                                            [default: 'spearman']
+     --p-permutations INTEGER
+       Range(0, None)     The number of permutations to be run when computing
+                          p-values. Supplying a value of zero will disable
+                          permutation testing and p-values will not be calculated
+                          (this results in *much* quicker execution time if
+                          p-values are not desired).               [default: 999]
+     --p-intersect-ids / --p-no-intersect-ids
+                          If supplied, IDs that are not found in both distance
+                          matrices will be discarded before applying the Mantel
+                          test. Default behavior is to error on any mismatched
+                          IDs.                                   [default: False]
+     --p-label1 TEXT      Label for `distance-matrix` in the output
+                          visualization.                    [default: 'Metadata']
+     --p-label2 TEXT      Label for `metadata-distance-matrix` in the output
+                          visualization.             [default: 'Distance Matrix']
+   Outputs:
+     --o-metadata-distance-matrix ARTIFACT
+       DistanceMatrix     The Distance Matrix produced from the metadata column
+                          and used in the mantel test                  [required]
+     --o-mantel-scatter-visualization VISUALIZATION
+                          Scatter plot rendering of the manteltest results
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.pipelines import beta_correlation
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Beta diversity correlation
+
+   Create a distance matrix from a numeric metadata column and apply a two-
+   sided Mantel test to identify correlation between two distance matrices.
+   Actions used internally: `distance-matrix` from q2-metadata and `mantel`
+   from q2-diversity.
+
+   Parameters
+   ----------
+   metadata : MetadataColumn[Numeric]
+       Numeric metadata column from which to compute pairwise Euclidean
+       distances
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   method : Str % Choices('spearman', 'pearson'), optional
+       The correlation test to be applied in the Mantel test.
+   permutations : Int % Range(0, None), optional
+       The number of permutations to be run when computing p-values. Supplying
+       a value of zero will disable permutation testing and p-values will not
+       be calculated (this results in *much* quicker execution time if
+       p-values are not desired).
+   intersect_ids : Bool, optional
+       If supplied, IDs that are not found in both distance matrices will be
+       discarded before applying the Mantel test. Default behavior is to error
+       on any mismatched IDs.
+   label1 : Str, optional
+       Label for `distance_matrix` in the output visualization.
+   label2 : Str, optional
+       Label for `metadata_distance_matrix` in the output visualization.
+
+   Returns
+   -------
+   metadata_distance_matrix : DistanceMatrix
+       The Distance Matrix produced from the metadata column and used in the
+       mantel test
+   mantel_scatter_visualization : Visualization
+       Scatter plot rendering of the manteltest results</pre>
+       </div>
+     </div>
+   </div>

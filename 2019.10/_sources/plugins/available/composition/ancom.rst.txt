@@ -1,0 +1,83 @@
+ancom: Apply ANCOM to identify features that differ in abundance.
+=================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime composition ancom [OPTIONS]
+
+     Apply Analysis of Composition of Microbiomes (ANCOM) to identify features
+     that are differentially abundant across groups.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Composition]
+                          The feature table to be used for ANCOM computation.
+                                                                       [required]
+   Parameters:
+     --m-metadata-file METADATA
+     --m-metadata-column COLUMN  MetadataColumn[Categorical]
+                          The categorical sample metadata column to test for
+                          differential abundance across.               [required]
+     --p-transform-function TEXT Choices('sqrt', 'log', 'clr')
+                          The method applied to transform feature values before
+                          generating volcano plots.              [default: 'clr']
+     --p-difference-function TEXT Choices('mean_difference', 'f_statistic')
+                          The method applied to visualize fold difference in
+                          feature abundances across groups for volcano plots.
+                                                                       [optional]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.composition.visualizers import ancom
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Apply ANCOM to identify features that differ in abundance.
+
+   Apply Analysis of Composition of Microbiomes (ANCOM) to identify features
+   that are differentially abundant across groups.
+
+   Parameters
+   ----------
+   table : FeatureTable[Composition]
+       The feature table to be used for ANCOM computation.
+   metadata : MetadataColumn[Categorical]
+       The categorical sample metadata column to test for differential
+       abundance across.
+   transform_function : Str % Choices('sqrt', 'log', 'clr'), optional
+       The method applied to transform feature values before generating
+       volcano plots.
+   difference_function : Str % Choices('mean_difference', 'f_statistic'), optional
+       The method applied to visualize fold difference in feature abundances
+       across groups for volcano plots.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

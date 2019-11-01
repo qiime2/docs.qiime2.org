@@ -1,0 +1,127 @@
+cluster-features-closed-reference: Closed-reference clustering of features.
+===========================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime vsearch cluster-features-closed-reference [OPTIONS]
+
+     Given a feature table and the associated feature sequences, cluster the
+     features against a reference database based on user-specified percent
+     identity threshold of their sequences. This is not a general-purpose
+     closed-reference clustering method, but rather is intended to be used for
+     clustering the results of quality-filtering/dereplication methods, such as
+     DADA2, or for re-clustering a FeatureTable at a lower percent identity
+     than it was originally clustered at. When a group of features in the input
+     table are clustered into a single feature, the frequency of that single
+     feature in a given sample is the sum of the frequencies of the features
+     that were clustered in that sample. Feature identifiers will be inherited
+     from the centroid feature of each cluster. See the vsearch documentation
+     for details on how sequence clustering is performed.
+
+   Inputs:
+     --i-sequences ARTIFACT FeatureData[Sequence]
+                             The sequences corresponding to the features in
+                             table.                                    [required]
+     --i-table ARTIFACT FeatureTable[Frequency]
+                             The feature table to be clustered.        [required]
+     --i-reference-sequences ARTIFACT FeatureData[Sequence]
+                             The sequences to use as cluster centroids.
+                                                                       [required]
+   Parameters:
+     --p-perc-identity PROPORTION Range(0, 1, inclusive_start=False,
+       inclusive_end=True)   The percent identity at which clustering should be
+                             performed. This parameter maps to vsearch's --id
+                             parameter.                                [required]
+     --p-strand TEXT Choices('plus', 'both')
+                             Search plus (i.e., forward) or both (i.e., forward
+                             and reverse complement) strands.   [default: 'plus']
+     --p-threads INTEGER Range(0, 256, inclusive_end=True)
+                             The number of threads to use for computation.
+                             Passing 0 will launch one thread per CPU core.
+                                                                     [default: 1]
+   Outputs:
+     --o-clustered-table ARTIFACT FeatureTable[Frequency]
+                             The table following clustering of features.
+                                                                       [required]
+     --o-clustered-sequences ARTIFACT FeatureData[Sequence]
+                             The sequences representing clustered features,
+                             relabeled by the reference IDs.           [required]
+     --o-unmatched-sequences ARTIFACT FeatureData[Sequence]
+                             The sequences which failed to match any reference
+                             sequences. This output maps to vsearch's
+                             --notmatched parameter.                   [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.vsearch.methods import cluster_features_closed_reference
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Closed-reference clustering of features.
+
+   Given a feature table and the associated feature sequences, cluster the
+   features against a reference database based on user-specified percent
+   identity threshold of their sequences. This is not a general-purpose
+   closed-reference clustering method, but rather is intended to be used for
+   clustering the results of quality-filtering/dereplication methods, such as
+   DADA2, or for re-clustering a FeatureTable at a lower percent identity than
+   it was originally clustered at. When a group of features in the input table
+   are clustered into a single feature, the frequency of that single feature
+   in a given sample is the sum of the frequencies of the features that were
+   clustered in that sample. Feature identifiers will be inherited from the
+   centroid feature of each cluster. See the vsearch documentation for details
+   on how sequence clustering is performed.
+
+   Parameters
+   ----------
+   sequences : FeatureData[Sequence]
+       The sequences corresponding to the features in table.
+   table : FeatureTable[Frequency]
+       The feature table to be clustered.
+   reference_sequences : FeatureData[Sequence]
+       The sequences to use as cluster centroids.
+   perc_identity : Float % Range(0, 1, inclusive_start=False, inclusive_end=True)
+       The percent identity at which clustering should be performed. This
+       parameter maps to vsearch's --id parameter.
+   strand : Str % Choices('plus', 'both'), optional
+       Search plus (i.e., forward) or both (i.e., forward and reverse
+       complement) strands.
+   threads : Int % Range(0, 256, inclusive_end=True), optional
+       The number of threads to use for computation. Passing 0 will launch one
+       thread per CPU core.
+
+   Returns
+   -------
+   clustered_table : FeatureTable[Frequency]
+       The table following clustering of features.
+   clustered_sequences : FeatureData[Sequence]
+       The sequences representing clustered features, relabeled by the
+       reference IDs.
+   unmatched_sequences : FeatureData[Sequence]
+       The sequences which failed to match any reference sequences. This
+       output maps to vsearch's --notmatched parameter.</pre>
+       </div>
+     </div>
+   </div>

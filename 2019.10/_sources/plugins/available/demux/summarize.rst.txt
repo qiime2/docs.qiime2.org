@@ -1,0 +1,77 @@
+summarize: Summarize counts per sample.
+=======================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime demux summarize [OPTIONS]
+
+     Summarize counts per sample for all samples, and generate interactive
+     positional quality plots based on `n` randomly selected sequences.
+
+   Inputs:
+     --i-data ARTIFACT SampleData[SequencesWithQuality |
+       PairedEndSequencesWithQuality | JoinedSequencesWithQuality]
+                          The demultiplexed sequences to be summarized.
+                                                                       [required]
+   Parameters:
+     --p-n INTEGER        The number of sequences that should be selected at
+                          random for quality score plots. The quality plots will
+                          present the average positional qualities across all of
+                          the sequences selected. If input sequences are paired
+                          end, plots will be generated for both forward and
+                          reverse reads for the same `n` sequences.
+                                                                 [default: 10000]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.demux.visualizers import summarize
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Summarize counts per sample.
+
+   Summarize counts per sample for all samples, and generate interactive
+   positional quality plots based on `n` randomly selected sequences.
+
+   Parameters
+   ----------
+   data : SampleData[SequencesWithQuality | PairedEndSequencesWithQuality | JoinedSequencesWithQuality]
+       The demultiplexed sequences to be summarized.
+   n : Int, optional
+       The number of sequences that should be selected at random for quality
+       score plots. The quality plots will present the average positional
+       qualities across all of the sequences selected. If input sequences are
+       paired end, plots will be generated for both forward and reverse reads
+       for the same `n` sequences.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

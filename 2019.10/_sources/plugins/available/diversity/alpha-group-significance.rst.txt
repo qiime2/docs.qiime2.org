@@ -1,0 +1,87 @@
+alpha-group-significance: Alpha diversity comparisons
+=====================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:alpha-group-significance.bib
+   :list: bullet
+   :all:
+   :keyprefix: diversity:alpha-group-significance:
+   :labelprefix: diversity:alpha-group-significance:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity alpha-group-significance [OPTIONS]
+
+     Visually and statistically compare groups of alpha diversity values.
+
+   Inputs:
+     --i-alpha-diversity ARTIFACT SampleData[AlphaDiversity]
+                          Vector of alpha diversity values by sample.  [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple          The sample metadata.
+        arguments will    
+        be merged)                                                     [required]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import alpha_group_significance
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Alpha diversity comparisons
+
+   Visually and statistically compare groups of alpha diversity values.
+
+   Parameters
+   ----------
+   alpha_diversity : SampleData[AlphaDiversity]
+       Vector of alpha diversity values by sample.
+   metadata : Metadata
+       The sample metadata.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

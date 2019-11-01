@@ -1,0 +1,128 @@
+first-distances: Compute first distances or distance from baseline between sequential states
+============================================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime longitudinal first-distances [OPTIONS]
+
+     Calculates first distances between sequential states for samples collected
+     from individual subjects sampled repeatedly at two or more states. This
+     method is similar to the "first differences" method, except that it
+     requires a distance matrix as input and calculates first differences as
+     distances between successive states. Outputs a data series of first
+     distances for each individual subject at each sequential pair of states,
+     labeled by the SampleID of the second state (e.g., paired distances
+     between time 0 and time 1 would be labeled by the SampleIDs at time 1).
+     This file can be used as input to linear mixed effects models or other
+     longitudinal or diversity methods to compare changes in first distances
+     across time or among groups of subjects. Also supports distance from
+     baseline (or other static comparison state) by setting the "baseline"
+     parameter.
+
+   Inputs:
+     --i-distance-matrix ARTIFACT
+       DistanceMatrix       Matrix of distances between pairs of samples.
+                                                                       [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple            Sample metadata file containing
+        arguments will be   individual-id-column.
+        merged)                                                        [required]
+     --p-state-column TEXT  Metadata column containing state (time) variable
+                            information.                               [required]
+     --p-individual-id-column TEXT
+                            Metadata column containing IDs for individual
+                            subjects.                                  [required]
+     --p-baseline NUMBER    A value listed in the state-column metadata column
+                            against which all other states should be compared.
+                            Toggles calculation of static distances instead of
+                            first distances (which are calculated if no value is
+                            given for baseline). If a "baseline" value is
+                            provided, sample distances at each state are compared
+                            against the baseline state, instead of the previous
+                            state. Must be a value listed in the state-column.
+                                                                       [optional]
+     --p-replicate-handling TEXT Choices('error', 'random', 'drop')
+                            Choose how replicate samples are handled. If
+                            replicates are detected, "error" causes method to
+                            fail; "drop" will discard all replicated samples;
+                            "random" chooses one representative at random from
+                            among replicates.                  [default: 'error']
+   Outputs:
+     --o-first-distances ARTIFACT SampleData[FirstDifferences]
+                            Series of first distances.                 [required]
+   Miscellaneous:
+     --output-dir PATH      Output unspecified results to a directory
+     --verbose / --quiet    Display verbose output to stdout and/or stderr
+                            during execution of this action. Or silence output if
+                            execution is successful (silence is golden).
+     --citations            Show citations and exit.
+     --help                 Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.longitudinal.methods import first_distances
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Compute first distances or distance from baseline between sequential states
+
+   Calculates first distances between sequential states for samples collected
+   from individual subjects sampled repeatedly at two or more states. This
+   method is similar to the "first differences" method, except that it
+   requires a distance matrix as input and calculates first differences as
+   distances between successive states. Outputs a data series of first
+   distances for each individual subject at each sequential pair of states,
+   labeled by the SampleID of the second state (e.g., paired distances between
+   time 0 and time 1 would be labeled by the SampleIDs at time 1). This file
+   can be used as input to linear mixed effects models or other longitudinal
+   or diversity methods to compare changes in first distances across time or
+   among groups of subjects. Also supports distance from baseline (or other
+   static comparison state) by setting the "baseline" parameter.
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   state_column : Str
+       Metadata column containing state (time) variable information.
+   individual_id_column : Str
+       Metadata column containing IDs for individual subjects.
+   baseline : Float, optional
+       A value listed in the state_column metadata column against which all
+       other states should be compared. Toggles calculation of static
+       distances instead of first distances (which are calculated if no value
+       is given for baseline). If a "baseline" value is provided, sample
+       distances at each state are compared against the baseline state,
+       instead of the previous state. Must be a value listed in the
+       state_column.
+   replicate_handling : Str % Choices('error', 'random', 'drop'), optional
+       Choose how replicate samples are handled. If replicates are detected,
+       "error" causes method to fail; "drop" will discard all replicated
+       samples; "random" chooses one representative at random from among
+       replicates.
+
+   Returns
+   -------
+   first_distances : SampleData[FirstDifferences]
+       Series of first distances.</pre>
+       </div>
+     </div>
+   </div>
