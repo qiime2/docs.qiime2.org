@@ -19,3 +19,4 @@ Disallow: /2018.11/
 Disallow: /2019.1/
 Disallow: /2019.4/
 Disallow: /2019.7/
+Disallow: /2019.10/
