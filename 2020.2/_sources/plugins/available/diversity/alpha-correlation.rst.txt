@@ -1,0 +1,103 @@
+alpha-correlation: Alpha diversity correlation
+==============================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:alpha-correlation.bib
+   :list: bullet
+   :all:
+   :keyprefix: diversity:alpha-correlation:
+   :labelprefix: diversity:alpha-correlation:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity alpha-correlation [OPTIONS]
+
+     Determine whether numeric sample metadata columns are correlated with
+     alpha diversity.
+
+   Inputs:
+     --i-alpha-diversity ARTIFACT SampleData[AlphaDiversity]
+                          Vector of alpha diversity values by sample.  [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple          The sample metadata.
+        arguments will    
+        be merged)                                                     [required]
+     --p-method TEXT Choices('spearman', 'pearson')
+                          The correlation test to be applied.
+                                                            [default: 'spearman']
+     --p-intersect-ids / --p-no-intersect-ids
+                          If supplied, IDs that are not found in both the alpha
+                          diversity vector and metadata will be discarded before
+                          calculating the correlation. Default behavior is to
+                          error on any mismatched IDs.           [default: False]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import alpha_correlation
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Alpha diversity correlation
+
+   Determine whether numeric sample metadata columns are correlated with alpha
+   diversity.
+
+   Parameters
+   ----------
+   alpha_diversity : SampleData[AlphaDiversity]
+       Vector of alpha diversity values by sample.
+   metadata : Metadata
+       The sample metadata.
+   method : Str % Choices('spearman', 'pearson'), optional
+       The correlation test to be applied.
+   intersect_ids : Bool, optional
+       If supplied, IDs that are not found in both the alpha diversity vector
+       and metadata will be discarded before calculating the correlation.
+       Default behavior is to error on any mismatched IDs.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

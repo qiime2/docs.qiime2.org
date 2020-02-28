@@ -1,0 +1,107 @@
+demux-single: Demultiplex single-end sequence data with barcodes in-sequence.
+=============================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime cutadapt demux-single [OPTIONS]
+
+     Demultiplex sequence data (i.e., map barcode reads to sample ids).
+     Barcodes are expected to be located within the sequence data (versus the
+     header, or a separate barcode file).
+
+   Inputs:
+     --i-seqs ARTIFACT MultiplexedSingleEndBarcodeInSequence
+                             The single-end sequences to be demultiplexed.
+                                                                       [required]
+   Parameters:
+     --m-barcodes-file METADATA
+     --m-barcodes-column COLUMN  MetadataColumn[Categorical]
+                             The sample metadata column listing the per-sample
+                             barcodes.                                 [required]
+     --p-error-rate PROPORTION Range(0, 1, inclusive_end=True)
+                             The level of error tolerance, specified as the
+                             maximum allowable error rate. The default value
+                             specified by cutadapt is 0.1 (=10%), which is
+                             greater than `demux emp-*`, which is 0.0 (=0%).
+                                                                   [default: 0.1]
+     --p-batch-size INTEGER  The number of samples cutadapt demultiplexes
+       Range(0, None)        concurrently. Demultiplexing in smaller batches will
+                             yield the same result with marginal speed loss, and
+                             may solve "too many files" errors related to sample
+                             quantity. Set to "0" to process all samples at once.
+                                                                     [default: 0]
+     --p-minimum-length INTEGER
+       Range(1, None)        Discard reads shorter than specified value. Note,
+                             the cutadapt default of 0 has been overridden,
+                             because that value produces empty sequence records.
+                                                                     [default: 1]
+   Outputs:
+     --o-per-sample-sequences ARTIFACT SampleData[SequencesWithQuality]
+                             The resulting demultiplexed sequences.    [required]
+     --o-untrimmed-sequences ARTIFACT MultiplexedSingleEndBarcodeInSequence
+                             The sequences that were unmatched to barcodes.
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.cutadapt.methods import demux_single
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Demultiplex single-end sequence data with barcodes in-sequence.
+
+   Demultiplex sequence data (i.e., map barcode reads to sample ids). Barcodes
+   are expected to be located within the sequence data (versus the header, or
+   a separate barcode file).
+
+   Parameters
+   ----------
+   seqs : MultiplexedSingleEndBarcodeInSequence
+       The single-end sequences to be demultiplexed.
+   barcodes : MetadataColumn[Categorical]
+       The sample metadata column listing the per-sample barcodes.
+   error_rate : Float % Range(0, 1, inclusive_end=True), optional
+       The level of error tolerance, specified as the maximum allowable error
+       rate. The default value specified by cutadapt is 0.1 (=10%), which is
+       greater than `demux emp-*`, which is 0.0 (=0%).
+   batch_size : Int % Range(0, None), optional
+       The number of samples cutadapt demultiplexes concurrently.
+       Demultiplexing in smaller batches will yield the same result with
+       marginal speed loss, and may solve "too many files" errors related to
+       sample quantity. Set to "0" to process all samples at once.
+   minimum_length : Int % Range(1, None), optional
+       Discard reads shorter than specified value. Note, the cutadapt default
+       of 0 has been overridden, because that value produces empty sequence
+       records.
+
+   Returns
+   -------
+   per_sample_sequences : SampleData[SequencesWithQuality]
+       The resulting demultiplexed sequences.
+   untrimmed_sequences : MultiplexedSingleEndBarcodeInSequence
+       The sequences that were unmatched to barcodes.</pre>
+       </div>
+     </div>
+   </div>

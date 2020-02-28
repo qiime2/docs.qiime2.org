@@ -1,0 +1,119 @@
+extract-reads: Extract reads from reference
+===========================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-classifier extract-reads [OPTIONS]
+
+     Extract sequencing-like reads from a reference database.
+
+   Inputs:
+     --i-sequences ARTIFACT FeatureData[Sequence]
+                                                                       [required]
+   Parameters:
+     --p-f-primer TEXT       forward primer sequence                   [required]
+     --p-r-primer TEXT       reverse primer sequence                   [required]
+     --p-trunc-len INTEGER   read is cut to trunc-len if trunc-len is positive.
+                             Applied before trim-left.               [default: 0]
+     --p-trim-left INTEGER   trim-left nucleotides are removed from the 5' end
+                             if trim-left is positive. Applied after trunc-len.
+                                                                     [default: 0]
+     --p-identity NUMBER     minimum combined primer match identity threshold.
+                                                                   [default: 0.8]
+     --p-min-length INTEGER  Minimum amplicon length. Shorter amplicons are
+       Range(0, None)        discarded. Applied after trimming and truncation, so
+                             be aware that trimming may impact sequence
+                             retention. Set to zero to disable min length
+                             filtering.                             [default: 50]
+     --p-max-length INTEGER  Maximum amplicon length. Longer amplicons are
+       Range(0, None)        discarded. Applied before trimming and truncation,
+                             so plan accordingly. Set to zero (default) to
+                             disable max length filtering.           [default: 0]
+     --p-n-jobs INTEGER      Number of seperate processes to run.
+       Range(1, None)                                                [default: 1]
+     --p-batch-size VALUE Int % Range(1, None) | Str % Choices('auto')
+                             Number of sequences to process in a batch. The
+                             `auto` option is calculated from the number of
+                             sequences and number of jobs specified.
+                                                                [default: 'auto']
+     --p-read-orientation TEXT Choices('both', 'forward', 'reverse')
+                             Orientation of primers relative to the sequences:
+                             "forward" searches for primer hits in the forward
+                             direction, "reverse" searches the
+                             reverse-complement, and "both" searches both
+                             directions.                        [default: 'both']
+   Outputs:
+     --o-reads ARTIFACT FeatureData[Sequence]
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_classifier.methods import extract_reads
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Extract reads from reference
+
+   Extract sequencing-like reads from a reference database.
+
+   Parameters
+   ----------
+   sequences : FeatureData[Sequence]
+   f_primer : Str
+       forward primer sequence
+   r_primer : Str
+       reverse primer sequence
+   trunc_len : Int, optional
+       read is cut to trunc_len if trunc_len is positive. Applied before
+       trim_left.
+   trim_left : Int, optional
+       trim_left nucleotides are removed from the 5' end if trim_left is
+       positive. Applied after trunc_len.
+   identity : Float, optional
+       minimum combined primer match identity threshold.
+   min_length : Int % Range(0, None), optional
+       Minimum amplicon length. Shorter amplicons are discarded. Applied after
+       trimming and truncation, so be aware that trimming may impact sequence
+       retention. Set to zero to disable min length filtering.
+   max_length : Int % Range(0, None), optional
+       Maximum amplicon length. Longer amplicons are discarded. Applied before
+       trimming and truncation, so plan accordingly. Set to zero (default) to
+       disable max length filtering.
+   n_jobs : Int % Range(1, None), optional
+       Number of seperate processes to run.
+   batch_size : Int % Range(1, None) | Str % Choices('auto'), optional
+       Number of sequences to process in a batch. The `auto` option is
+       calculated from the number of sequences and number of jobs specified.
+   read_orientation : Str % Choices('both', 'forward', 'reverse'), optional
+       Orientation of primers relative to the sequences: "forward" searches
+       for primer hits in the forward direction, "reverse" searches the
+       reverse-complement, and "both" searches both directions.
+
+   Returns
+   -------
+   reads : FeatureData[Sequence]</pre>
+       </div>
+     </div>
+   </div>

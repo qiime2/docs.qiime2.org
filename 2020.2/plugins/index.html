@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Plugins &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about/" />
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Available plugins" href="available/" />
+    <link rel="prev" title="Artifact API" href="../interfaces/artifact-api/" />
+  <script src="../_static/bootstrap.min.js"></script>
+  <script src="../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="plugins">
+<h1>Plugins<a class="headerlink" href="#plugins" title="Permalink to this headline">¶</a></h1>
+<p>The following pages describe what QIIME 2 plugins are available and how to develop a new plugin.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="available/">Available plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="available/alignment/">alignment: Plugin for generating and manipulating alignments.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/composition/">composition: Plugin for compositional data analysis.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/cutadapt/">cutadapt: Plugin for removing adapter sequences, primers, and other unwanted sequence from sequence data.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/dada2/">dada2: Plugin for sequence quality control with DADA2.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/deblur/">deblur: Plugin for sequence quality control with Deblur.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/demux/">demux: Plugin for demultiplexing &amp; viewing sequence quality.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/diversity/">diversity: Plugin for exploring community diversity.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/emperor/">emperor: Plugin for ordination plotting with Emperor.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/feature-classifier/">feature-classifier: Plugin for taxonomic classification.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/feature-table/">feature-table: Plugin for working with sample by feature tables.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/fragment-insertion/">fragment-insertion: Plugin for extending phylogenies.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/gneiss/">gneiss: Plugin for building compositional models.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/longitudinal/">longitudinal: Plugin for paired sample and time series analyses.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/metadata/">metadata: Plugin for working with Metadata.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/phylogeny/">phylogeny: Plugin for generating and manipulating phylogenies.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/quality-control/">quality-control: Plugin for quality control of feature and sequence data.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/quality-filter/">quality-filter: Plugin for PHRED-based filtering and trimming.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/sample-classifier/">sample-classifier: Plugin for machine learning prediction of sample metadata.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/taxa/">taxa: Plugin for working with feature taxonomy annotations.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/types/">types: Plugin defining types for microbiome analysis.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available/vsearch/">vsearch: Plugin for clustering and dereplicating with vsearch.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="future/">Future plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developing/">Developing a QIIME 2 plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developing/#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing/#plugin-components">Plugin components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing/#testing-your-plugin-with-q2cli-during-development">Testing your plugin with q2cli during development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing/#plugin-testing">Plugin testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing/#advanced-plugin-development">Advanced plugin development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing/#example-plugins">Example plugins</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="available/">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

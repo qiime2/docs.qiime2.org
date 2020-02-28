@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Natively installing QIIME 2 &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Installing QIIME 2 using Virtual Machines" href="../virtual/" />
+    <link rel="prev" title="Installing QIIME 2" href="../" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="natively-installing-qiime-2">
+<h1>Natively installing QIIME 2<a class="headerlink" href="#natively-installing-qiime-2" title="Permalink to this headline">¶</a></h1>
+<p>This guide describes how to natively install the <a class="reference internal" href="../#core-distribution"><span class="std std-ref">QIIME 2 Core 2020.2 distribution</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>QIIME 2 does not currently support Windows. We recommend using one of the <a class="reference internal" href="../virtual/"><span class="doc">QIIME 2 virtual machines</span></a>.</p>
+</div>
+<div class="section" id="install-miniconda">
+<h2>Install Miniconda<a class="headerlink" href="#install-miniconda" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://conda.io/miniconda.html">Miniconda</a> provides the <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment and package manager, and is the recommended way to install QIIME 2. Follow the instructions for downloading and installing Miniconda. You may choose either Miniconda2 or Miniconda3 (i.e. Miniconda Python 2 or 3). QIIME 2 will work with either version of Miniconda.</p>
+<p>After installing Miniconda and opening a new terminal, make sure you’re running the latest version of <code class="docutils literal notranslate"><span class="pre">conda</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda update conda
+conda install wget
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-qiime-2-within-a-conda-environment">
+<h2>Install QIIME 2 within a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment<a class="headerlink" href="#install-qiime-2-within-a-conda-environment" title="Permalink to this headline">¶</a></h2>
+<p>Once you have Miniconda installed, create a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment and install the QIIME 2 Core 2020.2 distribution within the environment. We <strong>highly</strong> recommend creating a <em>new</em> environment specifically for the QIIME 2 release being installed, as there are many required dependencies that you may not want added to an existing environment. You can choose whatever name you’d like for the environment. In this example, we’ll name the environment <code class="docutils literal notranslate"><span class="pre">qiime2-2020.2</span></code> to indicate what QIIME 2 release is installed (i.e. <code class="docutils literal notranslate"><span class="pre">2020.2</span></code>).</p>
+<div class="tabbed">
+   <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#instructions">Instructions</a></li>
+      <li><a data-toggle="tab" href="#macOS">macOS/OS X (64-bit)</a></li>
+      <li><a data-toggle="tab" href="#linux">Linux (64-bit)</a></li>
+   </ul>
+   <div class="tab-content">
+      <div id="instructions" class="tab-pane fade in active">
+         <p class="alert alert-warning" style="margin-bottom: 10px;">
+           From the above tabs, please choose the installation instructions that are appropriate for your platform.
+         </p>
+      </div>
+      <div id="macOS" class="tab-pane fade">
+         <pre>wget https://data.qiime2.org/distro/core/qiime2-2020.2-py36-osx-conda.yml
+conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-osx-conda.yml
+# OPTIONAL CLEANUP
+rm qiime2-2020.2-py36-osx-conda.yml</pre>
+         <div class="alert alert-warning">
+            If you encounter this error with wget:
+           <pre>Disabling SSL due to encountered errors.</pre>
+            you can download the file by clicking directly on this link:<br>
+            <a href="https://data.qiime2.org/distro/core/qiime2-2020.2-py36-osx-conda.yml">
+               https://data.qiime2.org/distro/core/qiime2-2020.2-py36-osx-conda.yml
+            </a><br>
+            Please note, depending on your browser, this might open immediately as a "Download" dialog. If it does not open that dialog you might need to "Save" the file manually.
+         </div>
+      </div>
+      <div id="linux" class="tab-pane fade">
+         <pre>wget https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml
+conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
+# OPTIONAL CLEANUP
+rm qiime2-2020.2-py36-linux-conda.yml</pre>
+         <div class="alert alert-warning">
+            If you encounter this error with wget:
+           <pre>Disabling SSL due to encountered errors.</pre>
+            you can download the file by clicking directly on this link:<br>
+            <a href="https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml">
+               https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml
+            </a><br>
+            Please note, depending on your browser, this might open immediately as a "Download" dialog. If it does not open that dialog you might need to "Save" the file manually.
+         </div>
+      </div>
+   </div>
+</div><div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you receive errors during the installation process, such as <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> errors, please ensure you are following the installation instructions that are compatible with your platform. Other errors are often resolved by running <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">env</span> <span class="pre">remove</span> <span class="pre">-n</span> <span class="pre">qiime2-2020.2</span></code> to remove the failed environments, then running <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">clean</span> <span class="pre">-y</span> <span class="pre">--all</span></code> to clean the local conda installation, and finally re-running the installation instructions above.</p>
+</div>
+</div>
+<div class="section" id="activate-the-conda-environment">
+<h2>Activate the <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment<a class="headerlink" href="#activate-the-conda-environment" title="Permalink to this headline">¶</a></h2>
+<p>Now that you have a QIIME 2 environment, activate it using the environment’s name:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> activate qiime2-2020.2
+</pre></div>
+</div>
+<p>To deactivate an environment, run <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">deactivate</span></code>.</p>
+</div>
+<div class="section" id="test-your-installation">
+<h2>Test your installation<a class="headerlink" href="#test-your-installation" title="Permalink to this headline">¶</a></h2>
+<p>You can test your installation by activating your QIIME 2 environment and running:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime --help
+</pre></div>
+</div>
+<p>If no errors are reported when running this command, the installation was successful!</p>
+</div>
+<div class="section" id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>Now that you have the Core distribution installed, check out the <a class="reference internal" href="../../interfaces/q2cli/"><span class="doc">q2cli docs</span></a> to get familiar with the QIIME 2 command-line interface (it is used extensively in the <a class="reference internal" href="../../tutorials/"><span class="doc">tutorials</span></a>). After that, try out the <a class="reference internal" href="../../tutorials/"><span class="doc">QIIME 2 tutorials</span></a> for examples of using QIIME 2 to analyze microbiome datasets. You might also try installing other QIIME 2 <a class="reference internal" href="../../interfaces/"><span class="doc">interfaces</span></a>.</p>
+</div>
+<div class="section" id="how-do-i-update-to-the-newest-version-of-qiime-2">
+<h2>How do I update to the newest version of QIIME 2?<a class="headerlink" href="#how-do-i-update-to-the-newest-version-of-qiime-2" title="Permalink to this headline">¶</a></h2>
+<p>In order to to update/upgrade to the newest release, you simply install the newest version in a new conda environment by following the instructions above. Then you will have two conda environments, one with the older version of QIIME 2 and one with the newer version.</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Installing QIIME 2</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Natively installing QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtual/">Installing QIIME 2 using Virtual Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../#qiime-2-core-2020-2-distribution">QIIME 2 Core 2020.2 distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

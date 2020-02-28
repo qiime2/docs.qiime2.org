@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorials &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about/" />
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Overview of QIIME 2 Plugin Workflows" href="overview/" />
+    <link rel="prev" title="Installing QIIME 2 using Docker" href="../install/virtual/docker/" />
+  <script src="../_static/bootstrap.min.js"></script>
+  <script src="../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="tutorials">
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The tutorials assume you have installed the QIIME 2 Core distribution using one of the procedures in the <a class="reference internal" href="../install/"><span class="doc">install documents</span></a>. The tutorials make extensive use of the QIIME 2 command-line interface so reviewing the <a class="reference internal" href="../interfaces/q2cli/"><span class="doc">q2cli docs</span></a> is recommended.</p>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview/">Overview of QIIME 2 Plugin Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview/#let-s-get-oriented-flowcharts">Let’s get oriented: flowcharts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#useful-points-for-beginners">Useful points for beginners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#conceptual-overview-of-qiime-2">Conceptual overview of QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#demultiplexing">Demultiplexing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#denoising-and-clustering">Denoising and clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#taxonomy-classification-and-taxonomic-analyses">Taxonomy classification and taxonomic analyses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#sequence-alignment-and-phylogeny-building">Sequence alignment and phylogeny building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#diversity-analysis">Diversity analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/#fun-with-feature-tables">Fun with feature tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="qiime2-for-experienced-microbiome-researchers/#why-switch-to-qiime-2">Why switch to QIIME 2?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qiime2-for-experienced-microbiome-researchers/#data-processing-steps">Data processing steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qiime2-for-experienced-microbiome-researchers/#analyze-feature-table-and-gain-insight">Analyze feature table and gain insight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qiime2-for-experienced-microbiome-researchers/#new-plugins">New plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="moving-pictures/">“Moving Pictures” tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#sample-metadata">Sample metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#obtaining-and-importing-data">Obtaining and importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#demultiplexing-sequences">Demultiplexing sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#sequence-quality-control-and-feature-table-construction">Sequence quality control and feature table construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#featuretable-and-featuredata-summaries">FeatureTable and FeatureData summaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#generate-a-tree-for-phylogenetic-diversity-analyses">Generate a tree for phylogenetic diversity analyses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#alpha-and-beta-diversity-analysis">Alpha and beta diversity analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#alpha-rarefaction-plotting">Alpha rarefaction plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#taxonomic-analysis">Taxonomic analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/#differential-abundance-testing-with-ancom">Differential abundance testing with ANCOM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fmt/">Fecal microbiota transplant (FMT) study: an exercise</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#obtain-data-files">Obtain data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#sequence-quality-control">Sequence quality control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#viewing-denoising-stats">Viewing denoising stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#merging-denoised-data">Merging denoised data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#diversity-analysis">Diversity analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atacama-soils/">“Atacama soil microbiome” tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/#obtain-the-data">Obtain the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/#paired-end-read-analysis-commands">Paired-end read analysis commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/#questions-to-guide-data-analysis">Questions to guide data analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pd-mice/">Parkinson’s Mouse Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#hypothesis">Hypothesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#set-up">Set up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#metadata">Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#importing-data-into-qiime-2">Importing data into QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#sequence-quality-control-and-feature-table">Sequence quality control and feature table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#generating-a-phylogenetic-tree-for-diversity-analysis">Generating a phylogenetic tree for diversity analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#alpha-rarefaction-and-selecting-a-rarefaction-depth">Alpha Rarefaction and Selecting a Rarefaction Depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#diversity-analysis">Diversity analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#taxonomic-classification">Taxonomic classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#taxonomy-barchart">Taxonomy barchart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#differential-abundance-with-ancom">Differential abundance with ANCOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#taxonomic-classification-again">Taxonomic classification again</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#longitudinal-analysis">Longitudinal analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#machine-learning-classifiers-for-predicting-sample-characteristics">Machine-learning classifiers for predicting sample characteristics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/#synthesis">Synthesis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gneiss/">Differential abundance analysis with gneiss</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/#creating-balances">Creating balances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/#option-1-correlation-clustering">Option 1: Correlation-clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/#option-2-gradient-clustering">Option 2: Gradient-clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="importing/">Importing data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="importing/#sequence-data-with-sequence-quality-information-i-e-fastq">Sequence data with sequence quality information (i.e. FASTQ)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#sequences-without-quality-information-i-e-fasta">Sequences without quality information (i.e. FASTA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#per-feature-unaligned-sequence-data-i-e-representative-fasta-sequences">Per-feature unaligned sequence data (i.e., representative FASTA sequences)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#per-feature-aligned-sequence-data-i-e-aligned-representative-fasta-sequences">Per-feature aligned sequence data (i.e., aligned representative FASTA sequences)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#feature-table-data">Feature table data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#phylogenetic-trees">Phylogenetic trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/#other-data-types">Other data types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exporting/">Exporting data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="exporting/#exporting-a-feature-table">Exporting a feature table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exporting/#exporting-a-phylogenetic-tree">Exporting a phylogenetic tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exporting/#exporting-versus-extracting">Exporting versus extracting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata/">Metadata in QIIME 2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#metadata-formatting-requirements">Metadata Formatting Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#using-metadata-files">Using Metadata Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#using-qiime-2-artifacts-as-metadata">Using QIIME 2 Artifacts as Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#merging-metadata">Merging metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#exploring-feature-metadata">Exploring feature metadata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filtering/">Filtering data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filtering/#obtain-the-data">Obtain the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering/#filtering-feature-tables">Filtering feature tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering/#filtering-sequences">Filtering sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering/#filtering-distance-matrices">Filtering distance matrices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feature-classifier/">Training feature classifiers with q2-feature-classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#obtaining-and-importing-reference-data-sets">Obtaining and importing reference data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#extract-reference-reads">Extract reference reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#train-the-classifier">Train the classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#test-the-classifier">Test the classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#classification-of-fungal-its-sequences">Classification of fungal ITS sequences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quality-control/">Evaluating and controlling data quality with q2-quality-control</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quality-control/#excluding-sequences-by-alignment">Excluding sequences by alignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quality-control/#evaluating-quality-of-samples-with-known-composition">Evaluating quality of samples with known composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quality-control/#evaluating-sequence-quality">Evaluating sequence quality</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/#predicting-categorical-sample-data">Predicting categorical sample data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/#predicting-continuous-i-e-numerical-sample-data">Predicting continuous (i.e., numerical) sample data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/#nested-cross-validation-provides-predictions-for-all-samples">Nested cross-validation provides predictions for all samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/#best-practices-things-you-should-not-do-with-q2-sample-classifier">Best practices: things you should not do with q2-sample-classifier</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#pairwise-difference-comparisons">Pairwise difference comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#pairwise-distance-comparisons">Pairwise distance comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#linear-mixed-effect-models">Linear mixed effect models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#volatility-analysis">Volatility analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#first-differencing-to-track-rate-of-change">First differencing to track rate of change</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#tracking-rate-of-change-from-static-timepoints">Tracking rate of change from static timepoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#non-parametric-microbial-interdependence-test-nmit">Non-parametric microbial interdependence test (NMIT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#feature-volatility-analysis">Feature volatility analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#maturity-index-prediction">“Maturity Index” prediction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chimera/#obtain-the-data">Obtain the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chimera/#run-de-novo-chimera-checking">Run <em>de novo</em> chimera checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chimera/#visualize-summary-stats">Visualize summary stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chimera/#filter-input-tables-and-sequences">Filter input tables and sequences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="read-joining/">Alternative methods of read-joining in QIIME 2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="read-joining/#obtain-the-data">Obtain the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="read-joining/#joining-reads">Joining reads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="read-joining/#viewing-a-summary-of-joined-data-with-read-quality">Viewing a summary of joined data with read quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="read-joining/#sequence-quality-control">Sequence quality control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="read-joining/#deblur">Deblur</a></li>
+<li class="toctree-l2"><a class="reference internal" href="read-joining/#view-summary-of-deblur-feature-table">View summary of Deblur feature table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="read-joining/#importing-pre-joined-reads">Importing pre-joined reads</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="otu-clustering/#obtain-the-data">Obtain the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otu-clustering/#dereplicating-a-sampledata-sequences-artifact">Dereplicating a <code class="docutils literal notranslate"><span class="pre">SampleData[Sequences]</span></code> artifact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otu-clustering/#clustering-of-featuretable-frequency-and-featuredata-sequence">Clustering of  <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code> and <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utilities/">Utilities in QIIME 2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utilities/#q2cli"><code class="docutils literal notranslate"><span class="pre">q2cli</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities/#artifact-api">Artifact API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="phylogeny/">Phylogenetic inference with q2-phylogeny</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="phylogeny/#inferring-phylogenies">Inferring phylogenies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phylogeny/#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phylogeny/#pipelines">Pipelines</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

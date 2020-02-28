@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fecal microbiota transplant (FMT) study: an exercise &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="“Atacama soil microbiome” tutorial" href="../atacama-soils/" />
+    <link rel="prev" title="“Moving Pictures” tutorial" href="../moving-pictures/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="fecal-microbiota-transplant-fmt-study-an-exercise">
+<h1>Fecal microbiota transplant (FMT) study: an exercise<a class="headerlink" href="#fecal-microbiota-transplant-fmt-study-an-exercise" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install guides</span></a>.</p>
+</div>
+<p>This document is intended to be run after <a class="reference internal" href="../moving-pictures/"><span class="doc">the moving pictures tutorial</span></a>. It is designed to introduce a few new ideas, and to be an exercise in applying the tools that were explored in that document.</p>
+<p>The data used in this tutorial is derived from a <a class="reference external" href="http://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-016-0225-7">Fecal Microbiome Transplant study</a> where children under the age of 18 with autism and gastrointestinal disorders, as measured by the Autism Diagnostic Interview-Revised (ADI-R) and Gastrointestinal Symptom Rating Scale (GSRS), respectively, were treated with fecal microbiota transplant in attempt to reduce the severity of their behavioral and gastrointestinal symptoms. We tracked changes in their microbiome, several metrics of the severity of autism including the Parent Global Impressions-III (PGI-III) and the Childhood Autism Rating Scale (CARS), and the severity of their gastrointestinal symptoms through their GSRS score over an eighteen week period. The microbiome was tracked through collection of weekly fecal swab samples (collected by swabbing used toilet paper) and less frequent stool samples (collected as whole stool). In the full study, which was a phase 1 clinical trial designed to test safety of the treatment, eighteen individuals received the treatment, and twenty individuals were followed as controls. The controls did not receive the treatment, but were monitored to track normal temporal variation in the gut microbiome. The fecal material that was transplanted during treatment was also sequenced in this study.</p>
+<p>This tutorial dataset is a subsample of the data generated for this study. It includes data from five individuals who received treatment and five controls. Between six and sixteen samples are included per individual, including stool and fecal swab samples for each individual, and samples before and after FMT treatment. Five samples of the transplanted fecal material are also included.</p>
+<p>These data were sequenced on two Illumina MiSeq sequencing runs. As in the Moving Pictures tutorial, we’ll use <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/27214047">DADA2</a> to perform initial quality control and generate our <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code> and <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> objects. However, the DADA2 denoising process is only applicable to a single sequencing run at a time, so we need to run this on a per sequencing run basis and then merge the results. We’ll work through this initial step, and then pose several questions that can be answered as an exercise.</p>
+<div class="section" id="obtain-data-files">
+<h2>Obtain data files<a class="headerlink" href="#obtain-data-files" title="Permalink to this headline">¶</a></h2>
+<p>Create a directory to work in called <code class="docutils literal notranslate"><span class="pre">qiime2-fmt-tutorial</span></code> and change to that directory:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir qiime2-fmt-tutorial
+<span class="nb">cd</span> qiime2-fmt-tutorial
+</pre></div>
+</div>
+<p>As in the Moving Pictures study, you should begin your analysis by familiarizing yourself with the sample metadata. You can again access the <a class="reference external" href="https://data.qiime2.org/2020.2/tutorials/fmt/sample_metadata">sample metadata</a> as a Google Spreadsheet. Notice that there are three tabs in this spreadsheet. This first tab (called sample-metadata) contains all of the clinical metadata.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/fmt/sample_metadata.tsv">
+            https://data.qiime2.org/2020.2/tutorials/fmt/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> sample-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "sample-metadata.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/sample_metadata.tsv" > \
+  "sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Next, download the <em>demultiplexed sequences</em> that we’ll use in this analysis. To learn how to start a QIIME 2 analysis from fastq-formatted sequence data, see the <a class="reference internal" href="../importing/"><span class="doc">importing data tutorial</span></a>. We’ll need to download two sets of demultiplexed sequences, each corresponding to one of the sequencing runs.</p>
+<p>In this tutorial we’ll work with a small subsample of the complete sequence data so that the commands will run quickly. You can choose either a 1% subsample of the reads or a 10% subsample of the reads. If you’re just trying to gain experience with preparing and combining multiple sequencing runs of data, you can work with the 1% subsample data so that the commands will run very quickly. If you’re using this tutorial to gain additional experience in generating and interpreting QIIME 2 analysis results, you should work with the 10% subsample data so that the results will be supported by more sequence data (1% of the reads is likely not sufficient to support some of the findings of the original study).</p>
+<div class="section" id="subsample-data">
+<h3>10% subsample data<a class="headerlink" href="#subsample-data" title="Permalink to this headline">¶</a></h3>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-1-10p.qza">
+            https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-1-10p.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> fmt-tutorial-demux-1.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "fmt-tutorial-demux-1.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-1-10p.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-1-10p.qza" > \
+  "fmt-tutorial-demux-1.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-2-10p.qza">
+            https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-2-10p.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> fmt-tutorial-demux-2.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "fmt-tutorial-demux-2.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-2-10p.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-2-10p.qza" > \
+  "fmt-tutorial-demux-2.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="section" id="id1">
+<h3>1% subsample data<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-1-1p.qza">
+            https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-1-1p.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> fmt-tutorial-demux-1.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "fmt-tutorial-demux-1.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-1-1p.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-1-1p.qza" > \
+  "fmt-tutorial-demux-1.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-4" aria-controls="browser-4" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-4" aria-controls="wget-4" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-4" aria-controls="messages-4" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-4">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-2-1p.qza">
+            https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-2-1p.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> fmt-tutorial-demux-2.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-4">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "fmt-tutorial-demux-2.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-2-1p.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-4">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/fmt/fmt-tutorial-demux-2-1p.qza" > \
+  "fmt-tutorial-demux-2.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="section" id="sequence-quality-control">
+<h2>Sequence quality control<a class="headerlink" href="#sequence-quality-control" title="Permalink to this headline">¶</a></h2>
+<p>We’ll begin by performing quality control on the demultiplexed sequences using <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/27214047">DADA2</a>, but this time we’ll run the <code class="docutils literal notranslate"><span class="pre">denoise-single</span></code> command on each set of demultiplexed sequences individually. Again, we’ll want to start by visualizing sequence quality for some of the samples in each run. When we run <code class="docutils literal notranslate"><span class="pre">denoise-single</span></code>, we need to use the same values for <code class="docutils literal notranslate"><span class="pre">--p-trunc-len</span></code> and <code class="docutils literal notranslate"><span class="pre">--p-trim-left</span></code> for both runs, so when looking at the visualizations that result from these two commands, think about what values would make sense for these parameters for both commands.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime demux summarize <span class="se">\</span>
+  --i-data fmt-tutorial-demux-1.qza <span class="se">\</span>
+  --o-visualization demux-summary-1.qzv
+qiime demux summarize <span class="se">\</span>
+  --i-data fmt-tutorial-demux-2.qza <span class="se">\</span>
+  --o-visualization demux-summary-2.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">fmt-tutorial-demux-1.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Ffmt-tutorial-demux-1.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/fmt-tutorial-demux-1.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">fmt-tutorial-demux-2.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Ffmt-tutorial-demux-2.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/fmt-tutorial-demux-2.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux-summary-2.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Fdemux-summary-2.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/demux-summary-2.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux-summary-1.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Fdemux-summary-1.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/demux-summary-1.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-0">
+<p class="admonition-title">Question</p>
+<p>Based on the plots you see in <code class="docutils literal notranslate"><span class="pre">demux-summary-1.qzv</span></code> and <code class="docutils literal notranslate"><span class="pre">demux-summary-2.qzv</span></code>, what values would you choose for <code class="docutils literal notranslate"><span class="pre">--p-trunc-len</span></code> and <code class="docutils literal notranslate"><span class="pre">--p-trim-left</span></code> in this case? How does these plots compare to those generated in the <a class="reference internal" href="../moving-pictures/"><span class="doc">the moving pictures tutorial</span></a>?</p>
+</div>
+<p>Here the quality seems relatively low in the first few bases, and then seems to stay relatively high through the end of the reads. We’ll therefore trim the first 13 bases from each sequence and truncate the sequences at 150 bases. Since the reads are 151 bases long, this results in very little truncation of the sequences.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime dada2 denoise-single <span class="se">\</span>
+  --p-trim-left <span class="m">13</span> <span class="se">\</span>
+  --p-trunc-len <span class="m">150</span> <span class="se">\</span>
+  --i-demultiplexed-seqs fmt-tutorial-demux-1.qza <span class="se">\</span>
+  --o-representative-sequences rep-seqs-1.qza <span class="se">\</span>
+  --o-table table-1.qza <span class="se">\</span>
+  --o-denoising-stats stats-1.qza
+qiime dada2 denoise-single <span class="se">\</span>
+  --p-trim-left <span class="m">13</span> <span class="se">\</span>
+  --p-trunc-len <span class="m">150</span> <span class="se">\</span>
+  --i-demultiplexed-seqs fmt-tutorial-demux-2.qza <span class="se">\</span>
+  --o-representative-sequences rep-seqs-2.qza <span class="se">\</span>
+  --o-table table-2.qza <span class="se">\</span>
+  --o-denoising-stats stats-2.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">stats-2.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Fstats-2.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/stats-2.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">stats-1.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Fstats-1.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/stats-1.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">rep-seqs-1.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Frep-seqs-1.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/rep-seqs-1.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">rep-seqs-2.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Frep-seqs-2.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/rep-seqs-2.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">table-1.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Ftable-1.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/table-1.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">table-2.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Ftable-2.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/table-2.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="viewing-denoising-stats">
+<h2>Viewing denoising stats<a class="headerlink" href="#viewing-denoising-stats" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">denoise-single</span></code> commands return basic statistics about the denoising process, and can be visualized with the following:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file stats-1.qza <span class="se">\</span>
+  --o-visualization denoising-stats-1.qzv
+qiime metadata tabulate <span class="se">\</span>
+  --m-input-file stats-2.qza <span class="se">\</span>
+  --o-visualization denoising-stats-2.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">denoising-stats-2.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Fdenoising-stats-2.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/denoising-stats-2.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">denoising-stats-1.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Fdenoising-stats-1.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/denoising-stats-1.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="merging-denoised-data">
+<h2>Merging denoised data<a class="headerlink" href="#merging-denoised-data" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">denoise-single</span></code> command is the last step in this analysis that needs to be run on a per sequencing run basis. We’re therefore ready to merge the artifacts generated by those two commands. First we’ll merge the two <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code> artifacts, and then we’ll merge the two <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> artifacts. This is possible because the feature ids generated in each run of <code class="docutils literal notranslate"><span class="pre">denoise-single</span></code> are directly comparable (in this case, the feature id is the md5 hash of the sequence defining the feature).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table merge <span class="se">\</span>
+  --i-tables table-1.qza <span class="se">\</span>
+  --i-tables table-2.qza <span class="se">\</span>
+  --o-merged-table table.qza
+qiime feature-table merge-seqs <span class="se">\</span>
+  --i-data rep-seqs-1.qza <span class="se">\</span>
+  --i-data rep-seqs-2.qza <span class="se">\</span>
+  --o-merged-data rep-seqs.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">rep-seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Frep-seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/rep-seqs.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Ftable.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/table.qza">download</a></p></li>
+</ul>
+</div>
+<p>Next, we’ll generate a summary of the merged <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code> artifact.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table summarize <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --o-visualization table.qzv <span class="se">\</span>
+  --m-sample-metadata-file sample-metadata.tsv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Ftable.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/table.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-1">
+<p class="admonition-title">Question</p>
+<p>Based on the information in <code class="docutils literal notranslate"><span class="pre">table.qzv</span></code>, what value will you choose for the <code class="docutils literal notranslate"><span class="pre">--p-sampling-depth</span></code> parameter when you run <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">diversity</span> <span class="pre">core-metrics-phylogenetic</span></code>?</p>
+</div>
+<div class="question admonition" id="question-2">
+<p class="admonition-title">Question</p>
+<p>Generate summaries of the tables for the individual runs of <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">dada2</span> <span class="pre">denoise-single</span></code>. How many features were defined in the first run? How many features were defined in the second run? How do these numbers compare to total number of features after merging?</p>
+</div>
+<p>We’ll also generate a summary of the merged <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> artifact. You can use this summary to obtain additional information about specific features of interest as you proceed through the analysis.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table tabulate-seqs <span class="se">\</span>
+  --i-data rep-seqs.qza <span class="se">\</span>
+  --o-visualization rep-seqs.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">rep-seqs.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffmt%2Frep-seqs.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/fmt/rep-seqs.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="diversity-analysis">
+<span id="fmt-diversity"></span><h2>Diversity analysis<a class="headerlink" href="#diversity-analysis" title="Permalink to this headline">¶</a></h2>
+<p>Now that you have <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code> and <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> objects, you’re ready to begin exploring the composition of these samples in the context of their metadata. Refer to <a class="reference internal" href="../moving-pictures/"><span class="doc">the moving pictures tutorial</span></a> to derive the specific commands that you’ll run. Several questions concern longitudinal changes in the microbiome of individuals; review the actions described in the <a class="reference internal" href="../longitudinal/"><span class="doc">q2-longitudinal tutorial</span></a> to learn about methods for longitudinal analysis that are supported in QIIME 2.</p>
+<p>Below are some specific questions to answer about this data, grouped into a few categories. Try to collect at least one specific result to support your answer to each question.</p>
+<ol class="arabic simple">
+<li><p>The personal human microbiome.</p>
+<ol class="loweralpha simple">
+<li><p>Do samples differ in composition by subject-id (i.e., across individual)?</p></li>
+<li><p>Do samples differ in richness by subject-id?</p></li>
+<li><p>Do samples differ in evenness by subject-id?</p></li>
+<li><p>Do richness, evenness, composition, and UniFrac distance change in individuals between baseline and the end of the study? Does this differ between individuals receiving FMT and control subjects? (Hint: try the paired difference/distance methods described in the <a class="reference internal" href="../longitudinal/"><span class="doc">q2-longitudinal tutorial</span></a>.)</p></li>
+<li><p>Do richness, evenness, composition, and UniFrac distance change over time and in relation to FMT treatment and other subject metadata? Are these metrics more variable over time in treatment or control groups? (Hint: these questions concern longitudinal measurements.)</p></li>
+</ol>
+</li>
+<li><p>Microbiota engraftment.</p>
+<ol class="loweralpha simple">
+<li><p>At approximately what week in the study do microbiome samples in individuals who receive treatment appear most similar to FMT donors in terms of unweighted UniFrac distances? (Hint: Try plotting the data with <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">emperor</span> <span class="pre">plot</span></code>. Pay close attention to the <em>color</em> tab and <em>visibility</em> menu.)</p></li>
+<li><p>At approximately what week in the study do microbiome samples in individuals who receive treatment appear most similar to FMT donors in terms of Bray-Curtis distances?</p></li>
+<li><p>Is this pattern stronger based on unweighted UniFrac or Bray-Curtis distance? Based on how you know about these metrics, what does this suggest to you about what is changing in the microbiome with fecal microbiota transplant? Use the Jaccard and weighted UniFrac distance Emperor plots to help you refine this idea.</p></li>
+</ol>
+</li>
+<li><p>Experimental design: Comparing stool and swab sample collection methods.</p>
+<ol class="loweralpha simple">
+<li><p>What feature(s) differ most in abundance between the stool and swab samples? What taxonomy is associated with those feature ids based on their best BLAST hits, and based on the results of Naive Bayes feature classification with the QIIME 2 <code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code> plugin?</p></li>
+<li><p>Is the microbial composition of stool and swab samples significantly different based on either unweighted UniFrac or Bray-Curtis distances between samples (<em>yes</em>, <em>no</em>, or <em>not possible to say with the current information</em>)?</p></li>
+<li><p>Do the donated fecal material samples appear more similar in composition to the stool or swab samples?</p></li>
+<li><p>Does community richness differ between stool samples and swab samples? Does community evenness differ between stool samples and swab samples?</p></li>
+</ol>
+</li>
+<li><p>How many samples were sequenced in each sequencing run? Do you observe any systematic differences in the samples across sequencing runs?</p></li>
+</ol>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>The data in this tutorial was initially presented in: Microbiota Transfer Therapy alters gut ecosystem and improves gastrointestinal and autism symptoms: an open-label study. Dae-Wook Kang, James B. Adams, Ann C. Gregory, Thomas Borody, Lauren Chittick, Alessio Fasano, Alexander Khoruts, Elizabeth Geis, Juan Maldonado, Sharon McDonough-Means, Elena L. Pollard, Simon Roux, Michael J. Sadowsky, Karen Schwarzberg Lipson, Matthew B. Sullivan, J. Gregory Caporaso and Rosa Krajmalnik-Brown. Microbiome (2017) 5:10. DOI: 10.1186/s40168-016-0225-7.</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

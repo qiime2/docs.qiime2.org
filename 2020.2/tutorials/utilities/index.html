@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Utilities in QIIME 2 &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Phylogenetic inference with q2-phylogeny" href="../phylogeny/" />
+    <link rel="prev" title="Clustering sequences into OTUs using q2-vsearch" href="../otu-clustering/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="utilities-in-qiime-2">
+<h1><a class="toc-backref" href="#id1">Utilities in QIIME 2</a><a class="headerlink" href="#utilities-in-qiime-2" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#utilities-in-qiime-2" id="id1">Utilities in QIIME 2</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q2cli" id="id2"><code class="docutils literal notranslate"><span class="pre">q2cli</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#retrieving-citations" id="id3">Retrieving Citations</a></p></li>
+<li><p><a class="reference internal" href="#viewing-visualizations" id="id4">Viewing Visualizations</a></p></li>
+<li><p><a class="reference internal" href="#peeking-at-results" id="id5">Peeking at Results</a></p></li>
+<li><p><a class="reference internal" href="#validating-results" id="id6">Validating Results</a></p></li>
+<li><p><a class="reference internal" href="#inspecting-metadata" id="id7">Inspecting Metadata</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#artifact-api" id="id8">Artifact API</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>There are many non-plugin-based utilities available in QIIME 2. The following
+document attempts to demonstrate many of these functions. This document is
+divided by <a class="reference internal" href="../../interfaces/"><span class="doc">interface</span></a>, and attempts to cross-reference similar
+functionality available in other interfaces.</p>
+<div class="section" id="q2cli">
+<h2><a class="toc-backref" href="#id2"><code class="docutils literal notranslate"><span class="pre">q2cli</span></code></a><a class="headerlink" href="#q2cli" title="Permalink to this headline">¶</a></h2>
+<p>Most of the interesting utilities can be found in the <code class="docutils literal notranslate"><span class="pre">tools</span></code> subcommand of
+<code class="docutils literal notranslate"><span class="pre">q2cli</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools --help
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">qiime</span> <span class="n">tools</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">COMMAND</span> <span class="p">[</span><span class="n">ARGS</span><span class="p">]</span><span class="o">...</span>
+
+  <span class="n">Tools</span> <span class="k">for</span> <span class="n">working</span> <span class="k">with</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">files</span><span class="o">.</span>
+
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">help</span>      <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
+
+<span class="n">Commands</span><span class="p">:</span>
+  <span class="n">citations</span>         <span class="n">Print</span> <span class="n">citations</span> <span class="k">for</span> <span class="n">a</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">result</span><span class="o">.</span>
+  <span class="n">export</span>            <span class="n">Export</span> <span class="n">data</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">Artifact</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">Visualization</span>
+  <span class="n">extract</span>           <span class="n">Extract</span> <span class="n">a</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">Artifact</span> <span class="ow">or</span> <span class="n">Visualization</span> <span class="n">archive</span><span class="o">.</span>
+  <span class="kn">import</span>            <span class="nn">Import</span> <span class="n">data</span> <span class="n">into</span> <span class="n">a</span> <span class="n">new</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">Artifact</span><span class="o">.</span>
+  <span class="n">inspect</span><span class="o">-</span><span class="n">metadata</span>  <span class="n">Inspect</span> <span class="n">columns</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span>
+  <span class="n">peek</span>              <span class="n">Take</span> <span class="n">a</span> <span class="n">peek</span> <span class="n">at</span> <span class="n">a</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">Artifact</span> <span class="ow">or</span> <span class="n">Visualization</span><span class="o">.</span>
+  <span class="n">validate</span>          <span class="n">Validate</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">Artifact</span><span class="o">.</span>
+  <span class="n">view</span>              <span class="n">View</span> <span class="n">a</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">Visualization</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Let’s get our hands on some data so that we can learn more about this
+functionality! First, we will take a look at the taxonomic bar charts from the
+<a class="reference internal" href="../pd-mice/"><span class="doc">PD Mice Tutorial</span></a>:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/utilities/taxa-barplot.qzv">
+            https://data.qiime2.org/2020.2/tutorials/utilities/taxa-barplot.qzv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> taxa-barplot.qzv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "taxa-barplot.qzv" \
+  "https://data.qiime2.org/2020.2/tutorials/utilities/taxa-barplot.qzv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/utilities/taxa-barplot.qzv" > \
+  "taxa-barplot.qzv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="section" id="retrieving-citations">
+<h3><a class="toc-backref" href="#id3">Retrieving Citations</a><a class="headerlink" href="#retrieving-citations" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have some results, let’s learn more about the citations relevant to
+the creation of this visualization. First, we can check the help text for the
+<code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">citations</span></code> command:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools citations --help
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">qiime</span> <span class="n">tools</span> <span class="n">citations</span> <span class="p">[</span><span class="n">OPTIONS</span><span class="p">]</span> <span class="n">ARTIFACT</span><span class="o">/</span><span class="n">VISUALIZATION</span>
+
+  <span class="n">Print</span> <span class="n">citations</span> <span class="k">as</span> <span class="n">a</span> <span class="n">BibTex</span> <span class="n">file</span> <span class="p">(</span><span class="o">.</span><span class="n">bib</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="n">QIIME</span> <span class="mi">2</span> <span class="n">result</span><span class="o">.</span>
+
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">help</span>      <span class="n">Show</span> <span class="n">this</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span><span class="o">.</span>
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">taxa-barplot.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Futilities%2Ftaxa-barplot.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/utilities/taxa-barplot.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Now that we know how to use the command, we will run the following:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools citations taxa-barplot.qzv
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">framework</span><span class="o">|</span><span class="n">qiime2</span><span class="p">:</span><span class="mf">2019.10</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Bolyen</span><span class="p">,</span> <span class="n">Evan</span> <span class="ow">and</span> <span class="n">Rideout</span><span class="p">,</span> <span class="n">Jai</span> <span class="n">Ram</span> <span class="ow">and</span> <span class="n">Dillon</span><span class="p">,</span> <span class="n">Matthew</span> <span class="n">R</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Bokulich</span><span class="p">,</span> <span class="n">Nicholas</span> <span class="n">A</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Abnet</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">C</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Al</span><span class="o">-</span><span class="n">Ghalith</span><span class="p">,</span> <span class="n">Gabriel</span> <span class="n">A</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Alexander</span><span class="p">,</span> <span class="n">Harriet</span> <span class="ow">and</span> <span class="n">Alm</span><span class="p">,</span> <span class="n">Eric</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Arumugam</span><span class="p">,</span> <span class="n">Manimozhiyan</span> <span class="ow">and</span> <span class="n">Asnicar</span><span class="p">,</span> <span class="n">Francesco</span> <span class="ow">and</span> <span class="n">Bai</span><span class="p">,</span> <span class="n">Yang</span> <span class="ow">and</span> <span class="n">Bisanz</span><span class="p">,</span> <span class="n">Jordan</span> <span class="n">E</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Bittinger</span><span class="p">,</span> <span class="n">Kyle</span> <span class="ow">and</span> <span class="n">Brejnrod</span><span class="p">,</span> <span class="n">Asker</span> <span class="ow">and</span> <span class="n">Brislawn</span><span class="p">,</span> <span class="n">Colin</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Brown</span><span class="p">,</span> <span class="n">C</span><span class="o">.</span> <span class="n">Titus</span> <span class="ow">and</span> <span class="n">Callahan</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Caraballo</span><span class="o">-</span><span class="n">Rodríguez</span><span class="p">,</span> <span class="n">Andrés</span> <span class="n">Mauricio</span> <span class="ow">and</span> <span class="n">Chase</span><span class="p">,</span> <span class="n">John</span> <span class="ow">and</span> <span class="n">Cope</span><span class="p">,</span> <span class="n">Emily</span> <span class="n">K</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Da</span> <span class="n">Silva</span><span class="p">,</span> <span class="n">Ricardo</span> <span class="ow">and</span> <span class="n">Diener</span><span class="p">,</span> <span class="n">Christian</span> <span class="ow">and</span> <span class="n">Dorrestein</span><span class="p">,</span> <span class="n">Pieter</span> <span class="n">C</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Douglas</span><span class="p">,</span> <span class="n">Gavin</span> <span class="n">M</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Durall</span><span class="p">,</span> <span class="n">Daniel</span> <span class="n">M</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Duvallet</span><span class="p">,</span> <span class="n">Claire</span> <span class="ow">and</span> <span class="n">Edwardson</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">F</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Ernst</span><span class="p">,</span> <span class="n">Madeleine</span> <span class="ow">and</span> <span class="n">Estaki</span><span class="p">,</span> <span class="n">Mehrbod</span> <span class="ow">and</span> <span class="n">Fouquier</span><span class="p">,</span> <span class="n">Jennifer</span> <span class="ow">and</span> <span class="n">Gauglitz</span><span class="p">,</span> <span class="n">Julia</span> <span class="n">M</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Gibbons</span><span class="p">,</span> <span class="n">Sean</span> <span class="n">M</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Gibson</span><span class="p">,</span> <span class="n">Deanna</span> <span class="n">L</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Gonzalez</span><span class="p">,</span> <span class="n">Antonio</span> <span class="ow">and</span> <span class="n">Gorlick</span><span class="p">,</span> <span class="n">Kestrel</span> <span class="ow">and</span> <span class="n">Guo</span><span class="p">,</span> <span class="n">Jiarong</span> <span class="ow">and</span> <span class="n">Hillmann</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="ow">and</span> <span class="n">Holmes</span><span class="p">,</span> <span class="n">Susan</span> <span class="ow">and</span> <span class="n">Holste</span><span class="p">,</span> <span class="n">Hannes</span> <span class="ow">and</span> <span class="n">Huttenhower</span><span class="p">,</span> <span class="n">Curtis</span> <span class="ow">and</span> <span class="n">Huttley</span><span class="p">,</span> <span class="n">Gavin</span> <span class="n">A</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Janssen</span><span class="p">,</span> <span class="n">Stefan</span> <span class="ow">and</span> <span class="n">Jarmusch</span><span class="p">,</span> <span class="n">Alan</span> <span class="n">K</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Jiang</span><span class="p">,</span> <span class="n">Lingjing</span> <span class="ow">and</span> <span class="n">Kaehler</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="n">D</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Kang</span><span class="p">,</span> <span class="n">Kyo</span> <span class="n">Bin</span> <span class="ow">and</span> <span class="n">Keefe</span><span class="p">,</span> <span class="n">Christopher</span> <span class="n">R</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Keim</span><span class="p">,</span> <span class="n">Paul</span> <span class="ow">and</span> <span class="n">Kelley</span><span class="p">,</span> <span class="n">Scott</span> <span class="n">T</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Knights</span><span class="p">,</span> <span class="n">Dan</span> <span class="ow">and</span> <span class="n">Koester</span><span class="p">,</span> <span class="n">Irina</span> <span class="ow">and</span> <span class="n">Kosciolek</span><span class="p">,</span> <span class="n">Tomasz</span> <span class="ow">and</span> <span class="n">Kreps</span><span class="p">,</span> <span class="n">Jorden</span> <span class="ow">and</span> <span class="n">Langille</span><span class="p">,</span> <span class="n">Morgan</span> <span class="n">G</span><span class="o">.</span> <span class="n">I</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Lee</span><span class="p">,</span> <span class="n">Joslynn</span> <span class="ow">and</span> <span class="n">Ley</span><span class="p">,</span> <span class="n">Ruth</span> <span class="ow">and</span> <span class="n">Liu</span><span class="p">,</span> <span class="n">Yong</span><span class="o">-</span><span class="n">Xin</span> <span class="ow">and</span> <span class="n">Loftfield</span><span class="p">,</span> <span class="n">Erikka</span> <span class="ow">and</span> <span class="n">Lozupone</span><span class="p">,</span> <span class="n">Catherine</span> <span class="ow">and</span> <span class="n">Maher</span><span class="p">,</span> <span class="n">Massoud</span> <span class="ow">and</span> <span class="n">Marotz</span><span class="p">,</span> <span class="n">Clarisse</span> <span class="ow">and</span> <span class="n">Martin</span><span class="p">,</span> <span class="n">Bryan</span> <span class="n">D</span><span class="o">.</span> <span class="ow">and</span> <span class="n">McDonald</span><span class="p">,</span> <span class="n">Daniel</span> <span class="ow">and</span> <span class="n">McIver</span><span class="p">,</span> <span class="n">Lauren</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Melnik</span><span class="p">,</span> <span class="n">Alexey</span> <span class="n">V</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Metcalf</span><span class="p">,</span> <span class="n">Jessica</span> <span class="n">L</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Morgan</span><span class="p">,</span> <span class="n">Sydney</span> <span class="n">C</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Morton</span><span class="p">,</span> <span class="n">Jamie</span> <span class="n">T</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Naimey</span><span class="p">,</span> <span class="n">Ahmad</span> <span class="n">Turan</span> <span class="ow">and</span> <span class="n">Navas</span><span class="o">-</span><span class="n">Molina</span><span class="p">,</span> <span class="n">Jose</span> <span class="n">A</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Nothias</span><span class="p">,</span> <span class="n">Louis</span> <span class="n">Felix</span> <span class="ow">and</span> <span class="n">Orchanian</span><span class="p">,</span> <span class="n">Stephanie</span> <span class="n">B</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Pearson</span><span class="p">,</span> <span class="n">Talima</span> <span class="ow">and</span> <span class="n">Peoples</span><span class="p">,</span> <span class="n">Samuel</span> <span class="n">L</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Petras</span><span class="p">,</span> <span class="n">Daniel</span> <span class="ow">and</span> <span class="n">Preuss</span><span class="p">,</span> <span class="n">Mary</span> <span class="n">Lai</span> <span class="ow">and</span> <span class="n">Pruesse</span><span class="p">,</span> <span class="n">Elmar</span> <span class="ow">and</span> <span class="n">Rasmussen</span><span class="p">,</span> <span class="n">Lasse</span> <span class="n">Buur</span> <span class="ow">and</span> <span class="n">Rivers</span><span class="p">,</span> <span class="n">Adam</span> <span class="ow">and</span> <span class="n">Robeson</span><span class="p">,</span> <span class="n">Michael</span> <span class="n">S</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Rosenthal</span><span class="p">,</span> <span class="n">Patrick</span> <span class="ow">and</span> <span class="n">Segata</span><span class="p">,</span> <span class="n">Nicola</span> <span class="ow">and</span> <span class="n">Shaffer</span><span class="p">,</span> <span class="n">Michael</span> <span class="ow">and</span> <span class="n">Shiffer</span><span class="p">,</span> <span class="n">Arron</span> <span class="ow">and</span> <span class="n">Sinha</span><span class="p">,</span> <span class="n">Rashmi</span> <span class="ow">and</span> <span class="n">Song</span><span class="p">,</span> <span class="n">Se</span> <span class="n">Jin</span> <span class="ow">and</span> <span class="n">Spear</span><span class="p">,</span> <span class="n">John</span> <span class="n">R</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Swafford</span><span class="p">,</span> <span class="n">Austin</span> <span class="n">D</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Thompson</span><span class="p">,</span> <span class="n">Luke</span> <span class="n">R</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Torres</span><span class="p">,</span> <span class="n">Pedro</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Trinh</span><span class="p">,</span> <span class="n">Pauline</span> <span class="ow">and</span> <span class="n">Tripathi</span><span class="p">,</span> <span class="n">Anupriya</span> <span class="ow">and</span> <span class="n">Turnbaugh</span><span class="p">,</span> <span class="n">Peter</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Ul</span><span class="o">-</span><span class="n">Hasan</span><span class="p">,</span> <span class="n">Sabah</span> <span class="ow">and</span> <span class="n">van</span> <span class="n">der</span> <span class="n">Hooft</span><span class="p">,</span> <span class="n">Justin</span> <span class="n">J</span><span class="o">.</span> <span class="n">J</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Vargas</span><span class="p">,</span> <span class="n">Fernando</span> <span class="ow">and</span> <span class="n">Vázquez</span><span class="o">-</span><span class="n">Baeza</span><span class="p">,</span> <span class="n">Yoshiki</span> <span class="ow">and</span> <span class="n">Vogtmann</span><span class="p">,</span> <span class="n">Emily</span> <span class="ow">and</span> <span class="n">von</span> <span class="n">Hippel</span><span class="p">,</span> <span class="n">Max</span> <span class="ow">and</span> <span class="n">Walters</span><span class="p">,</span> <span class="n">William</span> <span class="ow">and</span> <span class="n">Wan</span><span class="p">,</span> <span class="n">Yunhu</span> <span class="ow">and</span> <span class="n">Wang</span><span class="p">,</span> <span class="n">Mingxun</span> <span class="ow">and</span> <span class="n">Warren</span><span class="p">,</span> <span class="n">Jonathan</span> <span class="ow">and</span> <span class="n">Weber</span><span class="p">,</span> <span class="n">Kyle</span> <span class="n">C</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Williamson</span><span class="p">,</span> <span class="n">Charles</span> <span class="n">H</span><span class="o">.</span> <span class="n">D</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Willis</span><span class="p">,</span> <span class="n">Amy</span> <span class="n">D</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Xu</span><span class="p">,</span> <span class="n">Zhenjiang</span> <span class="n">Zech</span> <span class="ow">and</span> <span class="n">Zaneveld</span><span class="p">,</span> <span class="n">Jesse</span> <span class="n">R</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Zhang</span><span class="p">,</span> <span class="n">Yilong</span> <span class="ow">and</span> <span class="n">Zhu</span><span class="p">,</span> <span class="n">Qiyun</span> <span class="ow">and</span> <span class="n">Knight</span><span class="p">,</span> <span class="n">Rob</span> <span class="ow">and</span> <span class="n">Caporaso</span><span class="p">,</span> <span class="n">J</span><span class="o">.</span> <span class="n">Gregory</span><span class="p">},</span>
+ <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.1038</span><span class="o">/</span><span class="n">s41587</span><span class="o">-</span><span class="mi">019</span><span class="o">-</span><span class="mi">0209</span><span class="o">-</span><span class="mi">9</span><span class="p">},</span>
+ <span class="n">issn</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1546</span><span class="o">-</span><span class="mi">1696</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Nature</span> <span class="n">Biotechnology</span><span class="p">},</span>
+ <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">8</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">852</span><span class="o">-</span><span class="mi">857</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Reproducible</span><span class="p">,</span> <span class="n">interactive</span><span class="p">,</span> <span class="n">scalable</span> <span class="ow">and</span> <span class="n">extensible</span> <span class="n">microbiome</span> <span class="n">data</span> <span class="n">science</span> <span class="n">using</span> <span class="n">QIIME</span> <span class="mi">2</span><span class="p">},</span>
+ <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">doi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mf">10.1038</span><span class="o">/</span><span class="n">s41587</span><span class="o">-</span><span class="mi">019</span><span class="o">-</span><span class="mi">0209</span><span class="o">-</span><span class="mi">9</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">37</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2019</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@article</span><span class="p">{</span><span class="n">view</span><span class="o">|</span><span class="n">types</span><span class="p">:</span><span class="mf">2019.10</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="n">BIOMV210DirFmt</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">McDonald</span><span class="p">,</span> <span class="n">Daniel</span> <span class="ow">and</span> <span class="n">Clemente</span><span class="p">,</span> <span class="n">Jose</span> <span class="n">C</span> <span class="ow">and</span> <span class="n">Kuczynski</span><span class="p">,</span> <span class="n">Justin</span> <span class="ow">and</span> <span class="n">Rideout</span><span class="p">,</span> <span class="n">Jai</span> <span class="n">Ram</span> <span class="ow">and</span> <span class="n">Stombaugh</span><span class="p">,</span> <span class="n">Jesse</span> <span class="ow">and</span> <span class="n">Wendel</span><span class="p">,</span> <span class="n">Doug</span> <span class="ow">and</span> <span class="n">Wilke</span><span class="p">,</span> <span class="n">Andreas</span> <span class="ow">and</span> <span class="n">Huse</span><span class="p">,</span> <span class="n">Susan</span> <span class="ow">and</span> <span class="n">Hufnagle</span><span class="p">,</span> <span class="n">John</span> <span class="ow">and</span> <span class="n">Meyer</span><span class="p">,</span> <span class="n">Folker</span> <span class="ow">and</span> <span class="n">Knight</span><span class="p">,</span> <span class="n">Rob</span> <span class="ow">and</span> <span class="n">Caporaso</span><span class="p">,</span> <span class="n">J</span> <span class="n">Gregory</span><span class="p">},</span>
+ <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.1186</span><span class="o">/</span><span class="mi">2047</span><span class="o">-</span><span class="mi">217</span><span class="n">X</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">7</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">GigaScience</span><span class="p">},</span>
+ <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">7</span><span class="p">},</span>
+ <span class="n">publisher</span> <span class="o">=</span> <span class="p">{</span><span class="n">BioMed</span> <span class="n">Central</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">The</span> <span class="n">Biological</span> <span class="n">Observation</span> <span class="n">Matrix</span> <span class="p">(</span><span class="n">BIOM</span><span class="p">)</span> <span class="nb">format</span> <span class="ow">or</span><span class="p">:</span> <span class="n">how</span> <span class="n">I</span> <span class="n">learned</span> <span class="n">to</span> <span class="n">stop</span> <span class="n">worrying</span> <span class="ow">and</span> <span class="n">love</span> <span class="n">the</span> <span class="n">ome</span><span class="o">-</span><span class="n">ome</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2012</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@inproceedings</span><span class="p">{</span><span class="n">view</span><span class="o">|</span><span class="n">types</span><span class="p">:</span><span class="mf">2019.10</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">frame</span><span class="p">:</span><span class="n">DataFrame</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Wes</span> <span class="n">McKinney</span> <span class="p">},</span>
+ <span class="n">booktitle</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Proceedings</span> <span class="n">of</span> <span class="n">the</span> <span class="mi">9</span><span class="n">th</span> <span class="n">Python</span> <span class="ow">in</span> <span class="n">Science</span> <span class="n">Conference</span> <span class="p">},</span>
+ <span class="n">editor</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Stéfan</span> <span class="n">van</span> <span class="n">der</span> <span class="n">Walt</span> <span class="ow">and</span> <span class="n">Jarrod</span> <span class="n">Millman</span> <span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">51</span> <span class="o">--</span> <span class="mi">56</span> <span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Data</span> <span class="n">Structures</span> <span class="k">for</span> <span class="n">Statistical</span> <span class="n">Computing</span> <span class="ow">in</span> <span class="n">Python</span> <span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2010</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@inproceedings</span><span class="p">{</span><span class="n">view</span><span class="o">|</span><span class="n">types</span><span class="p">:</span><span class="mf">2019.10</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="p">:</span><span class="n">Series</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Wes</span> <span class="n">McKinney</span> <span class="p">},</span>
+ <span class="n">booktitle</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Proceedings</span> <span class="n">of</span> <span class="n">the</span> <span class="mi">9</span><span class="n">th</span> <span class="n">Python</span> <span class="ow">in</span> <span class="n">Science</span> <span class="n">Conference</span> <span class="p">},</span>
+ <span class="n">editor</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Stéfan</span> <span class="n">van</span> <span class="n">der</span> <span class="n">Walt</span> <span class="ow">and</span> <span class="n">Jarrod</span> <span class="n">Millman</span> <span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">51</span> <span class="o">--</span> <span class="mi">56</span> <span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Data</span> <span class="n">Structures</span> <span class="k">for</span> <span class="n">Statistical</span> <span class="n">Computing</span> <span class="ow">in</span> <span class="n">Python</span> <span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2010</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@article</span><span class="p">{</span><span class="n">plugin</span><span class="o">|</span><span class="n">dada2</span><span class="p">:</span><span class="mf">2019.10</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Callahan</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">McMurdie</span><span class="p">,</span> <span class="n">Paul</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">Rosen</span><span class="p">,</span> <span class="n">Michael</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">Han</span><span class="p">,</span> <span class="n">Andrew</span> <span class="n">W</span> <span class="ow">and</span> <span class="n">Johnson</span><span class="p">,</span> <span class="n">Amy</span> <span class="n">Jo</span> <span class="n">A</span> <span class="ow">and</span> <span class="n">Holmes</span><span class="p">,</span> <span class="n">Susan</span> <span class="n">P</span><span class="p">},</span>
+ <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.1038</span><span class="o">/</span><span class="n">nmeth</span><span class="o">.</span><span class="mi">3869</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Nature</span> <span class="n">methods</span><span class="p">},</span>
+ <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">7</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">581</span><span class="p">},</span>
+ <span class="n">publisher</span> <span class="o">=</span> <span class="p">{</span><span class="n">Nature</span> <span class="n">Publishing</span> <span class="n">Group</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">DADA2</span><span class="p">:</span> <span class="n">high</span><span class="o">-</span><span class="n">resolution</span> <span class="n">sample</span> <span class="n">inference</span> <span class="kn">from</span> <span class="nn">Illumina</span> <span class="n">amplicon</span> <span class="n">data</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">13</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2016</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@article</span><span class="p">{</span><span class="n">framework</span><span class="o">|</span><span class="n">qiime2</span><span class="p">:</span><span class="mf">2019.4</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Bolyen</span><span class="p">,</span> <span class="n">Evan</span> <span class="ow">and</span> <span class="n">Rideout</span><span class="p">,</span> <span class="n">Jai</span> <span class="n">Ram</span> <span class="ow">and</span> <span class="n">Dillon</span><span class="p">,</span> <span class="n">Matthew</span> <span class="n">R</span> <span class="ow">and</span> <span class="n">Bokulich</span><span class="p">,</span> <span class="n">Nicholas</span> <span class="n">A</span> <span class="ow">and</span> <span class="n">Abnet</span><span class="p">,</span> <span class="n">Christian</span> <span class="ow">and</span> <span class="n">Al</span><span class="o">-</span><span class="n">Ghalith</span><span class="p">,</span> <span class="n">Gabriel</span> <span class="n">A</span> <span class="ow">and</span> <span class="n">Alexander</span><span class="p">,</span> <span class="n">Harriet</span> <span class="ow">and</span> <span class="n">Alm</span><span class="p">,</span> <span class="n">Eric</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">Arumugam</span><span class="p">,</span> <span class="n">Manimozhiyan</span> <span class="ow">and</span> <span class="n">Asnicar</span><span class="p">,</span> <span class="n">Francesco</span> <span class="ow">and</span> <span class="n">Bai</span><span class="p">,</span> <span class="n">Yang</span> <span class="ow">and</span> <span class="n">Bisanz</span><span class="p">,</span> <span class="n">Jordan</span> <span class="n">E</span> <span class="ow">and</span> <span class="n">Bittinger</span><span class="p">,</span> <span class="n">Kyle</span> <span class="ow">and</span> <span class="n">Brejnrod</span><span class="p">,</span> <span class="n">Asker</span> <span class="ow">and</span> <span class="n">Brislawn</span><span class="p">,</span> <span class="n">Colin</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">Brown</span><span class="p">,</span> <span class="n">C</span> <span class="n">Titus</span> <span class="ow">and</span> <span class="n">Callahan</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">Caraballo</span><span class="o">-</span><span class="n">Rodríguez</span><span class="p">,</span> <span class="n">Andrés</span> <span class="n">Mauricio</span> <span class="ow">and</span> <span class="n">Chase</span><span class="p">,</span> <span class="n">John</span> <span class="ow">and</span> <span class="n">Cope</span><span class="p">,</span> <span class="n">Emily</span> <span class="ow">and</span> <span class="n">Da</span> <span class="n">Silva</span><span class="p">,</span> <span class="n">Ricardo</span> <span class="ow">and</span> <span class="n">Dorrestein</span><span class="p">,</span> <span class="n">Pieter</span> <span class="n">C</span> <span class="ow">and</span> <span class="n">Douglas</span><span class="p">,</span> <span class="n">Gavin</span> <span class="n">M</span> <span class="ow">and</span> <span class="n">Durall</span><span class="p">,</span> <span class="n">Daniel</span> <span class="n">M</span> <span class="ow">and</span> <span class="n">Duvallet</span><span class="p">,</span> <span class="n">Claire</span> <span class="ow">and</span> <span class="n">Edwardson</span><span class="p">,</span> <span class="n">Christian</span> <span class="n">F</span> <span class="ow">and</span> <span class="n">Ernst</span><span class="p">,</span> <span class="n">Madeleine</span> <span class="ow">and</span> <span class="n">Estaki</span><span class="p">,</span> <span class="n">Mehrbod</span> <span class="ow">and</span> <span class="n">Fouquier</span><span class="p">,</span> <span class="n">Jennifer</span> <span class="ow">and</span> <span class="n">Gauglitz</span><span class="p">,</span> <span class="n">Julia</span> <span class="n">M</span> <span class="ow">and</span> <span class="n">Gibson</span><span class="p">,</span> <span class="n">Deanna</span> <span class="n">L</span> <span class="ow">and</span> <span class="n">Gonzalez</span><span class="p">,</span> <span class="n">Antonio</span> <span class="ow">and</span> <span class="n">Gorlick</span><span class="p">,</span> <span class="n">Kestrel</span> <span class="ow">and</span> <span class="n">Guo</span><span class="p">,</span> <span class="n">Jiarong</span> <span class="ow">and</span> <span class="n">Hillmann</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="ow">and</span> <span class="n">Holmes</span><span class="p">,</span> <span class="n">Susan</span> <span class="ow">and</span> <span class="n">Holste</span><span class="p">,</span> <span class="n">Hannes</span> <span class="ow">and</span> <span class="n">Huttenhower</span><span class="p">,</span> <span class="n">Curtis</span> <span class="ow">and</span> <span class="n">Huttley</span><span class="p">,</span> <span class="n">Gavin</span> <span class="ow">and</span> <span class="n">Janssen</span><span class="p">,</span> <span class="n">Stefan</span> <span class="ow">and</span> <span class="n">Jarmusch</span><span class="p">,</span> <span class="n">Alan</span> <span class="n">K</span> <span class="ow">and</span> <span class="n">Jiang</span><span class="p">,</span> <span class="n">Lingjing</span> <span class="ow">and</span> <span class="n">Kaehler</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="ow">and</span> <span class="n">Kang</span><span class="p">,</span> <span class="n">Kyo</span> <span class="n">Bin</span> <span class="ow">and</span> <span class="n">Keefe</span><span class="p">,</span> <span class="n">Christopher</span> <span class="n">R</span> <span class="ow">and</span> <span class="n">Keim</span><span class="p">,</span> <span class="n">Paul</span> <span class="ow">and</span> <span class="n">Kelley</span><span class="p">,</span> <span class="n">Scott</span> <span class="n">T</span> <span class="ow">and</span> <span class="n">Knights</span><span class="p">,</span> <span class="n">Dan</span> <span class="ow">and</span> <span class="n">Koester</span><span class="p">,</span> <span class="n">Irina</span> <span class="ow">and</span> <span class="n">Kosciolek</span><span class="p">,</span> <span class="n">Tomasz</span> <span class="ow">and</span> <span class="n">Kreps</span><span class="p">,</span> <span class="n">Jorden</span> <span class="ow">and</span> <span class="n">Langille</span><span class="p">,</span> <span class="n">Morgan</span> <span class="n">GI</span> <span class="ow">and</span> <span class="n">Lee</span><span class="p">,</span> <span class="n">Joslynn</span> <span class="ow">and</span> <span class="n">Ley</span><span class="p">,</span> <span class="n">Ruth</span> <span class="ow">and</span> <span class="n">Liu</span><span class="p">,</span> <span class="n">Yong</span><span class="o">-</span><span class="n">Xin</span> <span class="ow">and</span> <span class="n">Loftfield</span><span class="p">,</span> <span class="n">Erikka</span> <span class="ow">and</span> <span class="n">Lozupone</span><span class="p">,</span> <span class="n">Catherine</span> <span class="ow">and</span> <span class="n">Maher</span><span class="p">,</span> <span class="n">Massoud</span> <span class="ow">and</span> <span class="n">Marotz</span><span class="p">,</span> <span class="n">Clarisse</span> <span class="ow">and</span> <span class="n">Martin</span><span class="p">,</span> <span class="n">Bryan</span> <span class="ow">and</span> <span class="n">McDonald</span><span class="p">,</span> <span class="n">Daniel</span> <span class="ow">and</span> <span class="n">McIver</span><span class="p">,</span> <span class="n">Lauren</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">Melnik</span><span class="p">,</span> <span class="n">Alexey</span> <span class="n">V</span> <span class="ow">and</span> <span class="n">Metcalf</span><span class="p">,</span> <span class="n">Jessica</span> <span class="n">L</span> <span class="ow">and</span> <span class="n">Morgan</span><span class="p">,</span> <span class="n">Sydney</span> <span class="n">C</span> <span class="ow">and</span> <span class="n">Morton</span><span class="p">,</span> <span class="n">Jamie</span> <span class="ow">and</span> <span class="n">Naimey</span><span class="p">,</span> <span class="n">Ahmad</span> <span class="n">Turan</span> <span class="ow">and</span> <span class="n">Navas</span><span class="o">-</span><span class="n">Molina</span><span class="p">,</span> <span class="n">Jose</span> <span class="n">A</span> <span class="ow">and</span> <span class="n">Nothias</span><span class="p">,</span> <span class="n">Louis</span> <span class="n">Felix</span> <span class="ow">and</span> <span class="n">Orchanian</span><span class="p">,</span> <span class="n">Stephanie</span> <span class="n">B</span> <span class="ow">and</span> <span class="n">Pearson</span><span class="p">,</span> <span class="n">Talima</span> <span class="ow">and</span> <span class="n">Peoples</span><span class="p">,</span> <span class="n">Samuel</span> <span class="n">L</span> <span class="ow">and</span> <span class="n">Petras</span><span class="p">,</span> <span class="n">Daniel</span> <span class="ow">and</span> <span class="n">Preuss</span><span class="p">,</span> <span class="n">Mary</span> <span class="n">Lai</span> <span class="ow">and</span> <span class="n">Pruesse</span><span class="p">,</span> <span class="n">Elmar</span> <span class="ow">and</span> <span class="n">Rasmussen</span><span class="p">,</span> <span class="n">Lasse</span> <span class="n">Buur</span> <span class="ow">and</span> <span class="n">Rivers</span><span class="p">,</span> <span class="n">Adam</span> <span class="ow">and</span> <span class="n">Robeson</span><span class="p">,</span> <span class="n">II</span><span class="p">,</span> <span class="n">Michael</span> <span class="n">S</span> <span class="ow">and</span> <span class="n">Rosenthal</span><span class="p">,</span> <span class="n">Patrick</span> <span class="ow">and</span> <span class="n">Segata</span><span class="p">,</span> <span class="n">Nicola</span> <span class="ow">and</span> <span class="n">Shaffer</span><span class="p">,</span> <span class="n">Michael</span> <span class="ow">and</span> <span class="n">Shiffer</span><span class="p">,</span> <span class="n">Arron</span> <span class="ow">and</span> <span class="n">Sinha</span><span class="p">,</span> <span class="n">Rashmi</span> <span class="ow">and</span> <span class="n">Song</span><span class="p">,</span> <span class="n">Se</span> <span class="n">Jin</span> <span class="ow">and</span> <span class="n">Spear</span><span class="p">,</span> <span class="n">John</span> <span class="n">R</span> <span class="ow">and</span> <span class="n">Swafford</span><span class="p">,</span> <span class="n">Austin</span> <span class="n">D</span> <span class="ow">and</span> <span class="n">Thompson</span><span class="p">,</span> <span class="n">Luke</span> <span class="n">R</span> <span class="ow">and</span> <span class="n">Torres</span><span class="p">,</span> <span class="n">Pedro</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">Trinh</span><span class="p">,</span> <span class="n">Pauline</span> <span class="ow">and</span> <span class="n">Tripathi</span><span class="p">,</span> <span class="n">Anupriya</span> <span class="ow">and</span> <span class="n">Turnbaugh</span><span class="p">,</span> <span class="n">Peter</span> <span class="n">J</span> <span class="ow">and</span> <span class="n">Ul</span><span class="o">-</span><span class="n">Hasan</span><span class="p">,</span> <span class="n">Sabah</span> <span class="ow">and</span> <span class="n">van</span> <span class="n">der</span> <span class="n">Hooft</span><span class="p">,</span> <span class="n">Justin</span> <span class="n">JJ</span> <span class="ow">and</span> <span class="n">Vargas</span><span class="p">,</span> <span class="n">Fernando</span> <span class="ow">and</span> <span class="n">Vázquez</span><span class="o">-</span><span class="n">Baeza</span><span class="p">,</span> <span class="n">Yoshiki</span> <span class="ow">and</span> <span class="n">Vogtmann</span><span class="p">,</span> <span class="n">Emily</span> <span class="ow">and</span> <span class="n">von</span> <span class="n">Hippel</span><span class="p">,</span> <span class="n">Max</span> <span class="ow">and</span> <span class="n">Walters</span><span class="p">,</span> <span class="n">William</span> <span class="ow">and</span> <span class="n">Wan</span><span class="p">,</span> <span class="n">Yunhu</span> <span class="ow">and</span> <span class="n">Wang</span><span class="p">,</span> <span class="n">Mingxun</span> <span class="ow">and</span> <span class="n">Warren</span><span class="p">,</span> <span class="n">Jonathan</span> <span class="ow">and</span> <span class="n">Weber</span><span class="p">,</span> <span class="n">Kyle</span> <span class="n">C</span> <span class="ow">and</span> <span class="n">Williamson</span><span class="p">,</span> <span class="n">Chase</span> <span class="n">HD</span> <span class="ow">and</span> <span class="n">Willis</span><span class="p">,</span> <span class="n">Amy</span> <span class="n">D</span> <span class="ow">and</span> <span class="n">Xu</span><span class="p">,</span> <span class="n">Zhenjiang</span> <span class="n">Zech</span> <span class="ow">and</span> <span class="n">Zaneveld</span><span class="p">,</span> <span class="n">Jesse</span> <span class="n">R</span> <span class="ow">and</span> <span class="n">Zhang</span><span class="p">,</span> <span class="n">Yilong</span> <span class="ow">and</span> <span class="n">Knight</span><span class="p">,</span> <span class="n">Rob</span> <span class="ow">and</span> <span class="n">Caporaso</span><span class="p">,</span> <span class="n">J</span> <span class="n">Gregory</span><span class="p">},</span>
+ <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.7287</span><span class="o">/</span><span class="n">peerj</span><span class="o">.</span><span class="n">preprints</span><span class="o">.</span><span class="mi">27295</span><span class="n">v1</span><span class="p">},</span>
+ <span class="n">issn</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2167</span><span class="o">-</span><span class="mi">9843</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">PeerJ</span> <span class="n">Preprints</span><span class="p">},</span>
+ <span class="n">month</span> <span class="o">=</span> <span class="p">{</span><span class="nb">oct</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="n">e27295v1</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">QIIME</span> <span class="mi">2</span><span class="p">:</span> <span class="n">Reproducible</span><span class="p">,</span> <span class="n">interactive</span><span class="p">,</span> <span class="n">scalable</span><span class="p">,</span> <span class="ow">and</span> <span class="n">extensible</span> <span class="n">microbiome</span> <span class="n">data</span> <span class="n">science</span><span class="p">},</span>
+ <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">doi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mf">10.7287</span><span class="o">/</span><span class="n">peerj</span><span class="o">.</span><span class="n">preprints</span><span class="o">.</span><span class="mi">27295</span><span class="n">v1</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2018</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@article</span><span class="p">{</span><span class="n">action</span><span class="o">|</span><span class="n">feature</span><span class="o">-</span><span class="n">classifier</span><span class="p">:</span><span class="mf">2019.10</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="n">method</span><span class="p">:</span><span class="n">classify_sklearn</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Pedregosa</span><span class="p">,</span> <span class="n">Fabian</span> <span class="ow">and</span> <span class="n">Varoquaux</span><span class="p">,</span> <span class="n">Gaël</span> <span class="ow">and</span> <span class="n">Gramfort</span><span class="p">,</span> <span class="n">Alexandre</span> <span class="ow">and</span> <span class="n">Michel</span><span class="p">,</span> <span class="n">Vincent</span> <span class="ow">and</span> <span class="n">Thirion</span><span class="p">,</span> <span class="n">Bertrand</span> <span class="ow">and</span> <span class="n">Grisel</span><span class="p">,</span> <span class="n">Olivier</span> <span class="ow">and</span> <span class="n">Blondel</span><span class="p">,</span> <span class="n">Mathieu</span> <span class="ow">and</span> <span class="n">Prettenhofer</span><span class="p">,</span> <span class="n">Peter</span> <span class="ow">and</span> <span class="n">Weiss</span><span class="p">,</span> <span class="n">Ron</span> <span class="ow">and</span> <span class="n">Dubourg</span><span class="p">,</span> <span class="n">Vincent</span> <span class="ow">and</span> <span class="n">Vanderplas</span><span class="p">,</span> <span class="n">Jake</span> <span class="ow">and</span> <span class="n">Passos</span><span class="p">,</span> <span class="n">Alexandre</span> <span class="ow">and</span> <span class="n">Cournapeau</span><span class="p">,</span> <span class="n">David</span> <span class="ow">and</span> <span class="n">Brucher</span><span class="p">,</span> <span class="n">Matthieu</span> <span class="ow">and</span> <span class="n">Perrot</span><span class="p">,</span> <span class="n">Matthieu</span> <span class="ow">and</span> <span class="n">Duchesnay</span><span class="p">,</span> <span class="n">Édouard</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Journal</span> <span class="n">of</span> <span class="n">machine</span> <span class="n">learning</span> <span class="n">research</span><span class="p">},</span>
+ <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="n">Oct</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2825</span><span class="o">--</span><span class="mi">2830</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Scikit</span><span class="o">-</span><span class="n">learn</span><span class="p">:</span> <span class="n">Machine</span> <span class="n">learning</span> <span class="ow">in</span> <span class="n">Python</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">12</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2011</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@article</span><span class="p">{</span><span class="n">plugin</span><span class="o">|</span><span class="n">feature</span><span class="o">-</span><span class="n">classifier</span><span class="p">:</span><span class="mf">2019.10</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Bokulich</span><span class="p">,</span> <span class="n">Nicholas</span> <span class="n">A</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Kaehler</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="n">D</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Rideout</span><span class="p">,</span> <span class="n">Jai</span> <span class="n">Ram</span> <span class="ow">and</span> <span class="n">Dillon</span><span class="p">,</span> <span class="n">Matthew</span> <span class="ow">and</span> <span class="n">Bolyen</span><span class="p">,</span> <span class="n">Evan</span> <span class="ow">and</span> <span class="n">Knight</span><span class="p">,</span> <span class="n">Rob</span> <span class="ow">and</span> <span class="n">Huttley</span><span class="p">,</span> <span class="n">Gavin</span> <span class="n">A</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Caporaso</span><span class="p">,</span> <span class="n">J</span><span class="o">.</span> <span class="n">Gregory</span><span class="p">},</span>
+ <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.1186</span><span class="o">/</span><span class="n">s40168</span><span class="o">-</span><span class="mi">018</span><span class="o">-</span><span class="mi">0470</span><span class="o">-</span><span class="n">z</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Microbiome</span><span class="p">},</span>
+ <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">90</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Optimizing</span> <span class="n">taxonomic</span> <span class="n">classification</span> <span class="n">of</span> <span class="n">marker</span><span class="o">-</span><span class="n">gene</span> <span class="n">amplicon</span> <span class="n">sequences</span> <span class="k">with</span> <span class="n">QIIME</span> <span class="mi">2</span><span class="s1">&#39;s q2-feature-classifier plugin},</span>
+ <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">doi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mf">10.1186</span><span class="o">/</span><span class="n">s40168</span><span class="o">-</span><span class="mi">018</span><span class="o">-</span><span class="mi">0470</span><span class="o">-</span><span class="n">z</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2018</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@article</span><span class="p">{</span><span class="n">view</span><span class="o">|</span><span class="n">types</span><span class="p">:</span><span class="mf">2019.10</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="n">biom</span><span class="o">.</span><span class="n">table</span><span class="p">:</span><span class="n">Table</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">McDonald</span><span class="p">,</span> <span class="n">Daniel</span> <span class="ow">and</span> <span class="n">Clemente</span><span class="p">,</span> <span class="n">Jose</span> <span class="n">C</span> <span class="ow">and</span> <span class="n">Kuczynski</span><span class="p">,</span> <span class="n">Justin</span> <span class="ow">and</span> <span class="n">Rideout</span><span class="p">,</span> <span class="n">Jai</span> <span class="n">Ram</span> <span class="ow">and</span> <span class="n">Stombaugh</span><span class="p">,</span> <span class="n">Jesse</span> <span class="ow">and</span> <span class="n">Wendel</span><span class="p">,</span> <span class="n">Doug</span> <span class="ow">and</span> <span class="n">Wilke</span><span class="p">,</span> <span class="n">Andreas</span> <span class="ow">and</span> <span class="n">Huse</span><span class="p">,</span> <span class="n">Susan</span> <span class="ow">and</span> <span class="n">Hufnagle</span><span class="p">,</span> <span class="n">John</span> <span class="ow">and</span> <span class="n">Meyer</span><span class="p">,</span> <span class="n">Folker</span> <span class="ow">and</span> <span class="n">Knight</span><span class="p">,</span> <span class="n">Rob</span> <span class="ow">and</span> <span class="n">Caporaso</span><span class="p">,</span> <span class="n">J</span> <span class="n">Gregory</span><span class="p">},</span>
+ <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.1186</span><span class="o">/</span><span class="mi">2047</span><span class="o">-</span><span class="mi">217</span><span class="n">X</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">7</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">GigaScience</span><span class="p">},</span>
+ <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">7</span><span class="p">},</span>
+ <span class="n">publisher</span> <span class="o">=</span> <span class="p">{</span><span class="n">BioMed</span> <span class="n">Central</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">The</span> <span class="n">Biological</span> <span class="n">Observation</span> <span class="n">Matrix</span> <span class="p">(</span><span class="n">BIOM</span><span class="p">)</span> <span class="nb">format</span> <span class="ow">or</span><span class="p">:</span> <span class="n">how</span> <span class="n">I</span> <span class="n">learned</span> <span class="n">to</span> <span class="n">stop</span> <span class="n">worrying</span> <span class="ow">and</span> <span class="n">love</span> <span class="n">the</span> <span class="n">ome</span><span class="o">-</span><span class="n">ome</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2012</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@article</span><span class="p">{</span><span class="n">plugin</span><span class="o">|</span><span class="n">feature</span><span class="o">-</span><span class="n">classifier</span><span class="p">:</span><span class="mf">2019.4</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Bokulich</span><span class="p">,</span> <span class="n">Nicholas</span> <span class="n">A</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Kaehler</span><span class="p">,</span> <span class="n">Benjamin</span> <span class="n">D</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Rideout</span><span class="p">,</span> <span class="n">Jai</span> <span class="n">Ram</span> <span class="ow">and</span> <span class="n">Dillon</span><span class="p">,</span> <span class="n">Matthew</span> <span class="ow">and</span> <span class="n">Bolyen</span><span class="p">,</span> <span class="n">Evan</span> <span class="ow">and</span> <span class="n">Knight</span><span class="p">,</span> <span class="n">Rob</span> <span class="ow">and</span> <span class="n">Huttley</span><span class="p">,</span> <span class="n">Gavin</span> <span class="n">A</span><span class="o">.</span> <span class="ow">and</span> <span class="n">Caporaso</span><span class="p">,</span> <span class="n">J</span><span class="o">.</span> <span class="n">Gregory</span><span class="p">},</span>
+ <span class="n">doi</span> <span class="o">=</span> <span class="p">{</span><span class="mf">10.1186</span><span class="o">/</span><span class="n">s40168</span><span class="o">-</span><span class="mi">018</span><span class="o">-</span><span class="mi">0470</span><span class="o">-</span><span class="n">z</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Microbiome</span><span class="p">},</span>
+ <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">90</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Optimizing</span> <span class="n">taxonomic</span> <span class="n">classification</span> <span class="n">of</span> <span class="n">marker</span><span class="o">-</span><span class="n">gene</span> <span class="n">amplicon</span> <span class="n">sequences</span> <span class="k">with</span> <span class="n">QIIME</span> <span class="mi">2</span><span class="s1">&#39;s q2-feature-classifier plugin},</span>
+ <span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">doi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="mf">10.1186</span><span class="o">/</span><span class="n">s40168</span><span class="o">-</span><span class="mi">018</span><span class="o">-</span><span class="mi">0470</span><span class="o">-</span><span class="n">z</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2018</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@article</span><span class="p">{</span><span class="n">action</span><span class="o">|</span><span class="n">feature</span><span class="o">-</span><span class="n">classifier</span><span class="p">:</span><span class="mf">2019.4</span><span class="o">.</span><span class="mi">0</span><span class="o">|</span><span class="n">method</span><span class="p">:</span><span class="n">fit_classifier_naive_bayes</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Pedregosa</span><span class="p">,</span> <span class="n">Fabian</span> <span class="ow">and</span> <span class="n">Varoquaux</span><span class="p">,</span> <span class="n">Gaël</span> <span class="ow">and</span> <span class="n">Gramfort</span><span class="p">,</span> <span class="n">Alexandre</span> <span class="ow">and</span> <span class="n">Michel</span><span class="p">,</span> <span class="n">Vincent</span> <span class="ow">and</span> <span class="n">Thirion</span><span class="p">,</span> <span class="n">Bertrand</span> <span class="ow">and</span> <span class="n">Grisel</span><span class="p">,</span> <span class="n">Olivier</span> <span class="ow">and</span> <span class="n">Blondel</span><span class="p">,</span> <span class="n">Mathieu</span> <span class="ow">and</span> <span class="n">Prettenhofer</span><span class="p">,</span> <span class="n">Peter</span> <span class="ow">and</span> <span class="n">Weiss</span><span class="p">,</span> <span class="n">Ron</span> <span class="ow">and</span> <span class="n">Dubourg</span><span class="p">,</span> <span class="n">Vincent</span> <span class="ow">and</span> <span class="n">Vanderplas</span><span class="p">,</span> <span class="n">Jake</span> <span class="ow">and</span> <span class="n">Passos</span><span class="p">,</span> <span class="n">Alexandre</span> <span class="ow">and</span> <span class="n">Cournapeau</span><span class="p">,</span> <span class="n">David</span> <span class="ow">and</span> <span class="n">Brucher</span><span class="p">,</span> <span class="n">Matthieu</span> <span class="ow">and</span> <span class="n">Perrot</span><span class="p">,</span> <span class="n">Matthieu</span> <span class="ow">and</span> <span class="n">Duchesnay</span><span class="p">,</span> <span class="n">Édouard</span><span class="p">},</span>
+ <span class="n">journal</span> <span class="o">=</span> <span class="p">{</span><span class="n">Journal</span> <span class="n">of</span> <span class="n">machine</span> <span class="n">learning</span> <span class="n">research</span><span class="p">},</span>
+ <span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="n">Oct</span><span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2825</span><span class="o">--</span><span class="mi">2830</span><span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Scikit</span><span class="o">-</span><span class="n">learn</span><span class="p">:</span> <span class="n">Machine</span> <span class="n">learning</span> <span class="ow">in</span> <span class="n">Python</span><span class="p">},</span>
+ <span class="n">volume</span> <span class="o">=</span> <span class="p">{</span><span class="mi">12</span><span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2011</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@inproceedings</span><span class="p">{</span><span class="n">view</span><span class="o">|</span><span class="n">types</span><span class="p">:</span><span class="mf">2019.4</span><span class="o">.</span><span class="mi">1</span><span class="o">|</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="p">:</span><span class="n">Series</span><span class="o">|</span><span class="mi">0</span><span class="p">,</span>
+ <span class="n">author</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Wes</span> <span class="n">McKinney</span> <span class="p">},</span>
+ <span class="n">booktitle</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Proceedings</span> <span class="n">of</span> <span class="n">the</span> <span class="mi">9</span><span class="n">th</span> <span class="n">Python</span> <span class="ow">in</span> <span class="n">Science</span> <span class="n">Conference</span> <span class="p">},</span>
+ <span class="n">editor</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Stéfan</span> <span class="n">van</span> <span class="n">der</span> <span class="n">Walt</span> <span class="ow">and</span> <span class="n">Jarrod</span> <span class="n">Millman</span> <span class="p">},</span>
+ <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">51</span> <span class="o">--</span> <span class="mi">56</span> <span class="p">},</span>
+ <span class="n">title</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Data</span> <span class="n">Structures</span> <span class="k">for</span> <span class="n">Statistical</span> <span class="n">Computing</span> <span class="ow">in</span> <span class="n">Python</span> <span class="p">},</span>
+ <span class="n">year</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2010</span> <span class="p">}</span>
+<span class="p">}</span>
+
+</pre></div>
+</div>
+<p>As you can see, the citations for this particular visualization are presented
+above in <a class="reference external" href="http://www.bibtex.org/">BibTeX format</a>.</p>
+<p>We can also <a class="reference internal" href="../../citation/#plugin-specific-citations"><span class="std std-ref">see the citations for a specific plugin</span></a>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime vsearch --citations
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>% use `qiime tools citations` on a QIIME 2 result for complete list
+
+@article{key0,
+ author = {Rognes, Torbjørn and Flouri, Tomáš and Nichols, Ben and Quince, Christopher and Mahé, Frédéric},
+ doi = {10.7717/peerj.2584},
+ journal = {PeerJ},
+ pages = {e2584},
+ publisher = {PeerJ Inc.},
+ title = {VSEARCH: a versatile open source tool for metagenomics},
+ volume = {4},
+ year = {2016}
+}
+
+</pre></div>
+</div>
+<p>And also for a specific action of a plugin:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime vsearch cluster-features-open-reference --citations
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>% use `qiime tools citations` on a QIIME 2 result for complete list
+
+@article{key0,
+ author = {Rideout, Jai Ram and He, Yan and Navas-Molina, Jose A. and Walters, William A. and Ursell, Luke K. and Gibbons, Sean M. and Chase, John and McDonald, Daniel and Gonzalez, Antonio and Robbins-Pianka, Adam and Clemente, Jose C. and Gilbert, Jack A. and Huse, Susan M. and Zhou, Hong-Wei and Knight, Rob and Caporaso, J. Gregory},
+ doi = {10.7717/peerj.545},
+ journal = {PeerJ},
+ pages = {e545},
+ publisher = {PeerJ Inc.},
+ title = {Subsampled open-reference clustering creates consistent, comprehensive OTU definitions and scales to billions of sequences},
+ volume = {2},
+ year = {2014}
+}
+
+</pre></div>
+</div>
+</div>
+<div class="section" id="viewing-visualizations">
+<h3><a class="toc-backref" href="#id4">Viewing Visualizations</a><a class="headerlink" href="#viewing-visualizations" title="Permalink to this headline">¶</a></h3>
+<p>What if we want to view our taxa bar plots? One option is to load the visualization
+at <a class="reference external" href="https://view.qiime2.org">https://view.qiime2.org</a>. Another option is to use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">view</span></code> to
+accomplish the job</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Provenance viewing is only available at <a class="reference external" href="https://view.qiime2.org">https://view.qiime2.org</a>.</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools view taxa-barplot.qzv
+</pre></div>
+</div>
+<p>This will open a browser window with your visualization loaded in it. When you
+are done, you can close the browser window and press <code class="docutils literal notranslate"><span class="pre">ctrl-c</span></code> on the
+keyboard to terminate the command.</p>
+</div>
+<div class="section" id="peeking-at-results">
+<h3><a class="toc-backref" href="#id5">Peeking at Results</a><a class="headerlink" href="#peeking-at-results" title="Permalink to this headline">¶</a></h3>
+<p>Oftentimes we need to verify the <code class="docutils literal notranslate"><span class="pre">type</span></code> and <code class="docutils literal notranslate"><span class="pre">uuid</span></code> of an Artifact. We can use the
+<code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">peek</span></code> command to view a brief summary report of those facts. First,
+let’s get some data to look at:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/utilities/faith-pd-vector.qza">
+            https://data.qiime2.org/2020.2/tutorials/utilities/faith-pd-vector.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> faith-pd-vector.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "faith-pd-vector.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/utilities/faith-pd-vector.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/utilities/faith-pd-vector.qza" > \
+  "faith-pd-vector.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Now that we have data, we can learn more about the file:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools peek faith-pd-vector.qza
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UUID</span><span class="p">:</span>        <span class="n">d5186dce</span><span class="o">-</span><span class="mi">438</span><span class="n">d</span><span class="o">-</span><span class="mi">44</span><span class="n">bb</span><span class="o">-</span><span class="mi">903</span><span class="n">c</span><span class="o">-</span><span class="n">cb51a7ad4abe</span>
+<span class="n">Type</span><span class="p">:</span>        <span class="n">SampleData</span><span class="p">[</span><span class="n">AlphaDiversity</span><span class="p">]</span> <span class="o">%</span> <span class="n">Properties</span><span class="p">(</span><span class="s1">&#39;phylogenetic&#39;</span><span class="p">)</span>
+<span class="n">Data</span> <span class="nb">format</span><span class="p">:</span> <span class="n">AlphaDiversityDirectoryFormat</span>
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">faith-pd-vector.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Futilities%2Ffaith-pd-vector.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/utilities/faith-pd-vector.qza">download</a></p></li>
+</ul>
+</div>
+<p>Here we can see that the type of the Artifact is
+<code class="docutils literal notranslate"><span class="pre">SampleData[AlphaDiversity]</span> <span class="pre">%</span> <span class="pre">Properties('phylogenetic')</span></code>, as well as the
+Artifact’s UUID and format.</p>
+</div>
+<div class="section" id="validating-results">
+<h3><a class="toc-backref" href="#id6">Validating Results</a><a class="headerlink" href="#validating-results" title="Permalink to this headline">¶</a></h3>
+<p>We can also validate the integrity of the file by running
+<code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">validate</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools validate faith-pd-vector.qza
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Result</span> <span class="n">faith</span><span class="o">-</span><span class="n">pd</span><span class="o">-</span><span class="n">vector</span><span class="o">.</span><span class="n">qza</span> <span class="n">appears</span> <span class="n">to</span> <span class="n">be</span> <span class="n">valid</span> <span class="n">at</span> <span class="n">level</span><span class="o">=</span><span class="nb">max</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>If there was an issue with the file, this command will usually do a good job
+of reporting <em>what</em> the problem is (within reason).</p>
+</div>
+<div class="section" id="inspecting-metadata">
+<h3><a class="toc-backref" href="#id7">Inspecting Metadata</a><a class="headerlink" href="#inspecting-metadata" title="Permalink to this headline">¶</a></h3>
+<p>In the <a class="reference internal" href="../metadata/"><span class="doc">Metadata tutorial</span></a> we learned about the <code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">tabulate</span></code>
+command, and the resulting visualization it creates. Oftentimes we don’t care
+so much about the <em>values</em> of the Metadata, but rather, just the shape of it:
+how many columns? What are their names? What are their types? How many rows (or IDs)
+are in the file?</p>
+<p>We can demonstrate this by first downloading some sample metadata:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata.tsv">
+            https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> sample-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "sample-metadata.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata.tsv" > \
+  "sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Then, we can run the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">inspect-metadata</span></code> command:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools inspect-metadata sample-metadata.tsv
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="n">COLUMN</span> <span class="n">NAME</span>  <span class="n">TYPE</span>       
+<span class="o">=========================</span>  <span class="o">===========</span>
+                  <span class="n">barcode</span>  <span class="n">categorical</span>
+                 <span class="n">mouse_id</span>  <span class="n">categorical</span>
+                 <span class="n">genotype</span>  <span class="n">categorical</span>
+                  <span class="n">cage_id</span>  <span class="n">categorical</span>
+                    <span class="n">donor</span>  <span class="n">categorical</span>
+             <span class="n">donor_status</span>  <span class="n">categorical</span>
+     <span class="n">days_post_transplant</span>  <span class="n">numeric</span>    
+<span class="n">genotype_and_donor_status</span>  <span class="n">categorical</span>
+<span class="o">=========================</span>  <span class="o">===========</span>
+                     <span class="n">IDS</span><span class="p">:</span>  <span class="mi">48</span>
+                 <span class="n">COLUMNS</span><span class="p">:</span>  <span class="mi">8</span>
+</pre></div>
+</div>
+<div class="question admonition" id="question-0">
+<p class="admonition-title">Question</p>
+<p>How many metadata columns are there in <code class="docutils literal notranslate"><span class="pre">sample-metadata.tsv</span></code>? How many IDs?
+Identify how many categorical columns are present. Now do the same for numerical
+columns.</p>
+</div>
+<p>This tool can be very helpful for learning about Metadata column names for
+files that are <em>viewable</em> as Metadata.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/utilities/jaccard-pcoa.qza">
+            https://data.qiime2.org/2020.2/tutorials/utilities/jaccard-pcoa.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> jaccard-pcoa.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "jaccard-pcoa.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/utilities/jaccard-pcoa.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/utilities/jaccard-pcoa.qza" > \
+  "jaccard-pcoa.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>The file we just downloaded is a Jaccard PCoA (from the
+<a class="reference internal" href="../pd-mice/"><span class="doc">PD Mice Tutorial</span></a>), which, can be used in place of the “typical” TSV-formatted
+Metadata file. We might need to know about column names for commands we wish to
+run, using <code class="docutils literal notranslate"><span class="pre">inspect-metadata</span></code>, we can learn all about it:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools inspect-metadata jaccard-pcoa.qza
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COLUMN</span> <span class="n">NAME</span>  <span class="n">TYPE</span>   
+<span class="o">===========</span>  <span class="o">=======</span>
+     <span class="n">Axis</span> <span class="mi">1</span>  <span class="n">numeric</span>
+     <span class="n">Axis</span> <span class="mi">2</span>  <span class="n">numeric</span>
+     <span class="n">Axis</span> <span class="mi">3</span>  <span class="n">numeric</span>
+     <span class="n">Axis</span> <span class="mi">4</span>  <span class="n">numeric</span>
+     <span class="n">Axis</span> <span class="mi">5</span>  <span class="n">numeric</span>
+     <span class="n">Axis</span> <span class="mi">6</span>  <span class="n">numeric</span>
+     <span class="n">Axis</span> <span class="mi">7</span>  <span class="n">numeric</span>
+     <span class="n">Axis</span> <span class="mi">8</span>  <span class="n">numeric</span>
+     <span class="n">Axis</span> <span class="mi">9</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">10</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">11</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">12</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">13</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">14</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">15</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">16</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">17</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">18</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">19</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">20</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">21</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">22</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">23</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">24</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">25</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">26</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">27</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">28</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">29</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">30</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">31</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">32</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">33</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">34</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">35</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">36</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">37</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">38</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">39</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">40</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">41</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">42</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">43</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">44</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">45</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">46</span>  <span class="n">numeric</span>
+    <span class="n">Axis</span> <span class="mi">47</span>  <span class="n">numeric</span>
+<span class="o">===========</span>  <span class="o">=======</span>
+       <span class="n">IDS</span><span class="p">:</span>  <span class="mi">47</span>
+   <span class="n">COLUMNS</span><span class="p">:</span>  <span class="mi">47</span>
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">jaccard-pcoa.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Futilities%2Fjaccard-pcoa.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/utilities/jaccard-pcoa.qza">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-1">
+<p class="admonition-title">Question</p>
+<p>How many IDs are there? How many columns? Are there any categorical columns? Why?</p>
+</div>
+</div>
+</div>
+<div class="section" id="artifact-api">
+<h2><a class="toc-backref" href="#id8">Artifact API</a><a class="headerlink" href="#artifact-api" title="Permalink to this headline">¶</a></h2>
+<p>Coming soon, please stay tuned!</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

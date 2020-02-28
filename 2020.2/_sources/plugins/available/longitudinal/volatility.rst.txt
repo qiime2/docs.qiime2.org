@@ -1,0 +1,114 @@
+volatility: Generate interactive volatility plot
+================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime longitudinal volatility [OPTIONS]
+
+     Generate an interactive control chart depicting the longitudinal
+     volatility of sample metadata and/or feature frequencies across time (as
+     set using the "state_column" parameter). Any numeric metadata column (and
+     metadata-transformable artifacts, e.g., alpha diversity results) can be
+     plotted on the y-axis, and are selectable using the "metric_column"
+     selector. Metric values are averaged to compare across any categorical
+     metadata column using the "group_column" selector. Longitudinal volatility
+     for individual subjects sampled over time is co-plotted as "spaghetti"
+     plots if the "individual_id_column" parameter is used. state_column will
+     typically be a measure of time, but any numeric metadata column can be
+     used.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[RelativeFrequency]
+                            Feature table containing metrics.          [optional]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple            Sample metadata file containing
+        arguments will be   individual-id-column.
+        merged)                                                        [required]
+     --p-state-column TEXT  Metadata column containing state (time) variable
+                            information.                               [required]
+     --p-individual-id-column TEXT
+                            Metadata column containing IDs for individual
+                            subjects.                                  [optional]
+     --p-default-group-column TEXT
+                            The default metadata column on which to separate
+                            groups for comparison (all categorical metadata
+                            columns will be available in the visualization).
+                                                                       [optional]
+     --p-default-metric TEXT
+                            Numeric metadata or artifact column to test by
+                            default (all numeric metadata columns will be
+                            available in the visualization).           [optional]
+     --p-yscale TEXT Choices('linear', 'pow', 'sqrt', 'log')
+                            y-axis scaling strategy to apply. [default: 'linear']
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH      Output unspecified results to a directory
+     --verbose / --quiet    Display verbose output to stdout and/or stderr
+                            during execution of this action. Or silence output if
+                            execution is successful (silence is golden).
+     --citations            Show citations and exit.
+     --help                 Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.longitudinal.visualizers import volatility
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Generate interactive volatility plot
+
+   Generate an interactive control chart depicting the longitudinal volatility
+   of sample metadata and/or feature frequencies across time (as set using the
+   "state_column" parameter). Any numeric metadata column (and metadata-
+   transformable artifacts, e.g., alpha diversity results) can be plotted on
+   the y-axis, and are selectable using the "metric_column" selector. Metric
+   values are averaged to compare across any categorical metadata column using
+   the "group_column" selector. Longitudinal volatility for individual
+   subjects sampled over time is co-plotted as "spaghetti" plots if the
+   "individual_id_column" parameter is used. state_column will typically be a
+   measure of time, but any numeric metadata column can be used.
+
+   Parameters
+   ----------
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   state_column : Str
+       Metadata column containing state (time) variable information.
+   individual_id_column : Str, optional
+       Metadata column containing IDs for individual subjects.
+   default_group_column : Str, optional
+       The default metadata column on which to separate groups for comparison
+       (all categorical metadata columns will be available in the
+       visualization).
+   default_metric : Str, optional
+       Numeric metadata or artifact column to test by default (all numeric
+       metadata columns will be available in the visualization).
+   table : FeatureTable[RelativeFrequency], optional
+       Feature table containing metrics.
+   yscale : Str % Choices('linear', 'pow', 'sqrt', 'log'), optional
+       y-axis scaling strategy to apply.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

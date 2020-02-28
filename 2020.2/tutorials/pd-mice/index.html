@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Parkinson’s Mouse Tutorial &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Differential abundance analysis with gneiss" href="../gneiss/" />
+    <link rel="prev" title="“Atacama soil microbiome” tutorial" href="../atacama-soils/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="parkinson-s-mouse-tutorial">
+<h1>Parkinson’s Mouse Tutorial<a class="headerlink" href="#parkinson-s-mouse-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial will demonstrate a “typical” QIIME 2 analysis of 16S rRNA gene amplicon data, using a set of fecal samples from <a class="reference external" href="https://en.wikipedia.org/wiki/Humanized_mouse">humanized</a> mice. The original study, <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/27912057">Sampson et al, 2016</a>, was designed to determine whether the fecal microbiome contributed to the development of Parkinson’s Disease (PD). Several observation studies showed a difference in the microbiome between PD patients and controls, although the organisms identified across studies were not consistent. However, this was sufficient evidence to suggest that there might be a relationship between PD and the fecal microbiome.</p>
+<p>To determine whether that relationship was incidental or actually disease associated, a second study was needed. A human cohort study was not feasible; the disease only affects about 1% of the population over 60 years old, PD takes a long time to develop and to be diagnosed, and it would be difficult to determine when to collect the samples. Therefore, a gnotobiotic mouse study was utilized to evaluate the role of the microbiome in the development of PD symptoms. Feces were collected from six donors with Parkinson’s disease and six age- and sex-matched neurologically health controls, and then transplanted into mice who were either predisposed to developing Parkinson’s disease due to a mutation (“aSyn”) or resistant wild type mice (“BDF1”). Mice from different donors were kept in separate cages, but mice from different genetic backgrounds were co-housed. The mice were followed for 7 weeks to see if they developed symptoms of Parkinson’s disease.</p>
+<p>We’ll look a subset of data from two human donors (one healthy and one with PD) whose samples were each transplanted into three separate cages of mice from the susceptible genotype. For this tutorial, a subset of the metadata has been prepared, and the sequences have been subsampled to approximately 5000 sequences per sample to allow the tutorial to run in a short time. The sequences for the full study are accessible at EBI with accession <a class="reference external" href="https://www.ebi.ac.uk/ena/data/view/PRJEB17694">PRJEB17694</a>; processed tables from the full study can be downloaded from the <a class="reference external" href="https://qiita.ucsd.edu">Qiita</a>  database from study 10483.</p>
+<div class="section" id="hypothesis">
+<h2>Hypothesis<a class="headerlink" href="#hypothesis" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will explore the hypothesis that the genetic background of a humanized mouse influences the microbial community. However, we’ll also need to consider other confounders which might drive the shape of the microbiome instead of the mouse genotype.</p>
+</div>
+<div class="section" id="set-up">
+<h2>Set up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial assumes that you have QIIME 2 installed according to the <a class="reference internal" href="../../install/"><span class="doc">installation instructions</span></a>.</p>
+<p>Before running the tutorial, you will need to make a directory for the tutorial data and navigate into that directory.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir ./mouse_tutorial
+<span class="nb">cd</span> ./mouse_tutorial
+</pre></div>
+</div>
+</div>
+<div class="section" id="metadata">
+<h2>Metadata<a class="headerlink" href="#metadata" title="Permalink to this headline">¶</a></h2>
+<p>Before starting any analysis, it’s important to be familiar with the metadata. In this study, the metadata file contains 7 columns.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 25%" />
+<col style="width: 21%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>variable</p></th>
+<th class="head"><p>description</p></th>
+<th class="head"><p>data type</p></th>
+<th class="head"><p>values</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sample-id</p></td>
+<td><p>unique sample
+identifier</p></td>
+<td><p>—</p></td>
+<td><p>unique for each
+sample</p></td>
+</tr>
+<tr class="row-odd"><td><p>mouse_id</p></td>
+<td><p>the unique
+identifier for
+each mouse</p></td>
+<td><p>categorical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">435</span></code>;
+<code class="docutils literal notranslate"><span class="pre">437</span></code>;
+<code class="docutils literal notranslate"><span class="pre">456</span></code>;
+<code class="docutils literal notranslate"><span class="pre">457</span></code>;
+<code class="docutils literal notranslate"><span class="pre">468</span></code>;
+<code class="docutils literal notranslate"><span class="pre">469</span></code>;
+<code class="docutils literal notranslate"><span class="pre">536</span></code>;
+<code class="docutils literal notranslate"><span class="pre">537</span></code>;
+<code class="docutils literal notranslate"><span class="pre">538</span></code>;
+<code class="docutils literal notranslate"><span class="pre">539</span></code>;
+<code class="docutils literal notranslate"><span class="pre">546</span></code>;
+<code class="docutils literal notranslate"><span class="pre">547</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>genotype</p></td>
+<td><p>the genetic
+background of
+the mouse. The
+Thy1-aSyn
+(<code class="docutils literal notranslate"><span class="pre">susceptible</span></code>)
+mice are
+genetically
+predisposed to
+disease;
+<code class="docutils literal notranslate"><span class="pre">wild_type</span></code>
+from the BDF1
+background do
+not have any
+additional risk</p></td>
+<td><p>categorical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wild_type</span></code>;
+<code class="docutils literal notranslate"><span class="pre">susceptible</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>cage_id</p></td>
+<td><p>the unique
+identifier for
+each cage of
+mice</p></td>
+<td><p>categorical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">C31</span></code>;
+<code class="docutils literal notranslate"><span class="pre">C35</span></code>;
+<code class="docutils literal notranslate"><span class="pre">C42</span></code>;
+<code class="docutils literal notranslate"><span class="pre">C43</span></code>;
+<code class="docutils literal notranslate"><span class="pre">C44</span></code>;
+<code class="docutils literal notranslate"><span class="pre">C49</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>donor</p></td>
+<td><p>A unique
+identifier for
+the human who
+donated the
+feces</p></td>
+<td><p>categorical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hc_1</span></code>
+<code class="docutils literal notranslate"><span class="pre">pd_1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>donor_status</p></td>
+<td><p>whether the
+donor has
+Parkinson’s
+disease or not
+(Donor
+<code class="docutils literal notranslate"><span class="pre">pd_1</span></code> had
+Parkinson’s
+disease;
+<code class="docutils literal notranslate"><span class="pre">hc_1</span></code>
+was
+neurologically
+healthy)</p></td>
+<td><p>categorical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Healthy</span></code>;
+<code class="docutils literal notranslate"><span class="pre">PD</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>days_post_transplant</p></td>
+<td><p>the number of
+days after the
+mice were
+humanized</p></td>
+<td><p>numeric</p></td>
+<td><p>7, 14, 21, 49</p></td>
+</tr>
+</tbody>
+</table>
+<p>Even though the mouse ID looks like a number, we will specify that it is categorical using the <code class="docutils literal notranslate"><span class="pre">#q2_type</span></code> directive.</p>
+<p>The metadata is available as a <a class="reference external" href="https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata">Google Sheet</a>, or you can download it directly and save it as a TSV (tab-separated values) file.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata.tsv">
+            https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "metadata.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/sample_metadata.tsv" > \
+  "metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>The sample metadata will be used throughout the tutorial. Let’s run our first QIIME 2 command, to summarize and explore the metadata.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file metadata.tsv <span class="se">\</span>
+  --o-visualization metadata.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">metadata.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fmetadata.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/metadata.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="importing-data-into-qiime-2">
+<h2>Importing data into QIIME 2<a class="headerlink" href="#importing-data-into-qiime-2" title="Permalink to this headline">¶</a></h2>
+<p>In QIIME 2, all data is structured as an Artifact of a specific semantic type. Artifacts contain the data as well as information about the data, including a record of the original data and the tools used to process it. This allows for better tracking of how you actually got to where you are in your analysis. You can learn more about common QIIME 2 Artifacts and semantic types <a class="reference internal" href="../../semantic-types/"><span class="doc">here</span></a>.</p>
+<p>Our samples were amplified using the <a class="reference external" href="http://www.earthmicrobiome.org/protocols-and-standards/16s/">EMP 515f-806r</a> primers and sequenced on an Illumina MiSeq with a 2x150bp kit. The hypervariable region covered by the primers we used is 290bp long, so with 150bp reads our sequences will be slightly too short to be able to do paired-end analysis downstream. Therefore, we’re going to work with single-end sequences. We will work with a version of the samples which have already been demultiplexed, for example, by the sequencing center. If you need to demultiplex your sequences, the <a class="reference internal" href="../moving-pictures/"><span class="doc">Moving Pictures tutorial</span></a> describes how to demultiplex sequences if they were sequenced using the Earth Microbiome Project protocol.</p>
+<p>We will import the sequences as <code class="docutils literal notranslate"><span class="pre">SampleData[SequencesWithQuality]</span></code>, which is the demultiplexed single-end sequence format. If we wanted to import paired-sequences, we would specify the semantic type <code class="docutils literal notranslate"><span class="pre">SampleData[PairedEndSequencesWithQuality]</span></code>. We will import the sequences using the sample <a class="reference internal" href="../importing/#manifest-file"><span class="std std-ref">manifest format</span></a>, a versatile way to import demultiplexed data in QIIME 2. We create a tab-separated sample manifest file that maps the sample name we want to use in QIIME 2 to the path of the sequence file. The benefit is that the demultiplexed sequence files can be named anything you want; there are not fixed assumptions about the conventions, and the file names do not dictate the final name. When QIIME 2 reads the file, it ignores any line prefixed with the <code class="docutils literal notranslate"><span class="pre">#</span></code> symbol. The first line that doesn’t contain a <code class="docutils literal notranslate"><span class="pre">#</span></code> is the header line and must be <code class="docutils literal notranslate"><span class="pre">sample-id&lt;TAB&gt;absolute-filepath</span></code>. The sample order after the header line does not matter. Read more about importing data into QIIME 2 artifacts <a class="reference internal" href="../importing/"><span class="doc">here</span></a> and more about sample metadata formatting requirements <a class="reference internal" href="../metadata/"><span class="doc">here</span></a>.</p>
+<p>Let’s start by downloading the manifest and corresponding sequences.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/pd-mice/manifest">
+            https://data.qiime2.org/2020.2/tutorials/pd-mice/manifest
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> manifest.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "manifest.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/manifest"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/manifest" > \
+  "manifest.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/pd-mice/demultiplexed_seqs.zip">
+            https://data.qiime2.org/2020.2/tutorials/pd-mice/demultiplexed_seqs.zip
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> demultiplexed_seqs.zip
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "demultiplexed_seqs.zip" \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/demultiplexed_seqs.zip"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/demultiplexed_seqs.zip" > \
+  "demultiplexed_seqs.zip"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>You’ll need to unzip sequence archive you just downloaded:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>unzip demultiplexed_seqs.zip
+</pre></div>
+</div>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">head</span></code> command to check the first few lines of the sample manifest.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>head manifest.tsv
+</pre></div>
+</div>
+<p class="section-subtitle">stdout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sample-id	absolute-filepath
+recip.220.WT.OB1.D7	$PWD/demultiplexed_seqs/10483.recip.220.WT.OB1.D7_30_L001_R1_001.fastq.gz
+recip.290.ASO.OB2.D1	$PWD/demultiplexed_seqs/10483.recip.290.ASO.OB2.D1_27_L001_R1_001.fastq.gz
+recip.389.WT.HC2.D21	$PWD/demultiplexed_seqs/10483.recip.389.WT.HC2.D21_1_L001_R1_001.fastq.gz
+recip.391.ASO.PD2.D14	$PWD/demultiplexed_seqs/10483.recip.391.ASO.PD2.D14_5_L001_R1_001.fastq.gz
+recip.391.ASO.PD2.D21	$PWD/demultiplexed_seqs/10483.recip.391.ASO.PD2.D21_1_L001_R1_001.fastq.gz
+recip.391.ASO.PD2.D7	$PWD/demultiplexed_seqs/10483.recip.391.ASO.PD2.D7_15_L001_R1_001.fastq.gz
+recip.400.ASO.HC2.D14	$PWD/demultiplexed_seqs/10483.recip.400.ASO.HC2.D14_32_L001_R1_001.fastq.gz
+recip.401.ASO.HC2.D7	$PWD/demultiplexed_seqs/10483.recip.401.ASO.HC2.D7_22_L001_R1_001.fastq.gz
+recip.403.ASO.PD2.D21	$PWD/demultiplexed_seqs/10483.recip.403.ASO.PD2.D21_31_L001_R1_001.fastq.gz
+</pre></div>
+</div>
+<p>When using this manifest format, a sample name can only appear in one line and can only map to one sequencing file per column (one column for single-end, two columns for paired-end). The <strong>absolute-filepath</strong> for each sample must be an <a class="reference external" href="https://en.wikipedia.org/wiki/Path_(computing)#Absolute_and_relative_paths">absolute path</a>, which specifies the “complete” location of the file. We do that here using the <code class="docutils literal notranslate"><span class="pre">$PWD</span></code> variable, which expands the current directory in absolute terms.</p>
+<p>We’ll use the manifest to import our data.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type <span class="s2">&quot;SampleData[SequencesWithQuality]&quot;</span> <span class="se">\</span>
+  --input-format SingleEndFastqManifestPhred33V2 <span class="se">\</span>
+  --input-path ./manifest.tsv <span class="se">\</span>
+  --output-path ./demux_seqs.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux_seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fdemux_seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/demux_seqs.qza">download</a></p></li>
+</ul>
+</div>
+<p>Let’s check the sequences and the sequencing depth of the samples using the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">demux</span> <span class="pre">summarize</span></code> command. It provides information about the number of sequences in each sample, as well as the quality of the sequences.</p>
+<p>Before running the command, let’s review the help documentation to make sure we understand the arguments for the command.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime demux summarize --help
+</pre></div>
+</div>
+<p>Based on the documentation, we should specify the file (Artifact) with the demultiplexed sequences for the <code class="docutils literal notranslate"><span class="pre">--i-data</span></code> argument, since this expects data of semantic type <code class="docutils literal notranslate"><span class="pre">SampleData[SequencesWithQuality]</span></code>. We’ll specify the location we want to save the visualization to by specifying the output path to <code class="docutils literal notranslate"><span class="pre">--o-visualization</span></code>.</p>
+<p>The help documentation is a good reference for any command, and the first place to look if you’re getting errors, especially errors about parameters.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime demux summarize <span class="se">\</span>
+  --i-data ./demux_seqs.qza <span class="se">\</span>
+  --o-visualization ./demux_seqs.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux_seqs.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fdemux_seqs.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/demux_seqs.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-0">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>After demultiplexing, which sample has the lowest sequencing depth?</p></li>
+<li><p>What is the median sequence length?</p></li>
+<li><p>What is the median quality score at position 125?</p></li>
+<li><p>If you are working on this tutorial alongside someone else, why does your plot look slightly different from your neighbors? If you aren’t working alongside someone else, try running this command a few times and compare the results.</p></li>
+</ol>
+</div>
+<div class="checkpoint admonition" id="checkpoint-0">
+<p class="admonition-title">Checkpoint</p>
+<p>What are good positions to consider trimming and/or truncating at?</p>
+</div>
+</div>
+<div class="section" id="sequence-quality-control-and-feature-table">
+<h2>Sequence quality control and feature table<a class="headerlink" href="#sequence-quality-control-and-feature-table" title="Permalink to this headline">¶</a></h2>
+<p>There are several ways to construct a feature table in QIIME 2. The first major choice to make is to work with Operational Taxonomic Units (OTUs) or Absolute Sequence Variants (ASVs). OTUs have been widely used in microbiome research since the mid 2010s, and assign sequences to clusters either based on a reference database or de novo assignment. QIIME 2 offers clustering through <a class="reference internal" href="../otu-clustering/"><span class="doc">q2-vsearch</span></a> and <a class="reference external" href="https://library.qiime2.org/plugins/q2-dbotu/4/">q2-dbOTU</a> plug-ins, currently.</p>
+<p>ASVs are a more recent development and provide better resolution in features than traditional OTU-based methods. ASVs can separate features based on differences of a single nucleotide in sequences of 400 bp or more, a resolution not possibly even with 99% identity OTU clustering. QIIME 2 currently offers denoising via <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/27214047">DADA2</a> (<code class="docutils literal notranslate"><span class="pre">q2-dada2</span></code>) and <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/28289731">Deblur</a> (<code class="docutils literal notranslate"><span class="pre">q2-deblur</span></code>). The major differences in the algorithms and motivation for denoising are nicely described in <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/30123705">Nearing et al, 2018</a>.</p>
+<p>It is worth noting in either case that denoising to ASVs and clustering to OTUs are separate, but parallel steps. A choice should be made for a single pathway: either denoising or OTU based clustering; it is not recommended to combine the steps.</p>
+<p>In this tutorial, we’ll denoise with DADA2 (using single-end sequences). Please see the <a class="reference internal" href="../atacama-soils/"><span class="doc">Atacama Soil tutorial</span></a> for an example of using DADA2 on paired-end sequences. For those interested in using Deblur, you can refer to the <a class="reference internal" href="../moving-pictures/"><span class="doc">Moving Pictures tutorial</span></a> and <a class="reference internal" href="../read-joining/"><span class="doc">Alternative methods of read joining</span></a> tutorial for running Deblur on single- and paired-end sequences, respectively.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">dada2</span> <span class="pre">denoise-single</span></code> method requires us to set the <code class="docutils literal notranslate"><span class="pre">--p-trunc-len</span></code> parameter. This controls the length of the sequences and should be selected based on a drop in quality scores. In our dataset, the quality scores are relatively evenly distributed along the sequencing run, so we’ll use the full 150 bp sequences. However, the selection of the trim length is a relatively subjective measurement and relies on the decision making capacity of the analyst.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime dada2 denoise-single <span class="se">\</span>
+  --i-demultiplexed-seqs ./demux_seqs.qza <span class="se">\</span>
+  --p-trunc-len <span class="m">150</span> <span class="se">\</span>
+  --o-table ./dada2_table.qza <span class="se">\</span>
+  --o-representative-sequences ./dada2_rep_set.qza <span class="se">\</span>
+  --o-denoising-stats ./dada2_stats.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">dada2_stats.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fdada2_stats.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/dada2_stats.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">dada2_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fdada2_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/dada2_table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">dada2_rep_set.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fdada2_rep_set.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/dada2_rep_set.qza">download</a></p></li>
+</ul>
+</div>
+<p>We can also review the denoising statistics using the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">metadata</span> <span class="pre">tabulate</span></code> command.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file ./dada2_stats.qza  <span class="se">\</span>
+  --o-visualization ./dada2_stats.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">dada2_stats.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fdada2_stats.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/dada2_stats.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="section" id="feature-table-summary">
+<h3>Feature table summary<a class="headerlink" href="#feature-table-summary" title="Permalink to this headline">¶</a></h3>
+<p>After we finish denoising the data, we can check the results by looking at the summary of the feature table. This will provide us with the counts associated with each sequence and each feature, as well as other useful plots and metrics.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table summarize <span class="se">\</span>
+  --i-table ./dada2_table.qza <span class="se">\</span>
+  --m-sample-metadata-file ./metadata.tsv <span class="se">\</span>
+  --o-visualization ./dada2_table.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">dada2_table.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fdada2_table.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/dada2_table.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-1">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>How many total features remain after denoising?</p></li>
+<li><p>Which sample has the highest total count of features? How many sequences did that sample have prior to DADA2 denoising?</p></li>
+<li><p>How many samples have fewer than 4250 total features?</p></li>
+<li><p>Which features are observed in at least 47 samples?</p></li>
+<li><p>Which sample has the fewest features? How many does it have?</p></li>
+</ol>
+<p>If you open the denoising summary, can you find the step where the sample with the fewest sequences fails?</p>
+</div>
+</div>
+</div>
+<div class="section" id="generating-a-phylogenetic-tree-for-diversity-analysis">
+<h2>Generating a phylogenetic tree for diversity analysis<a class="headerlink" href="#generating-a-phylogenetic-tree-for-diversity-analysis" title="Permalink to this headline">¶</a></h2>
+<p>QIIME 2 analysis allows the use of phylogenetic trees for diversity metrics such as Faith’s Phylogenetic Diversity and UniFrac distance as well as feature-based analyses in Gneiss. The tree provides an inherent structure to the data, allowing us to consider an evolutionary relationship between organisms.</p>
+<p>QIIME 2 offers several ways to construct a phylogenetic tree. For this tutorial, we’re going to create a fragment insertion tree using the <code class="docutils literal notranslate"><span class="pre">q2-fragment-insertion</span></code> plugin. The authors of the fragment insertion plugin suggest that it can outperform traditional alignment based methods based on short Illumina reads by alignment against a reference tree built out of larger sequences. Our command, <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">fragment-insertion</span> <span class="pre">sepp</span></code> will use the representative sequences (a <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> artifact) we generated during denoising to create a phylogenetic tree where the sequences have been inserted into the greengenes 13_8 99% identity reference tree backbone.</p>
+<p>First, we will download the reference database:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/common/sepp-refs-gg-13-8.qza">
+            https://data.qiime2.org/2020.2/common/sepp-refs-gg-13-8.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> sepp-refs-gg-13-8.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "sepp-refs-gg-13-8.qza" \
+  "https://data.qiime2.org/2020.2/common/sepp-refs-gg-13-8.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/common/sepp-refs-gg-13-8.qza" > \
+  "sepp-refs-gg-13-8.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This command is resource intensive - if your computation environment supports it, we suggest including an appropriately-set <code class="docutils literal notranslate"><span class="pre">--p-threads</span></code> parameter.</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime fragment-insertion sepp <span class="se">\</span>
+  --i-representative-sequences ./dada2_rep_set.qza <span class="se">\</span>
+  --i-reference-database sepp-refs-gg-13-8.qza <span class="se">\</span>
+  --o-tree ./tree.qza <span class="se">\</span>
+  --o-placements ./tree_placements.qza <span class="se">\</span>
+  --p-threads <span class="m">1</span>  <span class="c1"># update to a higher number if you can</span>
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">sepp-refs-gg-13-8.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsepp-refs-gg-13-8.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sepp-refs-gg-13-8.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">tree_placements.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ftree_placements.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/tree_placements.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">tree.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ftree.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/tree.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="alpha-rarefaction-and-selecting-a-rarefaction-depth">
+<h2>Alpha Rarefaction and Selecting a Rarefaction Depth<a class="headerlink" href="#alpha-rarefaction-and-selecting-a-rarefaction-depth" title="Permalink to this headline">¶</a></h2>
+<p>We now have a feature table (observation matrix) of ASVs in each sample, and a phylogenetic tree representing those ASVs, so are almost ready to perform various analyses of microbial diversity. However, first we must normalize our data to account for uneven sequencing depth between samples.</p>
+<p>Although sequencing depth in a microbiome sample does not directly relate to the original biomass in a community, the relative sequencing depth has a large impact on observed communities (<a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/28253908">Weiss et al, 2017</a>). Therefore, for most diversity metrics, a normalization approach is needed.</p>
+<p>Current best practices suggest the use of rarefaction, a normalization via sub-sampling without replacement. Rarefaction occurs in two steps: first, samples which are below the rarefaction depth are filtered out of the feature table. Then, all remaining samples are subsampled without replacement to get to the specified sequencing depth. It’s both important and sometimes challenging to select a rarefaction depth for diversity analyses. Several strategies exist to figure out an appropriate rarefaction depth - we will primarily consider alpha rarefaction in this tutorial, because it is a data-driven way to approach the problem.</p>
+<p>We’ll use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">diversity</span> <span class="pre">alpha-rarefaction</span></code> to subsample the ASV table at different depths (between <code class="docutils literal notranslate"><span class="pre">--p-min-depth</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--p-max-depth</span></code>) and calculate the alpha diversity using one or more metrics (<code class="docutils literal notranslate"><span class="pre">--p-metrics</span></code>). When we checked the feature table, we found that the sample with the fewest sequences in the denoised table has 85 features and that the sample with the most has 4996 features. We want to set a maximum depth close to the maximum number of sequences. We also know that if we look at a sequencing depth around 4250 sequences per sample, we’ll be looking at information from 22 samples. So, let’s set this as our maximum sequencing depth.</p>
+<p>At each sampling depth, 10 rarefied tables are usually calculated to provide an error estimate, although this can be adjusted using the <code class="docutils literal notranslate"><span class="pre">--p-iterations</span></code> parameter. We can check and see if there is a relationship between the alpha diversity and metadata by specifying the metadata file for the <code class="docutils literal notranslate"><span class="pre">--m-metadata-file</span></code> parameter.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity alpha-rarefaction <span class="se">\</span>
+  --i-table ./dada2_table.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --o-visualization ./alpha_rarefaction_curves.qzv <span class="se">\</span>
+  --p-min-depth <span class="m">10</span> <span class="se">\</span>
+  --p-max-depth <span class="m">4250</span>
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">alpha_rarefaction_curves.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Falpha_rarefaction_curves.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/alpha_rarefaction_curves.qzv">download</a></p></li>
+</ul>
+</div>
+<p>The visualization file will display two plots. The upper plot will display the alpha diversity (observed OTUs or shannon) as a function of the sampling depth. This is used to determine whether the richness or evenness has saturated based on the sampling depth. The rarefaction curve should “level out” as you approach the maximum sampling depth. Failure to do so, especially with a diversity-only metric such as observed OTUs or Faith’s PD diversity, may indicate that the richness in the samples has not been fully saturated.</p>
+<p>The second plot shows the number of samples in each metadata category group at each sampling depth. This is useful to determine the sampling depth where samples are lost, and whether this may be biased by metadata column group values. Remember that rarefaction is a two-step process and samples that do not meet the rarefaction depth are filtered out of the table. We can use the curves to look at the number of samples by different metadata columns.</p>
+<p>If you’re still unsure of the rarefaction depth, you can also use the sample summary to look at which samples are lost by supplying sample metadata to the feature table summary.</p>
+<div class="question admonition" id="question-2">
+<p class="admonition-title">Question</p>
+<p>Start by opening the alpha rarefaction visualization.</p>
+<ol class="arabic simple">
+<li><p>Are all metadata columns represented in the visualization? If not, which columns were excluded and why?</p></li>
+<li><p>Which metric shows saturation and stabilization of the diversity?</p></li>
+<li><p>Which mouse genetic background has higher diversity, based on the curve? Which has shallower sampling depth?</p></li>
+</ol>
+<p>Now, let’s check the feature table summary.</p>
+<ol class="arabic simple" start="4">
+<li><p>What percentage of samples are lost if we set the rarefaction depth to 2500 sequences per sample?</p></li>
+<li><p>Which mice did the missing samples come from?</p></li>
+</ol>
+</div>
+<p>After we’ve looked through the data, we need to select a rarefaction depth. In general, selecting a rarefaction depth is a subjective process that requires that analyst’s discretion. Selecting a rarefaction depth is an exercise in minimizing sequence loss while maximizing the sequences retained for diversity analysis. For high-biomass samples (fecal, oral, etc), a general best estimate is a rarefaction depth of no less than 1000 sequences per sample. In low biomass samples where sequencing is shallower, a lower rarefaction depth may be selected although it’s important to keep in mind that the diversity measurements on these samples will be quite noisy and the overall quality will be low.</p>
+<div class="checkpoint admonition" id="checkpoint-1">
+<p class="admonition-title">Checkpoint</p>
+<p><em>Based on the current rarefaction curve and sample summary, what sequencing depth would you pick? Why?</em></p>
+<p>In this case, we can retain 47 samples with a rarefaction depth of 2000 sequences/sample.</p>
+<p>Based on the sequencing depth and distribution of samples, we’ll use 2000 sequences/sample for this analysis. This will let us keep 47 of 48 high quality samples (discarding the one sample with sequencing depth below 1000 sequences/sample).</p>
+</div>
+</div>
+<div class="section" id="diversity-analysis">
+<h2>Diversity analysis<a class="headerlink" href="#diversity-analysis" title="Permalink to this headline">¶</a></h2>
+<p>The first step in hypothesis testing in microbial ecology is typically to look at within- (alpha) and between-sample (beta) diversity. We can calculate diversity metrics, apply appropriate statistical tests, and visualize the data using the <code class="docutils literal notranslate"><span class="pre">q2-diversity</span></code> plugin.</p>
+<p>We’ll start by using the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">diversity</span> <span class="pre">core-metrics-phylogenetic</span></code> method, which ratifies the input feature table, calculates several commonly used alpha- and beta-diversity metrics, and produces principal coordinate analysis (PCoA) visualizations in Emperor for the beta diversity metrics. By default, the metrics computed are:</p>
+<ul class="simple">
+<li><p><strong>Alpha Diversity</strong></p>
+<ul>
+<li><p>Shannon’s diversity index</p></li>
+<li><p>Observed OTUs</p></li>
+<li><p>Faith’s phylogenetic diversity</p></li>
+<li><p>Pielou’s evenness</p></li>
+</ul>
+</li>
+<li><p><strong>Beta Diversity</strong></p>
+<ul>
+<li><p>Jaccard distance</p></li>
+<li><p>Bray-Curtis distance</p></li>
+<li><p>Unweighted UniFrac distance</p></li>
+<li><p>Weighted UniFrac distance</p></li>
+</ul>
+</li>
+</ul>
+<p>There is a very good discussion of diversity metrics and their meanings in a <a class="reference external" href="https://forum.qiime2.org/t/alpha-and-beta-diversity-explanations-and-commands/2282/">forum post by Stephanie Orchanian</a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">diversity</span> <span class="pre">core-metrics-phylogenetic</span></code> method wraps several other methods, and it’s worthwhile to note that the steps can also be executed independently.</p>
+<p>One important consideration for diversity calculations is the rarefaction depth. Above, we used the alpha rarefaction visualization and the sample summary visualization to pick a rarefaction depth. So, for these analyses, we’ll use a depth of 2000 sequences per sample.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity core-metrics-phylogenetic <span class="se">\</span>
+  --i-table ./dada2_table.qza <span class="se">\</span>
+  --i-phylogeny ./tree.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --p-sampling-depth <span class="m">2000</span> <span class="se">\</span>
+  --output-dir ./core-metrics-results
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/faith_pd_vector.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Ffaith_pd_vector.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/faith_pd_vector.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/unweighted_unifrac_distance_matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Funweighted_unifrac_distance_matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/unweighted_unifrac_distance_matrix.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/bray_curtis_pcoa_results.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fbray_curtis_pcoa_results.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/bray_curtis_pcoa_results.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/shannon_vector.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fshannon_vector.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/shannon_vector.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/rarefied_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Frarefied_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/rarefied_table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/weighted_unifrac_distance_matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fweighted_unifrac_distance_matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/weighted_unifrac_distance_matrix.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/jaccard_pcoa_results.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fjaccard_pcoa_results.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/jaccard_pcoa_results.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/observed_otus_vector.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fobserved_otus_vector.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/observed_otus_vector.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/weighted_unifrac_pcoa_results.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fweighted_unifrac_pcoa_results.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/weighted_unifrac_pcoa_results.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/jaccard_distance_matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fjaccard_distance_matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/jaccard_distance_matrix.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/evenness_vector.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fevenness_vector.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/evenness_vector.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/bray_curtis_distance_matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fbray_curtis_distance_matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/bray_curtis_distance_matrix.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/unweighted_unifrac_pcoa_results.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Funweighted_unifrac_pcoa_results.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/unweighted_unifrac_pcoa_results.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/unweighted_unifrac_emperor.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Funweighted_unifrac_emperor.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/unweighted_unifrac_emperor.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/jaccard_emperor.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fjaccard_emperor.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/jaccard_emperor.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/bray_curtis_emperor.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fbray_curtis_emperor.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/bray_curtis_emperor.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/weighted_unifrac_emperor.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fweighted_unifrac_emperor.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/weighted_unifrac_emperor.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-3">
+<p class="admonition-title">Question</p>
+<p>Where did we get the value <code class="docutils literal notranslate"><span class="pre">2000</span></code> from? Why did we pick that?</p>
+</div>
+<div class="section" id="alpha-diversity">
+<h3>Alpha diversity<a class="headerlink" href="#alpha-diversity" title="Permalink to this headline">¶</a></h3>
+<p>Alpha diversity asks whether the distribution of features within a sample (or groups of samples) differs between different conditions. The comparison makes no assumptions about the features that are shared between samples; two samples can have the same alpha diversity and not share any features. The rarefied alpha diversity produced by <code class="docutils literal notranslate"><span class="pre">q2-diversity</span></code> is a univariate, continuous value and can be tested using common non-parametric statistical tests.</p>
+<p>We can test our covariates of interest against Faith’s phylogenetic diversity and Pielou’s evenness value by running:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity alpha-group-significance <span class="se">\</span>
+  --i-alpha-diversity ./core-metrics-results/faith_pd_vector.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --o-visualization ./core-metrics-results/faiths_pd_statistics.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/faiths_pd_statistics.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Ffaiths_pd_statistics.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/faiths_pd_statistics.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity alpha-group-significance <span class="se">\</span>
+ --i-alpha-diversity ./core-metrics-results/evenness_vector.qza <span class="se">\</span>
+ --m-metadata-file ./metadata.tsv <span class="se">\</span>
+ --o-visualization ./core-metrics-results/evenness_statistics.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/evenness_statistics.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fevenness_statistics.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/evenness_statistics.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-4">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>Is there a difference in <strong>evenness</strong> between genotype? Is there a difference in <strong>phylogenetic diversity</strong> between genotype?</p></li>
+<li><p>Based on the group significance test, is there a difference in phylogenetic diversity by genotype? Is there a difference based on the donor?</p></li>
+</ol>
+</div>
+<p>If we had a continuous covariate that we thought was associated with the alpha diversity, we could test that using <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">diversity</span> <span class="pre">alpha-correlation</span></code>. However, the only continuous variable in this dataset is the <code class="docutils literal notranslate"><span class="pre">days_since_transplant</span></code>.</p>
+<p>In some experiments, multiple interacting factors may impact alpha diversity together. If our alpha diversity estimates follow a normal distribution, we may use analysis of variance (ANOVA) to test whether multiple effects significantly impact alpha diversity. This test is present in the <code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code> plugin:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal anova <span class="se">\</span>
+  --m-metadata-file ./core-metrics-results/faith_pd_vector.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --p-formula <span class="s1">&#39;faith_pd ~ genotype * donor_status&#39;</span> <span class="se">\</span>
+  --o-visualization ./core-metrics-results/faiths_pd_anova.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/faiths_pd_anova.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Ffaiths_pd_anova.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/faiths_pd_anova.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="beta-diversity">
+<h3>Beta diversity<a class="headerlink" href="#beta-diversity" title="Permalink to this headline">¶</a></h3>
+<p>Next, we’ll compare the structure of the microbiome communities using beta diversity. Start by making a visual inspection of the principle coordinates plots (PCoA) plots that were generated by <code class="docutils literal notranslate"><span class="pre">q2-emperor</span></code> and <code class="docutils literal notranslate"><span class="pre">core-metrics-results/weighted_unifrac_emperor.qzv</span></code>.</p>
+<div class="question admonition" id="question-5">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>Open the unweighted UniFrac emperor plot (<code class="docutils literal notranslate"><span class="pre">core-metrics-results/unweighted_unifrac_emperor.qzv</span></code>) first. Can you find separation in the data? If so, can you find a metadata factor that reflects the separation? What if you used weighted UniFrac distance (<code class="docutils literal notranslate"><span class="pre">core-metrics-results/weighted_unifrac_emperor.qzv</span></code>)?</p></li>
+<li><p>One of the major concerns in mouse studies is that sometimes differences in communities are due to natural variation in cages. Do you see clustering by cage?</p></li>
+</ol>
+</div>
+<p>Now, let’s analyze the statistical trends using <a class="reference external" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1442-9993.2001.01070.pp.x">PERMANOVA</a>. PERMANOVA tests the hypothesis that samples within a group are more similar to each other than they are to samples in another group. To put it another way, it tests whether the within-group distances from each group are different from the between group distance. We expect samples that are similar to have smaller distances from each other, so if our hypothesis that one group is different from another is true, we’d expect the within-group distances to be smaller than the between group distance.</p>
+<p>Let’s use the <code class="docutils literal notranslate"><span class="pre">beta-group-significance</span></code> command to test whether the donor identity (which we qualitatively identified as a major separator in PCoA space) is associated with significant differences in weighted and unweighted UniFrac distance.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity beta-group-significance <span class="se">\</span>
+  --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file metadata.tsv <span class="se">\</span>
+  --m-metadata-column donor <span class="se">\</span>
+  --o-visualization core-metrics-results/unweighted-unifrac-donor-significance.qzv
+
+qiime diversity beta-group-significance <span class="se">\</span>
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file metadata.tsv <span class="se">\</span>
+  --m-metadata-column donor <span class="se">\</span>
+  --o-visualization core-metrics-results/weighted-unifrac-donor-significance.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/weighted-unifrac-donor-significance.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fweighted-unifrac-donor-significance.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/weighted-unifrac-donor-significance.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/unweighted-unifrac-donor-significance.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Funweighted-unifrac-donor-significance.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/unweighted-unifrac-donor-significance.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Let’s also check whether there’s a relationship between the cage in which a mouse lives and the beta diversity, since “cage effect” is often an important technical effect to consider. Since we have several cages, we’ll use the <code class="docutils literal notranslate"><span class="pre">--p-pairwise</span></code> parameter that will let us check whether there are individual differences between the cages driving the difference. This may be useful, since if we check the metadata, we may find that cage is nested by donor.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity beta-group-significance <span class="se">\</span>
+  --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file metadata.tsv <span class="se">\</span>
+  --m-metadata-column cage_id <span class="se">\</span>
+  --o-visualization core-metrics-results/unweighted-unifrac-cage-significance.qzv <span class="se">\</span>
+  --p-pairwise
+
+qiime diversity beta-group-significance <span class="se">\</span>
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file metadata.tsv <span class="se">\</span>
+  --m-metadata-column cage_id <span class="se">\</span>
+  --o-visualization core-metrics-results/weighted-unifrac-cage-significance.qzv <span class="se">\</span>
+  --p-pairwise
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/weighted-unifrac-cage-significance.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Fweighted-unifrac-cage-significance.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/weighted-unifrac-cage-significance.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/unweighted-unifrac-cage-significance.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Funweighted-unifrac-cage-significance.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/unweighted-unifrac-cage-significance.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-6">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>Is there a significant effect of donor?</p></li>
+<li><p>From the metadata, we know that cage C31, C32, and C42 all house mice transplanted from one donor, and that cages C43, C44, and C49 are from the other. Is there a significant difference in the microbial communities between samples collected in cage C31 and C32? How about between C31 and C43? Do the results look the way you expect, based on the boxplots for donor?</p></li>
+</ol>
+</div>
+<p>A significant difference in PERMANOVA can reflect a large difference between the group or differences in variances within a group. This means that we might see a statistically significant difference even if it’s caused by variation within one group. Distance boxplots can help give a visual sense of this, but it’s nice to use a statistical test to confirm this. We can use the <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/16706913">permdisp</a> to help rule out differences due to a high degree of dispersion (within-group variance) in one of the groups of interest.</p>
+<p>We can specify that we want to use permdisp using the <code class="docutils literal notranslate"><span class="pre">--p-method</span></code> flag in <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">diversity</span> <span class="pre">beta-group-significance</span></code>. Let’s explore dispersion based on <code class="docutils literal notranslate"><span class="pre">cage_id</span></code> to check whether are cage-related differences are due to large within-cage variance.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity beta-group-significance <span class="se">\</span>
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file metadata.tsv <span class="se">\</span>
+  --m-metadata-column cage_id <span class="se">\</span>
+  --o-visualization core-metrics-results/unweighted-unifrac-cage-significance_disp.qzv <span class="se">\</span>
+  --p-method permdisp
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/unweighted-unifrac-cage-significance_disp.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Funweighted-unifrac-cage-significance_disp.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/unweighted-unifrac-cage-significance_disp.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-7">
+<p class="admonition-title">Question</p>
+<p>Is there a significant difference in variance for any of the cages?</p>
+</div>
+<p>We can also use the adonis action to look at a multivariate model. The <code class="docutils literal notranslate"><span class="pre">adonis</span></code> action uses a PERMANOVA test, but a different implementation that permits multiple effects to be tested simultaneously (similar to how we used ANOVA earlier for multivariate effects on alpha diversity). Let’s look at the intersection between donor and genotype.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity adonis <span class="se">\</span>
+  --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file metadata.tsv <span class="se">\</span>
+  --o-visualization core-metrics-results/unweighted_adonis.qzv <span class="se">\</span>
+  --p-formula genotype+donor
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">core-metrics-results/unweighted_adonis.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcore-metrics-results%2Funweighted_adonis.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/core-metrics-results/unweighted_adonis.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-8">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>Is there a significant effect of donor?</p></li>
+<li><p>From the metadata, we know that cage C31, C32, and C42 all house mice transplanted from one donor, and that cages C43, C44, and C49 are from the other. Is there a significant difference in the microbial communities between samples collected in cage C31 and C32? How about between C31 and C43? Do the results look the way you expect, based on the boxplots for donor?</p></li>
+<li><p>If you adjust for donor in the adonis model, do you retain an effect of genotype? What percentage of the variation does genotype explain?</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="taxonomic-classification">
+<h2>Taxonomic classification<a class="headerlink" href="#taxonomic-classification" title="Permalink to this headline">¶</a></h2>
+<p>Up until now we have been performing diversity analyses directly on ASVs; in other words, we have assessed the similarity between samples based purely on the unique sequence variants that were observed in each sample. In most experiments we would like to get a sense of what microbial taxa are present — to identify ASVs and give them “names”. To do this, we’ll use the <code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code> plugin to classify ASVs taxonomically.</p>
+<p>For this analysis, we’ll use a pre-trained naive Bayes machine-learning classifier that was trained to differentiate taxa present in the 99% Greengenes 13_8 reference set trimmed to 250 bp of the V4 hypervariable region (corresponding to the 515F-806R primers). <a class="reference external" href="https://doi.org/10.1186/s40168-018-0470-z">This classifier works</a> by identifying k-mers that are diagnostic for particular taxonomic groups, and using that information to predict the taxonomic affiliation of each ASV. We can download the pre-trained classifier here:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-4" aria-controls="browser-4" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-4" aria-controls="wget-4" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-4" aria-controls="messages-4" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-4">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/common/gg-13-8-99-515-806-nb-classifier.qza">
+            https://data.qiime2.org/2020.2/common/gg-13-8-99-515-806-nb-classifier.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> gg-13-8-99-515-806-nb-classifier.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-4">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "gg-13-8-99-515-806-nb-classifier.qza" \
+  "https://data.qiime2.org/2020.2/common/gg-13-8-99-515-806-nb-classifier.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-4">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/common/gg-13-8-99-515-806-nb-classifier.qza" > \
+  "gg-13-8-99-515-806-nb-classifier.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>It’s worth noting that Naive Bayes classifiers perform best when they’re trained for the specific hypervariable region amplified. You can train a classifier specific for your dataset based on the <a class="reference internal" href="../feature-classifier/"><span class="doc">training classifiers tutorial</span></a> or download classifiers for other datasets from the <a class="reference internal" href="../../data-resources/"><span class="doc">QIIME 2 resource page</span></a>. Classifiers can be re-used for consistent versions of the underlying packages, database, and region of interest.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-classifier classify-sklearn <span class="se">\</span>
+  --i-reads ./dada2_rep_set.qza <span class="se">\</span>
+  --i-classifier ./gg-13-8-99-515-806-nb-classifier.qza <span class="se">\</span>
+  --o-classification ./taxonomy.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">taxonomy.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ftaxonomy.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/taxonomy.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">gg-13-8-99-515-806-nb-classifier.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fgg-13-8-99-515-806-nb-classifier.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/gg-13-8-99-515-806-nb-classifier.qza">download</a></p></li>
+</ul>
+</div>
+<p>Now, let’s review the taxonomy associated with the sequences using the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">metadata</span> <span class="pre">tabulate</span></code> method.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file ./taxonomy.qza <span class="se">\</span>
+  --o-visualization ./taxonomy.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">taxonomy.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ftaxonomy.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/taxonomy.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Let’s also tabulate the representative sequences (<code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code>). Tabulating the representative sequences will allow us to see the sequence assigned to the identifier and interactively blast the sequence against the NCBI database.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table tabulate-seqs <span class="se">\</span>
+  --i-data ./dada2_rep_set.qza <span class="se">\</span>
+  --o-visualization ./dada2_rep_set.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">dada2_rep_set.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fdada2_rep_set.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/dada2_rep_set.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-9">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>Find the feature, <code class="docutils literal notranslate"><span class="pre">07f183edd4e4d8aef1dcb2ab24dd7745</span></code>. What is the taxonomic classification of this sequence? What’s the confidence for the assignment?</p></li>
+<li><p>How many features are classified as <code class="docutils literal notranslate"><span class="pre">g__Akkermansia</span></code>?</p></li>
+<li><p>Use the tabulated representative sequences to look up these features. If you blast them against NCBI, do you get the same taxonomic identifier as you obtained with q2-feature-classifier?</p></li>
+</ol>
+</div>
+<div class="admonition note" id="why-classification-underlines-only">
+<p class="admonition-title">Note</p>
+<p>You might notice that some features do not have taxonomic assignments, which for the Greengenes database is indicated by a blank string at the level (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;g__&quot;</span></code>). These indicate that there is not enough information for the Greengenes database to differentiate members of that clade, either due to ambiguity in the database or because the gene region being sequenced doesn’t provide the resolution to distinguish members of that clade. This is distinct from cases where <code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code> cannot reliably classify the ASV to a deeper level: in those cases, an incomplete taxonomy string will be provided. Hence, you may see two different types of “underclassification” in your data: e.g., <code class="docutils literal notranslate"><span class="pre">k__Bacteria;</span> <span class="pre">p__Firmicutes;</span> <span class="pre">c__Clostridia;</span> <span class="pre">o__Clostridiales;</span> <span class="pre">f__Christensenellaceae;</span> <span class="pre">g__;</span> <span class="pre">s__</span></code> (genus and species annotations are missing in Greengenes) as well as <code class="docutils literal notranslate"><span class="pre">k__Bacteria;</span> <span class="pre">p__Firmicutes;</span> <span class="pre">c__Clostridia;</span> <span class="pre">o__Clostridiales;</span> <span class="pre">f__Christensenellaceae</span></code> (<code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code> could not confidently classify that ASV at genus level).</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You may also notice that more than one ASV has the same taxonomic assignment. This is normal — unique ASVs do not necessarily map to unique taxonomic groups! We visualize the frequency of each taxonomic group in barplots (as described below) or use the <code class="docutils literal notranslate"><span class="pre">q2-taxa</span></code> plugin to <code class="docutils literal notranslate"><span class="pre">collapse</span></code> our feature table based on taxonomic affiliation.</p>
+</div>
+</div>
+<div class="section" id="taxonomy-barchart">
+<h2>Taxonomy barchart<a class="headerlink" href="#taxonomy-barchart" title="Permalink to this headline">¶</a></h2>
+<p>Since we saw a difference in diversity in this dataset, we may want to look at the taxonomic composition of these samples. To visualize this, we will build a taxonomic barchart of the samples we analyzed in the diversity dataset.</p>
+<p>Before doing this, we will first filter out any samples with fewer features than our rarefaction threshold (<code class="docutils literal notranslate"><span class="pre">2000</span></code>). We can filter samples using the <code class="docutils literal notranslate"><span class="pre">q2-feature-table</span></code> plugin with the <code class="docutils literal notranslate"><span class="pre">filter-samples</span></code> method. This lets us filter our table based on a variety of criteria such as the number of counts (frequency, <code class="docutils literal notranslate"><span class="pre">--p-min-frequency</span></code> and <code class="docutils literal notranslate"><span class="pre">--p-max-frequency</span></code>), number of features (<code class="docutils literal notranslate"><span class="pre">--p-min-features</span></code> and <code class="docutils literal notranslate"><span class="pre">--p-max-features</span></code>), or sample metadata (<code class="docutils literal notranslate"><span class="pre">--p-where</span></code>). See the <a class="reference internal" href="../filtering/"><span class="doc">filtering tutorial</span></a> for more details and examples.</p>
+<p>For this example, we need to filter out samples with fewer sequences than our rarefaction depth.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table ./dada2_table.qza <span class="se">\</span>
+  --p-min-frequency <span class="m">2000</span> <span class="se">\</span>
+  --o-filtered-table ./table_2k.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table_2k.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ftable_2k.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/table_2k.qza">download</a></p></li>
+</ul>
+</div>
+<p>Now, let’s use the filtered table to build an interactive barplot of the taxonomy in each sample.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa barplot <span class="se">\</span>
+  --i-table ./table_2k.qza <span class="se">\</span>
+  --i-taxonomy ./taxonomy.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --o-visualization ./taxa_barplot.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">taxa_barplot.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ftaxa_barplot.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/taxa_barplot.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-10">
+<p class="admonition-title">Question</p>
+<p>Visualize the data at level 2 (phylum level) and sort the samples by donor, then by genotype. Can you observe a consistent difference in phylum between the donors? Does this surprising you? Why or why not?</p>
+</div>
+</div>
+<div class="section" id="differential-abundance-with-ancom">
+<h2>Differential abundance with ANCOM<a class="headerlink" href="#differential-abundance-with-ancom" title="Permalink to this headline">¶</a></h2>
+<p>Many microbiome investigators are interested in testing whether individual ASVs or taxa are more or less abundant in different sample groups. This is known as <em>differential abundance</em>. Microbiome data present several challenges for performing differential abundance using convential methods. Microbiome abundance data are inherently sparse (have a lot of zeros) and compositional (everything adds up to 1). Because of this, traditional statistical methods that you may be familiar with, such as ANOVA or t-tests, are not appropriate for performing differential abundance tests of microbiome data and lead to a high false-positive rate. ANCOM is a compositionally aware alternative that allows to test for differentially abundant features. If you’re unfamiliar with the technique, it’s worthwhile to review the <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/26028277">ANCOM paper</a> to better understand the method.</p>
+<p>Before we begin, we will filter out low abundance/low prevalence ASVs. Filtering can provide better resolution and limit false discovery rate (FDR) penalty on features that are too far below the noise threshhold to be applicable to a statistical test. A feature that shows up with 10 counts may be a real feature that is present only in that sample, may be a feature that’s present in several samples but only got amplified and sequenced in one sample because PCR is a somewhat stochastic process, or it may be noise. It’s not possible to tell, so feature-based analysis may be better after filtering low abundance features. However, filtering also shifts the composition of a sample, further disrupting the relationship. Here, the filtering is performed as a trade off between the model, computational efficiency, and statistical practicality.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table ./table_2k.qza <span class="se">\</span>
+  --p-min-frequency <span class="m">50</span> <span class="se">\</span>
+  --p-min-samples <span class="m">4</span> <span class="se">\</span>
+  --o-filtered-table ./table_2k_abund.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table_2k_abund.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ftable_2k_abund.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/table_2k_abund.qza">download</a></p></li>
+</ul>
+</div>
+<p>ANCOM fundamentally operates on a <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code>, which contains the frequencies of features in each sample. However, ANCOM cannot tolerate zeros (because compositional methods typically use a log-transform or a ratio and you can’t take the log or divide by zeros). To remove the zeros from our table, we add a pseudocount to the <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code> Artifact, creating a <code class="docutils literal notranslate"><span class="pre">FeatureTable[Composition]</span></code> in its place.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime composition add-pseudocount <span class="se">\</span>
+  --i-table ./table_2k_abund.qza <span class="se">\</span>
+  --o-composition-table ./table2k_abund_comp.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table2k_abund_comp.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ftable2k_abund_comp.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/table2k_abund_comp.qza">download</a></p></li>
+</ul>
+</div>
+<p>Let’s use ANCOM to check whether there is a difference in the mice based on their donor and then by their genetic background. The test will calculate the number of ratios between pairs of ASVs that are significantly different with FDR-corrected p &lt; 0.05.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime composition ancom <span class="se">\</span>
+  --i-table ./table2k_abund_comp.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-metadata-column donor <span class="se">\</span>
+  --o-visualization ./ancom_donor.qzv
+
+qiime composition ancom <span class="se">\</span>
+  --i-table ./table2k_abund_comp.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-metadata-column genotype <span class="se">\</span>
+  --o-visualization ./ancom_genotype.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ancom_genotype.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fancom_genotype.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/ancom_genotype.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ancom_donor.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fancom_donor.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/ancom_donor.qzv">download</a></p></li>
+</ul>
+</div>
+<p>When you open the ANCOM visualizations, you’ll see a <a class="reference external" href="https://en.wikipedia.org/wiki/Volcano_plot_(statistics)">volcano plot</a> on top, which relates the ANCOM W statistic to the CLR (center log transform) for the groups. The W statistic is the number of ANCOM subhypotheses that have passed for each individual taxon, indicating that the ratios of that taxon’s relative abundance to the relative abundances of <code class="docutils literal notranslate"><span class="pre">W</span></code> other taxa were detected to be significantly different (typically FDR-adjusted p &lt; 0.05). Because differential abundance in ANCOM is based on the ratio between tests, it does not produce a traditional p-value.</p>
+<div class="question admonition" id="question-11">
+<p class="admonition-title">Question</p>
+<p>Open the ANCOM visualizations for the donor and genotype and the taxonomy visualization artifact.</p>
+<ol class="arabic simple">
+<li><p>Are there more differentially abundant features between the donors or the mouse genotype? Did you expect this result based on the beta diversity?</p></li>
+<li><p>Are there any features that are differentially abundant in both the donors and by genotype?</p></li>
+<li><p>How many differentially abundant features are there between the two genotypes? Using the percentile abundances and volcano plot as a guide, can you tell if they are more abundant in wild type or susceptible mice?</p></li>
+<li><p>Use taxonomy metadata visualization and search sequence identifiers for the significantly different features by genotype. What genera do they belong to?</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="taxonomic-classification-again">
+<h2>Taxonomic classification again<a class="headerlink" href="#taxonomic-classification-again" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to <a class="reference external" href="https://www.biorxiv.org/content/10.1101/406611v2">increase taxonomic classification accuracy</a> by showing the taxonomic classifier what a typical animal stool sample looks like before attempting classification. To do that we will have to retrain the naive Bayes classifier. Fortunately, a representation of a typical stool sample that is derived from <a class="reference external" href="https://qiita.ucsd.edu">Qiita</a> data is available from the <a class="reference external" href="https://github.com/BenKaehler/readytowear">readytowear collection</a>.</p>
+<p>If you feel that these samples are not typical stool samples, it is possible to, for instance, assemble data on just mouse or just human (or just human and mouse) stool samples using <a class="reference external" href="https://library.qiime2.org/plugins/q2-clawback/7/">q2-clawback</a>. We will not attempt that here because it takes a while to run, but details are available in the <a class="reference external" href="https://forum.qiime2.org/t/using-q2-clawback-to-assemble-taxonomic-weights/5859">tutorial</a>.</p>
+<p>Start by downloading the stool data, along with the 99% Greengene 13_8 reference data.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-5" aria-controls="browser-5" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-5" aria-controls="wget-5" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-5" aria-controls="messages-5" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-5">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/pd-mice/ref_seqs_v4.qza">
+            https://data.qiime2.org/2020.2/tutorials/pd-mice/ref_seqs_v4.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ref_seqs_v4.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-5">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "ref_seqs_v4.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/ref_seqs_v4.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-5">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/ref_seqs_v4.qza" > \
+  "ref_seqs_v4.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-6" aria-controls="browser-6" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-6" aria-controls="wget-6" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-6" aria-controls="messages-6" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-6">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/pd-mice/ref_tax.qza">
+            https://data.qiime2.org/2020.2/tutorials/pd-mice/ref_tax.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ref_tax.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-6">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "ref_tax.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/ref_tax.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-6">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/ref_tax.qza" > \
+  "ref_tax.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-7" aria-controls="browser-7" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-7" aria-controls="wget-7" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-7" aria-controls="messages-7" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-7">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/pd-mice/animal_distal_gut.qza">
+            https://data.qiime2.org/2020.2/tutorials/pd-mice/animal_distal_gut.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> animal_distal_gut.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-7">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "animal_distal_gut.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/animal_distal_gut.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-7">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/pd-mice/animal_distal_gut.qza" > \
+  "animal_distal_gut.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Next retrain the classifier.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-classifier fit-classifier-naive-bayes <span class="se">\</span>
+  --i-reference-reads ./ref_seqs_v4.qza <span class="se">\</span>
+  --i-reference-taxonomy ./ref_tax.qza <span class="se">\</span>
+  --i-class-weight ./animal_distal_gut.qza <span class="se">\</span>
+  --o-classifier ./bespoke.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ref_seqs_v4.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fref_seqs_v4.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/ref_seqs_v4.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">animal_distal_gut.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fanimal_distal_gut.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/animal_distal_gut.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">bespoke.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fbespoke.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/bespoke.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ref_tax.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fref_tax.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/ref_tax.qza">download</a></p></li>
+</ul>
+</div>
+<p>We can use the new classifier in exactly the same way as the standard classifier that we downloaded above.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-classifier classify-sklearn <span class="se">\</span>
+  --i-reads ./dada2_rep_set.qza <span class="se">\</span>
+  --i-classifier ./bespoke.qza <span class="se">\</span>
+  --o-classification ./bespoke_taxonomy.qza
+
+qiime metadata tabulate <span class="se">\</span>
+  --m-input-file ./bespoke_taxonomy.qza <span class="se">\</span>
+  --o-visualization ./bespoke_taxonomy.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">bespoke_taxonomy.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fbespoke_taxonomy.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/bespoke_taxonomy.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">bespoke_taxonomy.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fbespoke_taxonomy.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/bespoke_taxonomy.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-12">
+<p class="admonition-title">Question</p>
+<p>Open up the old <code class="docutils literal notranslate"><span class="pre">taxonomy.qzv</span></code> visualization and compare it to the <code class="docutils literal notranslate"><span class="pre">bespoke_taxonomy.qzv</span></code> visualization.</p>
+<ol class="arabic simple">
+<li><p>Search for “ovatus” in both. Is there an ASV in the new taxonomy that wasn’t present in the original?</p></li>
+<li><p>Revisit the <code class="docutils literal notranslate"><span class="pre">ancom_donor.qzv</span></code> visualization. Can you find that ASV?</p></li>
+</ol>
+</div>
+<p>When analyzing ANCOM results, it is possible to trace the ASVs that we found using the taxonomies that we have created. It is also possible to run ANCOM directly on taxonomic groups that we have discovered in our samples by counting features according to taxonomic classification. This has the advantage of pooling feature counts across taxonomically similar ASVs, for instance allowing exact species substitution between samples. The output is also more readable. On the down side, it has all the inaccuracies that come with automated taxonomic classification.</p>
+<p>We will run through the pipeline twice, once with our original taxonomy and once with the new taxonomy, for the purpose of comparison. First using the original taxonomy:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa collapse <span class="se">\</span>
+  --i-table ./table_2k.qza <span class="se">\</span>
+  --i-taxonomy ./taxonomy.qza <span class="se">\</span>
+  --o-collapsed-table ./uniform_table.qza <span class="se">\</span>
+  --p-level <span class="m">7</span> <span class="c1"># means that we group at species level</span>
+
+qiime feature-table filter-features <span class="se">\</span>
+  --i-table ./uniform_table.qza <span class="se">\</span>
+  --p-min-frequency <span class="m">50</span> <span class="se">\</span>
+  --p-min-samples <span class="m">4</span> <span class="se">\</span>
+  --o-filtered-table ./filtered_uniform_table.qza
+
+qiime composition add-pseudocount <span class="se">\</span>
+  --i-table ./filtered_uniform_table.qza <span class="se">\</span>
+  --o-composition-table ./cfu_table.qza
+
+qiime composition ancom <span class="se">\</span>
+  --i-table ./cfu_table.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-metadata-column donor <span class="se">\</span>
+  --o-visualization ./ancom_donor_uniform.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">uniform_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Funiform_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/uniform_table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">cfu_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcfu_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/cfu_table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">filtered_uniform_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ffiltered_uniform_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/filtered_uniform_table.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ancom_donor_uniform.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fancom_donor_uniform.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/ancom_donor_uniform.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Now redo with the new taxonomy:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa collapse <span class="se">\</span>
+  --i-table ./table_2k.qza <span class="se">\</span>
+  --i-taxonomy ./bespoke_taxonomy.qza <span class="se">\</span>
+  --p-level <span class="m">7</span> <span class="se">\</span>
+  --o-collapsed-table ./bespoke_table.qza
+
+qiime feature-table filter-features <span class="se">\</span>
+  --i-table ./bespoke_table.qza <span class="se">\</span>
+  --p-min-frequency <span class="m">50</span> <span class="se">\</span>
+  --p-min-samples <span class="m">4</span> <span class="se">\</span>
+  --o-filtered-table ./filtered_bespoke_table.qza
+
+qiime composition add-pseudocount <span class="se">\</span>
+  --i-table ./filtered_bespoke_table.qza <span class="se">\</span>
+  --o-composition-table ./cfb_table.qza
+
+qiime composition ancom <span class="se">\</span>
+  --i-table ./cfb_table.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-metadata-column donor <span class="se">\</span>
+  --o-visualization ./ancom_donor_bespoke.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">bespoke_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fbespoke_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/bespoke_table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">cfb_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fcfb_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/cfb_table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">filtered_bespoke_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ffiltered_bespoke_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/filtered_bespoke_table.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ancom_donor_bespoke.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fancom_donor_bespoke.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/ancom_donor_bespoke.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-13">
+<p class="admonition-title">Question</p>
+<p>Compare final ANCOM visualizations. They are fairly similar, which is good.</p>
+<ol class="arabic simple">
+<li><p>Is <em>Bacteroides ovatus</em> present in the ANCOM results derived from our original taxonomy?</p></li>
+<li><p>Is <em>B. ovatus</em> present in the new ANCOM results?</p></li>
+<li><p>Why is that?</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="longitudinal-analysis">
+<h2>Longitudinal analysis<a class="headerlink" href="#longitudinal-analysis" title="Permalink to this headline">¶</a></h2>
+<p>This study includes a longitudinal component; samples from each mouse were collected 7, 14, 21, and 49 days post fecal transplant. We can use the <code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code> plug-in to explore the hypothesis that a mouse’s genetic background affected the change in the microbial community of each mouse. For this longitudinal analysis, we’re going to focus on beta diversity. Alpha diversity changes wildly in infants, but it’s often stable in adults over short time periods. We’re dealing with an adult fecal community over a relatively short time period, and there is no difference in alpha diversity with time. The <a class="reference internal" href="../longitudinal/"><span class="doc">longitudinal analysis tutorial</span></a> is an excellent resource for exploring longitudinal analyses of microbiome samples.</p>
+<div class="section" id="pcoa-based-analyses">
+<h3>PCoA-based analyses<a class="headerlink" href="#pcoa-based-analyses" title="Permalink to this headline">¶</a></h3>
+<p>We can start by exploring temporal change in the PCoA using the animations tab.</p>
+<div class="question admonition" id="question-14">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>Open the unweighted UniFrac emperor plot and color the samples by mouse id. Click on the “animations” tab and animate using the <code class="docutils literal notranslate"><span class="pre">day_post_transplant</span></code> as your gradient and <code class="docutils literal notranslate"><span class="pre">mouse_id</span></code> as your trajectory. Do you observe any clear temporal trends based on the PCoA?</p></li>
+<li><p>What happens if you color by <code class="docutils literal notranslate"><span class="pre">day_post_transplant</span></code>? Do you see a difference based on the day? <em>Hint: Trying changing the colormap to a sequential colormap like viridis.</em></p></li>
+</ol>
+</div>
+<p>A volatility plot will let us look at patterns of variation along principle coordinate axes starting from the same point. This can be helpful since inter-individual variation can be large and this visualizations lets us focus instead on magnitude of change in each group and in each individual.</p>
+<p>Let’s use the <code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code> plugin to look at how samples from an individual move along each PC. The <code class="docutils literal notranslate"><span class="pre">--m-metadata-file</span></code> column can take several types, including a metadata file (like our <code class="docutils literal notranslate"><span class="pre">metadata.tsv</span></code>) as well as a <code class="docutils literal notranslate"><span class="pre">SampleData[AlphaDiversity]</span></code>, <code class="docutils literal notranslate"><span class="pre">SampleData[Distance]</span></code> (files “viewable” as metadata), or a <code class="docutils literal notranslate"><span class="pre">PCoA</span></code> artifact.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal volatility <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-metadata-file ./core-metrics-results/unweighted_unifrac_pcoa_results.qza <span class="se">\</span>
+  --p-state-column days_post_transplant <span class="se">\</span>
+  --p-individual-id-column mouse_id <span class="se">\</span>
+  --p-default-group-column <span class="s1">&#39;donor_status&#39;</span> <span class="se">\</span>
+  --p-default-metric <span class="s1">&#39;Axis 2&#39;</span> <span class="se">\</span>
+  --o-visualization ./pc_vol.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">pc_vol.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fpc_vol.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/pc_vol.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-15">
+<p class="admonition-title">Question</p>
+<p>Using the controls, look at variation in cage along PCs 1, 2, and 3. What kind of patterns do you see with time along each axis?</p>
+</div>
+</div>
+<div class="section" id="distance-based-analysis">
+<h3>Distance-based analysis<a class="headerlink" href="#distance-based-analysis" title="Permalink to this headline">¶</a></h3>
+<p>Now, let’s try looking directly at the pairwise distances between samples. Here, we’ll test the hypothesis that genotype affects the magnitude of change in the distance from the first sample collected from each mouse (7 days post transplant). We assume that given the rate of turnover in a microbial community, we might expect to see a change in the community over time. However, here we’ll ask if these changes are associated with host genotype.</p>
+<p>We’ll start this analysis by looking at how much the microbial community of each mouse changes from 7 days post transplant. We use the <code class="docutils literal notranslate"><span class="pre">baseline</span></code> parameter to specify a static time point against which all other time points are compared; if we remove this parameter from the command, we look instead at the <em>rate of change</em> for each individual between each time point. See the <a class="reference internal" href="../longitudinal/"><span class="doc">longitudinal analysis tutorial</span></a> for more details.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal first-distances <span class="se">\</span>
+  --i-distance-matrix ./core-metrics-results/unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --p-state-column days_post_transplant <span class="se">\</span>
+  --p-individual-id-column mouse_id <span class="se">\</span>
+  --p-baseline <span class="m">7</span> <span class="se">\</span>
+  --o-first-distances ./from_first_unifrac.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">from_first_unifrac.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ffrom_first_unifrac.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/from_first_unifrac.qza">download</a></p></li>
+</ul>
+</div>
+<p>We can again use volatility analysis to visualize the change in beta diversity based on distance.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal volatility <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-metadata-file ./from_first_unifrac.qza <span class="se">\</span>
+  --p-state-column days_post_transplant <span class="se">\</span>
+  --p-individual-id-column mouse_id <span class="se">\</span>
+  --p-default-metric Distance <span class="se">\</span>
+  --p-default-group-column <span class="s1">&#39;donor_status&#39;</span> <span class="se">\</span>
+  --o-visualization ./from_first_unifrac_vol.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">from_first_unifrac_vol.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ffrom_first_unifrac_vol.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/from_first_unifrac_vol.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-16">
+<p class="admonition-title">Question</p>
+<p>Based on the volatility plot, does one donor change more over time than the other? What about by genotype? Cage?</p>
+</div>
+<p>A linear mixed effects (LME) model lets us test whether there’s a relationship between a dependent variable and one or more independent variables in an experiment using repeated measures. Since we’re interested in genotype, we should use this as an independent predictor.</p>
+<p>For our experiment, we’re currently interested in the change in distance from the initial timepoint, so we’ll use this as our outcome variable (given by <code class="docutils literal notranslate"><span class="pre">--p-metric</span></code>).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">linear-mixed-effects</span></code> action also requires a state column (<code class="docutils literal notranslate"><span class="pre">--p-state-column</span></code>) which designates the time component in the metadata, and an individual identifier (<code class="docutils literal notranslate"><span class="pre">--p-individual-id-column</span></code>). Which columns should we use in our data?</p>
+<p>We can build a model either using the <code class="docutils literal notranslate"><span class="pre">--p-formula</span></code> parameter or the <code class="docutils literal notranslate"><span class="pre">--p-group-columns</span></code> parameter. For this analysis, we’re interested in whether genotype affects the longitudinal change in the microbial community. However, we also know from our cross sectional analysis that donor plays a large role in shaping the fecal community. So, we should also probably include that in this analysis. We may also want to consider cage effect in our experiment, since this is a common confounder in rodent studies. However, the original experimental design here was clever: although cages were grouped by donor (mice are coprophagic), they were of mixed genotype. This partial randomization helps limit some of the cage effects we might otherwise see.</p>
+<p>Based on the experimental design, what group columns should we choose?</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal linear-mixed-effects <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-metadata-file ./from_first_unifrac.qza <span class="se">\</span>
+  --p-metric Distance <span class="se">\</span>
+  --p-state-column days_post_transplant <span class="se">\</span>
+  --p-individual-id-column mouse_id <span class="se">\</span>
+  --p-group-columns genotype,donor <span class="se">\</span>
+  --o-visualization ./from_first_unifrac_lme.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">from_first_unifrac_lme.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Ffrom_first_unifrac_lme.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/from_first_unifrac_lme.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Now, let’s look at the results of the models.</p>
+<div class="question admonition" id="question-17">
+<p class="admonition-title">Question</p>
+<ol class="arabic simple">
+<li><p>Is there a significant association between the genotype and temporal change?</p></li>
+<li><p>Which genotype is more stable (has lower variation)?</p></li>
+<li><p>Is there a temporal change associated with the donor? Did you expect or not expect this based on the volatility plot results?</p></li>
+<li><p>Can you find an interaction between the donor and genotype?</p></li>
+</ol>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Importantly, LME models also allow us to distinguish between two types of independent variables: fixed effects (e.g., experimental treatments) and random effects (e.g., biological factors that cannot be controlled in the experiment). By default, the <code class="docutils literal notranslate"><span class="pre">linear-mixed-effects</span></code> action in <code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code> uses the <code class="docutils literal notranslate"><span class="pre">individual_id_column</span></code> as a random effect, since we can expect that biological differences between individual subjects will impact the baseline values of the dependent variable we are testing. The rate of change — slope — is another inter-individual effect that we often might want to consider as a random effect in longitudinal experiments. See the <a class="reference internal" href="../longitudinal/"><span class="doc">longitudinal analysis tutorial</span></a> for more details and discussion of LME tests and effect types.</p>
+</div>
+</div>
+</div>
+<div class="section" id="machine-learning-classifiers-for-predicting-sample-characteristics">
+<h2>Machine-learning classifiers for predicting sample characteristics<a class="headerlink" href="#machine-learning-classifiers-for-predicting-sample-characteristics" title="Permalink to this headline">¶</a></h2>
+<p>As an alternative (or complementary) approach to the methods we have used in this tutorial for testing if and how samples are different from one another, we can utilize <a class="reference internal" href="../sample-classifier/"><span class="doc">machine-learning methods</span></a> to determine how <em>predictive</em> microbiome composition is of other characteristics about a sample. For example, we may use machine-learning classifiers to predict a patient’s susceptibility to disease, or predict the treatment group that a sample belongs to. Additionally, many machine-learning methods report which features are most important for predicting sample characteristics, making this a useful approach for determining which features (ASVs, species, etc) are associated with a particular treatment, disease state, or other category of interest. All of this and much more can be found in the <code class="docutils literal notranslate"><span class="pre">q2-sample-classifier</span></code> plugin. Here we will use this plugin to predict each mouse’s genotype and donor status based on their ASV composition using a Random Forest classifier (this pipeline can access many different machine-learning methods via the <code class="docutils literal notranslate"><span class="pre">estimator</span></code> parameter, but Random Forest classifiers are used by default).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier classify-samples <span class="se">\</span>
+  --i-table ./dada2_table.qza <span class="se">\</span>
+  --m-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-metadata-column genotype_and_donor_status <span class="se">\</span>
+  --p-random-state <span class="m">666</span> <span class="se">\</span>
+  --p-n-jobs <span class="m">1</span> <span class="se">\</span>
+  --output-dir ./sample-classifier-results/
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-classifier-results/probabilities.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsample-classifier-results%2Fprobabilities.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sample-classifier-results/probabilities.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-classifier-results/sample_estimator.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsample-classifier-results%2Fsample_estimator.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sample-classifier-results/sample_estimator.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-classifier-results/feature_importance.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsample-classifier-results%2Ffeature_importance.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sample-classifier-results/feature_importance.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-classifier-results/predictions.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsample-classifier-results%2Fpredictions.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sample-classifier-results/predictions.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-classifier-results/heatmap.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsample-classifier-results%2Fheatmap.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sample-classifier-results/heatmap.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-classifier-results/accuracy_results.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsample-classifier-results%2Faccuracy_results.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sample-classifier-results/accuracy_results.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-classifier-results/model_summary.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsample-classifier-results%2Fmodel_summary.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sample-classifier-results/model_summary.qzv">download</a></p></li>
+</ul>
+</div>
+<p>This pipeline generates a number of output artifacts and visualizations. You can read more about these in the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a> but right now let’s just focus on <code class="docutils literal notranslate"><span class="pre">./sample-classifier-results/accuracy_results.qzv</span></code>. This visualization tells you how well your sample classifier performed via a <a class="reference external" href="https://en.wikipedia.org/wiki/Confusion_matrix">confusion matrix</a> and accompanying table of accuracy scores. This tells you how frequently each sample type is classified to each sample class, including the correct class label. Overall error rates are also reported in the table below.</p>
+<div class="question admonition" id="question-18">
+<p class="admonition-title">Question</p>
+<p>How did we do? Just for fun, try predicting some of the other metadata columns to see how easily <code class="docutils literal notranslate"><span class="pre">cage_id</span></code> and other columns can be predicted.</p>
+</div>
+<p>Looks like we did pretty well! So we can see what features are most predictive of each sample class (donor and genotype groups). The importance scores are stored in the <code class="docutils literal notranslate"><span class="pre">./sample-classifier-results/feature_importance.qza</span></code> artifact (pro tip: this can be view with the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">metadata</span> <span class="pre">tabulate</span></code> command we covered earlier). Here we will generate a heatmap showing the mean abundance of the 100 most important ASVs in each genotype and donor group.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier heatmap <span class="se">\</span>
+  --i-table ./dada2_table.qza <span class="se">\</span>
+  --i-importance ./sample-classifier-results/feature_importance.qza <span class="se">\</span>
+  --m-sample-metadata-file ./metadata.tsv <span class="se">\</span>
+  --m-sample-metadata-column genotype_and_donor_status <span class="se">\</span>
+  --p-group-samples <span class="se">\</span>
+  --p-feature-count <span class="m">100</span> <span class="se">\</span>
+  --o-heatmap ./sample-classifier-results/heatmap.qzv <span class="se">\</span>
+  --o-filtered-table ./sample-classifier-results/filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-classifier-results/filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fpd-mice%2Fsample-classifier-results%2Ffiltered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/pd-mice/sample-classifier-results/filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-19">
+<p class="admonition-title">Question</p>
+<p>What features appear to differentiate genotypes? What about donors? Are any ASVs specific to a single sample group?</p>
+</div>
+</div>
+<div class="section" id="synthesis">
+<h2>Synthesis<a class="headerlink" href="#synthesis" title="Permalink to this headline">¶</a></h2>
+<p>Based on the results of the analysis, we can say that there is a difference in the microbial communities of these mice based on their donor and genetic background. (This recapitulates the results of the original analysis.)</p>
+<p>We found that the donor is the primary driver of alpha diversity.</p>
+<p>But, we saw differences by donor and genotype based on beta diversity. Using the PCoA emperor plots, we can see clear separation between the mice from the two donors. After adjusting for the donor, we saw a significant difference between the genotypes.</p>
+<p>Although there wasn’t a clear pattern in the barchart at the phylum level between donors or genotypes, we were still able to find ASVs which differentiated the genotypes using ANCOM and Random Forest classification. There was no overlap between these ASVs in the donor and genetic background, supporting the hypothesis that the difference due to genotype is separate from the difference due to donor.</p>
+<p>The volatility plots and temporal analysis showed that the microbiome in different genetic backgrounds changed differently over time.</p>
+<p>This suggests that there is a genotype-specific effect on the microbiome of mice receiving fecal transplants.</p>
+<p>💩🐁</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

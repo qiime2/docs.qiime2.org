@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Installing QIIME 2 &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about/" />
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Natively installing QIIME 2" href="native/" />
+    <link rel="prev" title="Core concepts" href="../concepts/" />
+  <script src="../_static/bootstrap.min.js"></script>
+  <script src="../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="installing-qiime-2">
+<h1>Installing QIIME 2<a class="headerlink" href="#installing-qiime-2" title="Permalink to this headline">¶</a></h1>
+<p>QIIME 2 can be installed natively or using virtual machines. The following pages describe how to install the <a class="reference internal" href="#core-distribution"><span class="std std-ref">QIIME 2 Core 2020.2 distribution</span></a> in either scenario.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="native/">Natively installing QIIME 2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="native/#install-miniconda">Install Miniconda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="native/#install-qiime-2-within-a-conda-environment">Install QIIME 2 within a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="native/#activate-the-conda-environment">Activate the <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="native/#test-your-installation">Test your installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="native/#next-steps">Next steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="native/#how-do-i-update-to-the-newest-version-of-qiime-2">How do I update to the newest version of QIIME 2?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="virtual/">Installing QIIME 2 using Virtual Machines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtual/virtualbox/">Installing QIIME 2 using VirtualBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtual/aws/">Installing QIIME 2 using Amazon Web Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtual/docker/">Installing QIIME 2 using Docker</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="qiime-2-core-2020-2-distribution">
+<span id="core-distribution"></span><h2>QIIME 2 Core 2020.2 distribution<a class="headerlink" href="#qiime-2-core-2020-2-distribution" title="Permalink to this headline">¶</a></h2>
+<p>The QIIME 2 Core 2020.2 distribution includes the QIIME 2 framework, <code class="docutils literal notranslate"><span class="pre">q2cli</span></code> (a QIIME 2 command-line interface) and the following plugins:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-alignment</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-composition</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-cutadapt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-dada2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-deblur</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-demux</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-diversity</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-emperor</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-feature-table</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-fragment-insertion</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-gneiss</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-metadata</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-phylogeny</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-quality-control</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-quality-filter</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-sample-classifier</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-taxa</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-types</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q2-vsearch</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The QIIME 2 Core 2020.2 distribution includes plugins and interfaces that are developed, maintained, tested, and distributed by the QIIME 2 development team. The Core distribution is necessary to run the commands in the <a class="reference internal" href="../tutorials/"><span class="doc">QIIME 2 tutorials</span></a>. If there are additional QIIME 2 plugins or interfaces you would like to install, please consult the relevant package(s) documentation. Other types of distributions may be made available in the future in addition to Core.</p>
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/">Core concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installing QIIME 2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="native/">Natively installing QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtual/">Installing QIIME 2 using Virtual Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#qiime-2-core-2020-2-distribution">QIIME 2 Core 2020.2 distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

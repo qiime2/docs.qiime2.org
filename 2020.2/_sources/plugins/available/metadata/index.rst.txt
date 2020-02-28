@@ -1,0 +1,89 @@
+metadata
+========
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin provides functionality for working with and visualizing Metadata.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2020.2.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-metadata" rel="noopener">https://github.com/qiime2/q2-metadata</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+       <tr>
+         <th scope="row">q2cli Invocation</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   qiime metadata
+
+.. raw:: html
+
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Artifact API Import</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins import metadata
+
+.. raw:: html
+
+         </td>
+       </tr>
+
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   distance-matrix
+   
+
+
+
+Visualizers
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   tabulate
+   

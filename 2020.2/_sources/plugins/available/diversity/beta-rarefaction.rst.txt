@@ -1,0 +1,154 @@
+beta-rarefaction: Beta diversity rarefaction
+============================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:beta-rarefaction.bib
+   :list: bullet
+   :all:
+   :keyprefix: diversity:beta-rarefaction:
+   :labelprefix: diversity:beta-rarefaction:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity beta-rarefaction [OPTIONS]
+
+     Repeatedly rarefy a feature table to compare beta diversity results within
+     a given rarefaction depth.
+
+     For a given beta diversity metric, this visualizer will provide: an
+     Emperor jackknifed PCoA plot, samples clustered by UPGMA or neighbor
+     joining with support calculation, and a heatmap showing the correlation
+     between rarefaction trials of that beta diversity metric.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                             Feature table upon which to perform beta diversity
+                             rarefaction analyses.                     [required]
+     --i-phylogeny ARTIFACT  Phylogenetic tree containing tip identifiers that
+       Phylogeny[Rooted]     correspond to the feature identifiers in the table.
+                             This tree can contain tip ids that are not present
+                             in the table, but all feature ids in the table must
+                             be present in this tree. [required for phylogenetic
+                             metrics]                                  [optional]
+   Parameters:
+     --p-metric TEXT Choices('euclidean', 'wminkowski', 'mahalanobis',
+       'canberra', 'correlation', 'kulsinski', 'weighted_normalized_unifrac',
+       'seuclidean', 'yule', 'chebyshev', 'braycurtis', 'rogerstanimoto',
+       'unweighted_unifrac', 'dice', 'sokalmichener', 'hamming', 'sqeuclidean',
+       'cityblock', 'generalized_unifrac', 'cosine', 'aitchison', 'russellrao',
+       'canberra_adkins', 'sokalsneath', 'matching', 'weighted_unifrac',
+       'jaccard')            The beta diversity metric to be computed. [required]
+     --p-clustering-method TEXT Choices('nj', 'upgma')
+                             Samples can be clustered with neighbor joining or
+                             UPGMA. An arbitrary rarefaction trial will be used
+                             for the tree, and the remaining trials are used to
+                             calculate the support of the internal nodes of that
+                             tree.                                     [required]
+     --m-metadata-file METADATA...
+       (multiple arguments   The sample metadata used for the Emperor jackknifed
+        will be merged)      PCoA plot.                                [required]
+     --p-sampling-depth INTEGER
+       Range(1, None)        The total frequency that each sample should be
+                             rarefied to prior to computing the diversity metric.
+                                                                       [required]
+     --p-iterations INTEGER  Number of times to rarefy the feature table at a
+       Range(2, None)        given sampling depth.                  [default: 10]
+     --p-correlation-method TEXT Choices('spearman', 'pearson')
+                             The Mantel correlation test to be applied when
+                             computing correlation between beta diversity
+                             distance matrices.             [default: 'spearman']
+     --p-color-scheme TEXT Choices('BrBG', 'BrBG_r', 'PRGn', 'PRGn_r', 'PiYG',
+       'PiYG_r', 'PuOr', 'PuOr_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdYlBu',
+       'RdYlBu_r', 'RdYlGn', 'RdYlGn_r')
+                             The matplotlib color scheme to generate the heatmap
+                             with.                              [default: 'BrBG']
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import beta_rarefaction
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Beta diversity rarefaction
+
+   Repeatedly rarefy a feature table to compare beta diversity results within
+   a given rarefaction depth.  For a given beta diversity metric, this
+   visualizer will provide: an Emperor jackknifed PCoA plot, samples clustered
+   by UPGMA or neighbor joining with support calculation, and a heatmap
+   showing the correlation between rarefaction trials of that beta diversity
+   metric.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table upon which to perform beta diversity rarefaction
+       analyses.
+   metric : Str % Choices('weighted_normalized_unifrac', 'dice', 'euclidean', 'generalized_unifrac', 'unweighted_unifrac', 'cosine', 'russellrao', 'mahalanobis', 'matching', 'sokalsneath', 'jaccard', 'weighted_unifrac', 'correlation', 'sqeuclidean', 'seuclidean', 'yule', 'aitchison', 'canberra', 'canberra_adkins', 'rogerstanimoto', 'wminkowski', 'chebyshev', 'braycurtis', 'hamming', 'cityblock', 'sokalmichener', 'kulsinski')
+       The beta diversity metric to be computed.
+   clustering_method : Str % Choices('nj', 'upgma')
+       Samples can be clustered with neighbor joining or UPGMA. An arbitrary
+       rarefaction trial will be used for the tree, and the remaining trials
+       are used to calculate the support of the internal nodes of that tree.
+   metadata : Metadata
+       The sample metadata used for the Emperor jackknifed PCoA plot.
+   sampling_depth : Int % Range(1, None)
+       The total frequency that each sample should be rarefied to prior to
+       computing the diversity metric.
+   iterations : Int % Range(2, None), optional
+       Number of times to rarefy the feature table at a given sampling depth.
+   phylogeny : Phylogeny[Rooted], optional
+       Phylogenetic tree containing tip identifiers that correspond to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree. [required for phylogenetic metrics]
+   correlation_method : Str % Choices('pearson', 'spearman'), optional
+       The Mantel correlation test to be applied when computing correlation
+       between beta diversity distance matrices.
+   color_scheme : Str % Choices('BrBG', 'BrBG_r', 'PRGn', 'PRGn_r', 'PiYG', 'PiYG_r', 'PuOr', 'PuOr_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r'), optional
+       The matplotlib color scheme to generate the heatmap with.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

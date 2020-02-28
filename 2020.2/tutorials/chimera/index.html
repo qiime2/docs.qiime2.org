@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Identifying and filtering chimeric feature sequences with q2-vsearch &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Alternative methods of read-joining in QIIME 2" href="../read-joining/" />
+    <link rel="prev" title="Performing longitudinal and paired sample comparisons with q2-longitudinal" href="../longitudinal/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="identifying-and-filtering-chimeric-feature-sequences-with-q2-vsearch">
+<h1>Identifying and filtering chimeric feature sequences with q2-vsearch<a class="headerlink" href="#identifying-and-filtering-chimeric-feature-sequences-with-q2-vsearch" title="Permalink to this headline">¶</a></h1>
+<p>Chimera checking in QIIME 2 is performed on a pair of <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code> and <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequences]</span></code> artifacts. QIIME 2 wraps the Uchime <em>de novo</em> and reference pipelines from vsearch. For details on how these work, see the original <a class="reference external" href="http://dx.doi.org/10.1093/bioinformatics/btr381">Uchime paper</a>, and the <a class="reference external" href="https://github.com/torognes/vsearch">vsearch</a> documentation.</p>
+<p>In this tutorial, we’ll use the table and sequences from the <a class="reference internal" href="../atacama-soils/"><span class="doc">Atacama soils tutorial</span></a>.</p>
+<div class="section" id="obtain-the-data">
+<h2>Obtain the data<a class="headerlink" href="#obtain-the-data" title="Permalink to this headline">¶</a></h2>
+<p>Start by creating a directory to work in.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir qiime2-chimera-filtering-tutorial
+<span class="nb">cd</span> qiime2-chimera-filtering-tutorial
+</pre></div>
+</div>
+<p>Next, download the necessary files:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/chimera/atacama-table.qza">
+            https://data.qiime2.org/2020.2/tutorials/chimera/atacama-table.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> atacama-table.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "atacama-table.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/chimera/atacama-table.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/chimera/atacama-table.qza" > \
+  "atacama-table.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/chimera/atacama-rep-seqs.qza">
+            https://data.qiime2.org/2020.2/tutorials/chimera/atacama-rep-seqs.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> atacama-rep-seqs.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "atacama-rep-seqs.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/chimera/atacama-rep-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/chimera/atacama-rep-seqs.qza" > \
+  "atacama-rep-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="section" id="run-de-novo-chimera-checking">
+<h2>Run <em>de novo</em> chimera checking<a class="headerlink" href="#run-de-novo-chimera-checking" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime vsearch uchime-denovo <span class="se">\</span>
+  --i-table atacama-table.qza <span class="se">\</span>
+  --i-sequences atacama-rep-seqs.qza <span class="se">\</span>
+  --output-dir uchime-dn-out
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">atacama-rep-seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fatacama-rep-seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/atacama-rep-seqs.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">atacama-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fatacama-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/atacama-table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/nonchimeras.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Fnonchimeras.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/nonchimeras.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/chimeras.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Fchimeras.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/chimeras.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/stats.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Fstats.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/stats.qza">download</a></p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Reference-based chimera checking is also available - see <a class="reference internal" href="../../plugins/available/vsearch/uchime-ref/"><span class="doc">vsearch uchime-ref</span></a> for more details.</p>
+</div>
+</div>
+<div class="section" id="visualize-summary-stats">
+<h2>Visualize summary stats<a class="headerlink" href="#visualize-summary-stats" title="Permalink to this headline">¶</a></h2>
+<p>To learn more about the sequences that were identified as chimeric, we can <code class="docutils literal notranslate"><span class="pre">tabulate</span></code> the stats output from the previous step:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file uchime-dn-out/stats.qza <span class="se">\</span>
+  --o-visualization uchime-dn-out/stats.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/stats.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Fstats.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/stats.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="filter-input-tables-and-sequences">
+<h2>Filter input tables and sequences<a class="headerlink" href="#filter-input-tables-and-sequences" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="exclude-chimeras-and-borderline-chimeras">
+<h3>Exclude chimeras and “borderline chimeras”<a class="headerlink" href="#exclude-chimeras-and-borderline-chimeras" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table atacama-table.qza <span class="se">\</span>
+  --m-metadata-file uchime-dn-out/nonchimeras.qza <span class="se">\</span>
+  --o-filtered-table uchime-dn-out/table-nonchimeric-wo-borderline.qza
+qiime feature-table filter-seqs <span class="se">\</span>
+  --i-data atacama-rep-seqs.qza <span class="se">\</span>
+  --m-metadata-file uchime-dn-out/nonchimeras.qza <span class="se">\</span>
+  --o-filtered-data uchime-dn-out/rep-seqs-nonchimeric-wo-borderline.qza
+qiime feature-table summarize <span class="se">\</span>
+  --i-table uchime-dn-out/table-nonchimeric-wo-borderline.qza <span class="se">\</span>
+  --o-visualization uchime-dn-out/table-nonchimeric-wo-borderline.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/rep-seqs-nonchimeric-wo-borderline.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Frep-seqs-nonchimeric-wo-borderline.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/rep-seqs-nonchimeric-wo-borderline.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/table-nonchimeric-wo-borderline.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Ftable-nonchimeric-wo-borderline.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/table-nonchimeric-wo-borderline.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/table-nonchimeric-wo-borderline.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Ftable-nonchimeric-wo-borderline.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/table-nonchimeric-wo-borderline.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="exclude-chimeras-but-retain-borderline-chimeras">
+<h3>Exclude chimeras but retain “borderline chimeras”<a class="headerlink" href="#exclude-chimeras-but-retain-borderline-chimeras" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table atacama-table.qza <span class="se">\</span>
+  --m-metadata-file uchime-dn-out/chimeras.qza <span class="se">\</span>
+  --p-exclude-ids <span class="se">\</span>
+  --o-filtered-table uchime-dn-out/table-nonchimeric-w-borderline.qza
+qiime feature-table filter-seqs <span class="se">\</span>
+  --i-data atacama-rep-seqs.qza <span class="se">\</span>
+  --m-metadata-file uchime-dn-out/chimeras.qza <span class="se">\</span>
+  --p-exclude-ids <span class="se">\</span>
+  --o-filtered-data uchime-dn-out/rep-seqs-nonchimeric-w-borderline.qza
+qiime feature-table summarize <span class="se">\</span>
+  --i-table uchime-dn-out/table-nonchimeric-w-borderline.qza <span class="se">\</span>
+  --o-visualization uchime-dn-out/table-nonchimeric-w-borderline.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/table-nonchimeric-w-borderline.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Ftable-nonchimeric-w-borderline.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/table-nonchimeric-w-borderline.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/rep-seqs-nonchimeric-w-borderline.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Frep-seqs-nonchimeric-w-borderline.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/rep-seqs-nonchimeric-w-borderline.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">uchime-dn-out/table-nonchimeric-w-borderline.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fchimera%2Fuchime-dn-out%2Ftable-nonchimeric-w-borderline.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/chimera/uchime-dn-out/table-nonchimeric-w-borderline.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

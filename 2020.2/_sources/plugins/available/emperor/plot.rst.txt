@@ -1,0 +1,88 @@
+plot: Visualize and Interact with Principal Coordinates Analysis Plots
+======================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime emperor plot [OPTIONS]
+
+     Generates an interactive ordination plot where the user can visually
+     integrate sample metadata.
+
+   Inputs:
+     --i-pcoa ARTIFACT    The principal coordinates matrix to be plotted.
+       PCoAResults                                                     [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple          The sample metadata.
+        arguments will    
+        be merged)                                                     [required]
+     --p-custom-axes TEXT...
+       List[Str]          Numeric sample metadata columns that should be
+                          included as axes in the Emperor plot.        [optional]
+     --p-ignore-missing-samples / --p-no-ignore-missing-samples
+                          This will suppress the error raised when the
+                          coordinates matrix contains samples that are not
+                          present in the metadata. Samples without metadata are
+                          included by setting all metadata values to: "This
+                          sample has no metadata". This flag is only applied if
+                          at least one sample is present in both the coordinates
+                          matrix and the metadata.               [default: False]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.emperor.visualizers import plot
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Visualize and Interact with Principal Coordinates Analysis Plots
+
+   Generates an interactive ordination plot where the user can visually
+   integrate sample metadata.
+
+   Parameters
+   ----------
+   pcoa : PCoAResults
+       The principal coordinates matrix to be plotted.
+   metadata : Metadata
+       The sample metadata.
+   custom_axes : List[Str], optional
+       Numeric sample metadata columns that should be included as axes in the
+       Emperor plot.
+   ignore_missing_samples : Bool, optional
+       This will suppress the error raised when the coordinates matrix
+       contains samples that are not present in the metadata. Samples without
+       metadata are included by setting all metadata values to: "This sample
+       has no metadata". This flag is only applied if at least one sample is
+       present in both the coordinates matrix and the metadata.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

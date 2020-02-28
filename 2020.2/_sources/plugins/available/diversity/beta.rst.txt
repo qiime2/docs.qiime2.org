@@ -1,0 +1,117 @@
+beta: Beta diversity
+====================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:beta.bib
+   :list: bullet
+   :all:
+   :keyprefix: diversity:beta:
+   :labelprefix: diversity:beta:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity beta [OPTIONS]
+
+     Computes a user-specified beta diversity metric for all pairs of samples
+     in a feature table.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          The feature table containing the samples over which
+                          beta diversity should be computed.           [required]
+   Parameters:
+     --p-metric TEXT Choices('euclidean', 'wminkowski', 'seuclidean', 'yule',
+       'braycurtis', 'rogerstanimoto', 'dice', 'sokalmichener', 'hamming',
+       'cosine', 'russellrao', 'canberra_adkins', 'jaccard', 'mahalanobis',
+       'canberra', 'correlation', 'kulsinski', 'chebyshev', 'sqeuclidean',
+       'cityblock', 'aitchison', 'sokalsneath', 'matching')
+                          The beta diversity metric to be computed.    [required]
+     --p-pseudocount INTEGER
+       Range(1, None)     A pseudocount to handle zeros for compositional
+                          metrics.  This is ignored for other metrics.
+                                                                     [default: 1]
+     --p-n-jobs INTEGER   The number of jobs to use for the computation. This
+                          works by breaking down the pairwise matrix into n-jobs
+                          even slices and computing them in parallel. If -1 all
+                          CPUs are used. If 1 is given, no parallel computing
+                          code is used at all, which is useful for debugging. For
+                          n-jobs below -1, (n_cpus + 1 + n-jobs) are used. Thus
+                          for n-jobs = -2, all CPUs but one are used.
+                          (Description from sklearn.metrics.pairwise_distances)
+                                                                     [default: 1]
+   Outputs:
+     --o-distance-matrix ARTIFACT
+       DistanceMatrix     The resulting distance matrix.               [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.methods import beta
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Beta diversity
+
+   Computes a user-specified beta diversity metric for all pairs of samples in
+   a feature table.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table containing the samples over which beta diversity
+       should be computed.
+   metric : Str % Choices('cosine', 'mahalanobis', 'matching', 'seuclidean', 'rogerstanimoto', 'braycurtis', 'hamming', 'sokalmichener', 'kulsinski', 'dice', 'euclidean', 'russellrao', 'jaccard', 'correlation', 'sqeuclidean', 'yule', 'aitchison', 'canberra', 'wminkowski', 'chebyshev', 'canberra_adkins', 'cityblock', 'sokalsneath')
+       The beta diversity metric to be computed.
+   pseudocount : Int % Range(1, None), optional
+       A pseudocount to handle zeros for compositional metrics.  This is
+       ignored for other metrics.
+   n_jobs : Int, optional
+       The number of jobs to use for the computation. This works by breaking
+       down the pairwise matrix into n_jobs even slices and computing them in
+       parallel. If -1 all CPUs are used. If 1 is given, no parallel computing
+       code is used at all, which is useful for debugging. For n_jobs below
+       -1, (n_cpus + 1 + n_jobs) are used. Thus for n_jobs = -2, all CPUs but
+       one are used. (Description from sklearn.metrics.pairwise_distances)
+
+   Returns
+   -------
+   distance_matrix : DistanceMatrix
+       The resulting distance matrix.</pre>
+       </div>
+     </div>
+   </div>

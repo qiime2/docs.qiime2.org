@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>fit-classifier-sklearn: Train an almost arbitrary scikit-learn classifier &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+    <link rel="next" title="feature-table" href="../../feature-table/" />
+    <link rel="prev" title="fit-classifier-naive-bayes: Train the naive_bayes classifier" href="../fit-classifier-naive-bayes/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <script src="../../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="fit-classifier-sklearn-train-an-almost-arbitrary-scikit-learn-classifier">
+<h1>fit-classifier-sklearn: Train an almost arbitrary scikit-learn classifier<a class="headerlink" href="#fit-classifier-sklearn-train-an-almost-arbitrary-scikit-learn-classifier" title="Permalink to this headline">¶</a></h1>
+<table class="table action-info">
+  <tbody>
+    <tr>
+      <th scope="row"><p></p>Citations</th>
+      <td><ul class="simple" id="bibtex-bibliography-plugins/available/feature-classifier/fit-classifier-sklearn-0">
+<li><p>Fabian Pedregosa, Gaël Varoquaux, Alexandre Gramfort, Vincent Michel, Bertrand Thirion, Olivier Grisel, Mathieu Blondel, Peter Prettenhofer, Ron Weiss, Vincent Dubourg, Jake Vanderplas, Alexandre Passos, David Cournapeau, Matthieu Brucher, Matthieu Perrot, and Édouard Duchesnay. Scikit-learn: machine learning in python. <em>Journal of machine learning research</em>, 12(Oct):2825–2830, 2011.</p></li>
+</ul>
+      </td>
+    </tr>
+  </tbody>
+</table><div class="tabbed">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+    <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="cli" class="tab-pane fade in active">
+      <h4>Docstring:</h4>
+      <pre>Usage: qiime feature-classifier fit-classifier-sklearn [OPTIONS]
+
+  Train a scikit-learn classifier to classify reads.
+
+Inputs:
+  --i-reference-reads ARTIFACT FeatureData[Sequence]
+                                                                    [required]
+  --i-reference-taxonomy ARTIFACT FeatureData[Taxonomy]
+                                                                    [required]
+  --i-class-weight ARTIFACT FeatureTable[RelativeFrequency]
+                                                                    [optional]
+Parameters:
+  --p-classifier-specification TEXT
+                                                                    [required]
+Outputs:
+  --o-classifier ARTIFACT TaxonomicClassifier
+                                                                    [required]
+Miscellaneous:
+  --output-dir PATH    Output unspecified results to a directory
+  --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                       execution of this action. Or silence output if
+                       execution is successful (silence is golden).
+  --citations          Show citations and exit.
+  --help               Show this message and exit.</pre>
+    </div>
+    <div id="api" class="tab-pane fade">
+    <h4>Import:</h4><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>from qiime2.plugins.feature_classifier.methods import fit_classifier_sklearn
+</pre></div>
+</div>
+    <h4>Docstring:</h4>
+      <pre>Train an almost arbitrary scikit-learn classifier
+
+Train a scikit-learn classifier to classify reads.
+
+Parameters
+----------
+reference_reads : FeatureData[Sequence]
+reference_taxonomy : FeatureData[Taxonomy]
+classifier_specification : Str
+class_weight : FeatureTable[RelativeFrequency], optional
+
+Returns
+-------
+classifier : TaxonomicClassifier</pre>
+    </div>
+  </div>
+</div></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

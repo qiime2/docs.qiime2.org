@@ -1,0 +1,177 @@
+heatmap: Generate a heatmap representation of a feature table
+=============================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: feature-table:heatmap.bib
+   :list: bullet
+   :all:
+   :keyprefix: feature-table:heatmap:
+   :labelprefix: feature-table:heatmap:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table heatmap [OPTIONS]
+
+     Generate a heatmap representation of a feature table with optional
+     clustering on both the sample and feature axes.
+
+     Tip: To generate a heatmap containing taxonomic annotations, use `qiime
+     taxa collapse` to collapse the feature table at the desired taxonomic
+     level.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                            The feature table to visualize.            [required]
+   Parameters:
+     --m-sample-metadata-file METADATA
+     --m-sample-metadata-column COLUMN  MetadataColumn[Categorical]
+                            Annotate the sample IDs with these sample metadata
+                            values. When metadata is present and
+                            `cluster`='feature', samples will be sorted by the
+                            metadata values.                           [optional]
+     --m-feature-metadata-file METADATA
+     --m-feature-metadata-column COLUMN  MetadataColumn[Categorical]
+                            Annotate the feature IDs with these feature metadata
+                            values. When metadata is present and
+                            `cluster`='sample', features will be sorted by the
+                            metadata values.                           [optional]
+     --p-normalize / --p-no-normalize
+                            Normalize the feature table by adding a psuedocount
+                            of 1 and then taking the log10 of the table.
+                                                                  [default: True]
+     --p-title TEXT         Optional custom plot title.                [optional]
+     --p-metric TEXT Choices('euclidean', 'seuclidean', 'yule', 'braycurtis',
+       'rogerstanimoto', 'hamming', 'dice', 'sokalmichener', 'cosine',
+       'minkowski', 'russellrao', 'jaccard', 'mahalanobis', 'canberra',
+       'correlation', 'kulsinski', 'chebyshev', 'sqeuclidean', 'cityblock',
+       'sokalsneath', 'matching')
+                            Metrics exposed by seaborn (see
+                            http://seaborn.pydata.org/generated/seaborn.clusterma
+                            p.html#seaborn.clustermap for more detail).
+                                                           [default: 'euclidean']
+     --p-method TEXT Choices('complete', 'single', 'centroid', 'weighted',
+       'average', 'ward', 'median')
+                            Clustering methods exposed by seaborn (see
+                            http://seaborn.pydata.org/generated/seaborn.clusterma
+                            p.html#seaborn.clustermap for more detail).
+                                                             [default: 'average']
+     --p-cluster TEXT Choices('none', 'both', 'features', 'samples')
+                            Specify which axes to cluster.      [default: 'both']
+     --p-color-scheme TEXT Choices('OrRd_r', 'RdPu', 'gist_gray_r', 'PuRd_r',
+       'Purples', 'spring', 'bone', 'cubehelix', 'Oranges', 'cool_r',
+       'Vega20b_r', 'BuPu_r', 'inferno_r', 'prism', 'Dark2_r', 'Wistia',
+       'Set1_r', 'Reds_r', 'hsv_r', 'nipy_spectral', 'Set3_r', 'tab20c_r',
+       'PRGn', 'Spectral', 'rocket', 'Set2', 'OrRd', 'Pastel1_r', 'PuBuGn',
+       'PuBuGn_r', 'autumn', 'winter_r', 'coolwarm', 'RdGy_r', 'GnBu',
+       'Vega20c_r', 'YlGn_r', 'hsv', 'prism_r', 'jet', 'cool', 'tab20', 'Paired',
+       'coolwarm_r', 'flag_r', 'gnuplot2_r', 'icefire', 'Spectral_r', 'spring_r',
+       'RdPu_r', 'CMRmap', 'gist_heat', 'binary', 'spectral', 'summer', 'vlag',
+       'Vega10', 'magma', 'tab10', 'mako_r', 'hot_r', 'autumn_r', 'Set2_r',
+       'rainbow_r', 'PuOr_r', 'PiYG', 'Accent', 'seismic', 'Greens',
+       'spectral_r', 'Vega10_r', 'tab20b_r', 'YlOrRd_r', 'icefire_r',
+       'gist_rainbow', 'BuGn', 'Reds', 'gist_yarg_r', 'RdYlBu', 'gist_gray',
+       'viridis_r', 'Purples_r', 'cividis', 'Pastel2', 'BuGn_r', 'afmhot',
+       'RdYlGn_r', 'Pastel2_r', 'plasma', 'seismic_r', 'gnuplot_r', 'YlOrBr_r',
+       'brg', 'jet_r', 'terrain', 'pink', 'Blues_r', 'YlOrBr', 'gist_heat_r',
+       'gray_r', 'RdYlBu_r', 'Blues', 'Vega20', 'YlGnBu_r', 'afmhot_r',
+       'gist_stern', 'hot', 'PuBu_r', 'magma_r', 'tab20_r', 'terrain_r', 'PuBu',
+       'GnBu_r', 'RdBu', 'PuRd', 'winter', 'gist_ncar', 'copper', 'Vega20b',
+       'bone_r', 'YlOrRd', 'PuOr', 'pink_r', 'gnuplot2', 'gist_rainbow_r',
+       'CMRmap_r', 'rocket_r', 'YlGn', 'bwr', 'PRGn_r', 'flag', 'Wistia_r',
+       'ocean_r', 'vlag_r', 'Greys', 'Paired_r', 'gist_yarg', 'RdYlGn',
+       'Greys_r', 'gist_earth', 'brg_r', 'Vega20_r', 'RdBu_r', 'viridis',
+       'gist_earth_r', 'BrBG_r', 'Greens_r', 'Accent_r', 'gray', 'Oranges_r',
+       'bwr_r', 'BrBG', 'Set3', 'cubehelix_r', 'gist_ncar_r', 'tab20b', 'BuPu',
+       'cividis_r', 'plasma_r', 'PiYG_r', 'nipy_spectral_r', 'rainbow', 'ocean',
+       'summer_r', 'Dark2', 'RdGy', 'YlGnBu', 'binary_r', 'gist_stern_r',
+       'gnuplot', 'Vega20c', 'inferno', 'Set1', 'tab10_r', 'tab20c', 'mako',
+       'copper_r', 'Pastel1')
+                            The matplotlib colorscheme to generate the heatmap
+                            with.                             [default: 'rocket']
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH      Output unspecified results to a directory
+     --verbose / --quiet    Display verbose output to stdout and/or stderr
+                            during execution of this action. Or silence output if
+                            execution is successful (silence is golden).
+     --citations            Show citations and exit.
+     --help                 Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.visualizers import heatmap
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Generate a heatmap representation of a feature table
+
+   Generate a heatmap representation of a feature table with optional
+   clustering on both the sample and feature axes.  Tip: To generate a heatmap
+   containing taxonomic annotations, use `qiime taxa collapse` to collapse the
+   feature table at the desired taxonomic level.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table to visualize.
+   sample_metadata : MetadataColumn[Categorical], optional
+       Annotate the sample IDs with these sample metadata values. When
+       metadata is present and `cluster`='feature', samples will be sorted by
+       the metadata values.
+   feature_metadata : MetadataColumn[Categorical], optional
+       Annotate the feature IDs with these feature metadata values. When
+       metadata is present and `cluster`='sample', features will be sorted by
+       the metadata values.
+   normalize : Bool, optional
+       Normalize the feature table by adding a psuedocount of 1 and then
+       taking the log10 of the table.
+   title : Str, optional
+       Optional custom plot title.
+   metric : Str % Choices('cosine', 'mahalanobis', 'matching', 'seuclidean', 'rogerstanimoto', 'braycurtis', 'hamming', 'sokalmichener', 'kulsinski', 'dice', 'euclidean', 'minkowski', 'russellrao', 'jaccard', 'sqeuclidean', 'correlation', 'yule', 'canberra', 'chebyshev', 'cityblock', 'sokalsneath'), optional
+       Metrics exposed by seaborn (see http://seaborn.pydata.org/generated/sea
+       born.clustermap.html#seaborn.clustermap for more detail).
+   method : Str % Choices('ward', 'centroid', 'median', 'single', 'weighted', 'average', 'complete'), optional
+       Clustering methods exposed by seaborn (see http://seaborn.pydata.org/ge
+       nerated/seaborn.clustermap.html#seaborn.clustermap for more detail).
+   cluster : Str % Choices('features', 'both', 'none', 'samples'), optional
+       Specify which axes to cluster.
+   color_scheme : Str % Choices('tab10_r', 'coolwarm', 'Set2_r', 'gist_ncar_r', 'Pastel2', 'jet_r', 'brg_r', 'GnBu', 'spring_r', 'Blues', 'RdGy', 'Spectral', 'cividis_r', 'tab20c_r', 'gray', 'RdYlBu', 'YlGn', 'PRGn_r', 'RdBu', 'gist_yarg_r', 'cubehelix_r', 'GnBu_r', 'BuPu_r', 'gnuplot2', 'Vega20c_r', 'flag', 'PRGn', 'flag_r', 'gist_earth', 'gist_gray', 'gist_gray_r', 'RdYlGn_r', 'gist_ncar', 'OrRd', 'gist_earth_r', 'Oranges_r', 'coolwarm_r', 'Pastel1_r', 'viridis_r', 'prism', 'nipy_spectral', 'autumn_r', 'cividis', 'PuRd', 'hsv', 'PuRd_r', 'summer', 'afmhot_r', 'BuGn_r', 'Paired_r', 'gnuplot_r', 'terrain_r', 'RdPu_r', 'Set1', 'bone', 'Vega10', 'seismic', 'cool_r', 'Greens', 'bwr', 'Blues_r', 'prism_r', 'RdPu', 'RdYlGn', 'Greys', 'Reds_r', 'tab10', 'Pastel2_r', 'rainbow', 'PuBuGn_r', 'gist_stern', 'Purples', 'gist_stern_r', 'cubehelix', 'CMRmap', 'spectral_r', 'tab20c', 'ocean_r', 'gist_rainbow_r', 'Vega20c', 'gist_heat_r', 'summer_r', 'mako', 'cool', 'PiYG', 'pink', 'tab20_r', 'rainbow_r', 'Reds', 'Purples_r', 'YlOrRd', 'YlGnBu_r', 'magma_r', 'Greens_r', 'YlOrBr', 'hot_r', 'rocket', 'Vega10_r', 'BrBG', 'Set3', 'binary', 'seismic_r', 'YlOrBr_r', 'RdBu_r', 'YlOrRd_r', 'autumn', 'Pastel1', 'mako_r', 'Vega20b', 'bwr_r', 'hsv_r', 'gray_r', 'vlag_r', 'tab20b', 'gnuplot2_r', 'PuBuGn', 'PuBu_r', 'tab20b_r', 'gist_heat', 'CMRmap_r', 'hot', 'winter', 'Oranges', 'PuBu', 'icefire_r', 'afmhot', 'PuOr', 'Set1_r', 'tab20', 'RdYlBu_r', 'rocket_r', 'YlGnBu', 'BrBG_r', 'YlGn_r', 'Vega20_r', 'BuPu', 'copper_r', 'vlag', 'Dark2_r', 'Wistia', 'Set3_r', 'Accent_r', 'inferno', 'PiYG_r', 'inferno_r', 'viridis', 'Set2', 'OrRd_r', 'spring', 'spectral', 'Accent', 'Wistia_r', 'icefire', 'binary_r', 'plasma', 'gist_yarg', 'RdGy_r', 'gnuplot', 'plasma_r', 'jet', 'Greys_r', 'magma', 'ocean', 'Dark2', 'gist_rainbow', 'bone_r', 'PuOr_r', 'BuGn', 'Vega20b_r', 'Spectral_r', 'copper', 'brg', 'winter_r', 'Vega20', 'nipy_spectral_r', 'Paired', 'terrain', 'pink_r'), optional
+       The matplotlib colorscheme to generate the heatmap with.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,86 @@
+classify-samples-from-dist: Run k-nearest-neighbors on a labeled distance matrix.
+=================================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime sample-classifier classify-samples-from-dist [OPTIONS]
+
+     Run k-nearest-neighbors on a labeled distance matrix. Return cross-
+     validated (leave one out) predictions and  accuracy. k = 1 by default
+
+   Inputs:
+     --i-distance-matrix ARTIFACT
+       DistanceMatrix     a distance matrix                            [required]
+   Parameters:
+     --m-metadata-file METADATA
+     --m-metadata-column COLUMN  MetadataColumn[Categorical]
+                          Categorical metadata column to use as prediction
+                          target.                                      [required]
+     --p-k INTEGER        Number of nearest neighbors                [default: 1]
+     --p-palette TEXT Choices('YellowOrangeBrown', 'YellowOrangeRed',
+       'OrangeRed', 'PurpleRed', 'RedPurple', 'BluePurple', 'GreenBlue',
+       'PurpleBlue', 'YellowGreen', 'summer', 'copper', 'viridis', 'cividis',
+       'plasma', 'inferno', 'magma', 'sirocco', 'drifting', 'melancholy',
+       'enigma', 'eros', 'spectre', 'ambition', 'mysteriousstains', 'daydream',
+       'solano', 'navarro', 'dandelions', 'deepblue', 'verve', 'greyscale')
+                          The color palette to use for plotting.
+                                                             [default: 'sirocco']
+   Outputs:
+     --o-predictions ARTIFACT SampleData[ClassifierPredictions]
+                          leave one out predictions for each sample    [required]
+     --o-accuracy-results VISUALIZATION
+                          Accuracy results visualization.              [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.sample_classifier.pipelines import classify_samples_from_dist
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Run k-nearest-neighbors on a labeled distance matrix.
+
+   Run k-nearest-neighbors on a labeled distance matrix. Return cross-
+   validated (leave one out) predictions and  accuracy. k = 1 by default
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       a distance matrix
+   metadata : MetadataColumn[Categorical]
+       Categorical metadata column to use as prediction target.
+   k : Int, optional
+       Number of nearest neighbors
+   palette : Str % Choices('YellowOrangeBrown', 'YellowOrangeRed', 'OrangeRed', 'PurpleRed', 'RedPurple', 'BluePurple', 'GreenBlue', 'PurpleBlue', 'YellowGreen', 'summer', 'copper', 'viridis', 'cividis', 'plasma', 'inferno', 'magma', 'sirocco', 'drifting', 'melancholy', 'enigma', 'eros', 'spectre', 'ambition', 'mysteriousstains', 'daydream', 'solano', 'navarro', 'dandelions', 'deepblue', 'verve', 'greyscale'), optional
+       The color palette to use for plotting.
+
+   Returns
+   -------
+   predictions : SampleData[ClassifierPredictions]
+       leave one out predictions for each sample
+   accuracy_results : Visualization
+       Accuracy results visualization.</pre>
+       </div>
+     </div>
+   </div>

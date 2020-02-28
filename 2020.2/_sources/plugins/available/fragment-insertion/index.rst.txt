@@ -1,0 +1,97 @@
+fragment-insertion
+==================
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           No description available. See plugin website: <a href="https://github.com/qiime2/q2-fragment-insertion" rel="noopener">https://github.com/qiime2/q2-fragment-insertion</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2020.2.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-fragment-insertion" rel="noopener">https://github.com/qiime2/q2-fragment-insertion</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           <a href="https://github.com/qiime2/q2-fragment-insertion/issues" rel="noopener">https://github.com/qiime2/q2-fragment-insertion/issues</a><br/>
+           
+       <tr>
+         <th scope="row">q2cli Invocation</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   qiime fragment-insertion
+
+.. raw:: html
+
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Artifact API Import</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins import fragment_insertion
+
+.. raw:: html
+
+         </td>
+       </tr>
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: citations.bib
+   :list: bullet
+   :all:
+   :keyprefix: fragment-insertion:
+   :labelprefix: fragment-insertion:
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   classify-otus-experimental
+   
+   filter-features
+   
+   sepp
+   
+
+

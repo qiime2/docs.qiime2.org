@@ -1,0 +1,107 @@
+biplot: Visualize and Interact with Principal Coordinates Analysis Biplot
+=========================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime emperor biplot [OPTIONS]
+
+     Generates an interactive ordination biplot where the user can visually
+     integrate sample and feature metadata. Vectors representing the n most
+     important features are then plotted in the emperor visualization (5
+     largest, by default).
+
+   Inputs:
+     --i-biplot ARTIFACT PCoAResults % Properties('biplot')
+                          The principal coordinates matrix to be plotted.
+                                                                       [required]
+   Parameters:
+     --m-sample-metadata-file METADATA...
+       (multiple          The sample metadata
+        arguments will    
+        be merged)                                                     [required]
+     --m-feature-metadata-file METADATA...
+       (multiple          The feature metadata (useful to manipulate the arrows
+        arguments will    in the plot).
+        be merged)                                                     [optional]
+     --p-ignore-missing-samples / --p-no-ignore-missing-samples
+                          This will suppress the error raised when the
+                          coordinates matrix contains samples that are not
+                          present in the metadata. Samples without metadata are
+                          included by setting all metadata values to: "This
+                          sample has no metadata". This flag is only applied if
+                          at least one sample is present in both the coordinates
+                          matrix and the metadata.               [default: False]
+     --p-invert / --p-no-invert
+                          If specified, the point and arrow coordinates will be
+                          swapped.                               [default: False]
+     --p-number-of-features INTEGER
+       Range(1, None)     The number of most important features (arrows) to
+                          display in the ordination. “Importance” is calculated
+                          for each feature based on the vector’s magnitude
+                          (euclidean distance from origin).          [default: 5]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.emperor.visualizers import biplot
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Visualize and Interact with Principal Coordinates Analysis Biplot
+
+   Generates an interactive ordination biplot where the user can visually
+   integrate sample and feature metadata. Vectors representing the n most
+   important features are then plotted in the emperor visualization (5
+   largest, by default).
+
+   Parameters
+   ----------
+   biplot : PCoAResults % Properties('biplot')
+       The principal coordinates matrix to be plotted.
+   sample_metadata : Metadata
+       The sample metadata
+   feature_metadata : Metadata, optional
+       The feature metadata (useful to manipulate the arrows in the plot).
+   ignore_missing_samples : Bool, optional
+       This will suppress the error raised when the coordinates matrix
+       contains samples that are not present in the metadata. Samples without
+       metadata are included by setting all metadata values to: "This sample
+       has no metadata". This flag is only applied if at least one sample is
+       present in both the coordinates matrix and the metadata.
+   invert : Bool, optional
+       If specified, the point and arrow coordinates will be swapped.
+   number_of_features : Int % Range(1, None), optional
+       The number of most important features (arrows) to display in the
+       ordination. “Importance” is calculated for each feature based on the
+       vector’s magnitude (euclidean distance from origin).
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

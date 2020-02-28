@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>vsearch &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../about/" />
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="cluster-features-open-reference: Open-reference clustering of features." href="cluster-features-open-reference/" />
+    <link rel="prev" title="types" href="../types/" />
+  <script src="../../../_static/bootstrap.min.js"></script>
+  <script src="../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="vsearch">
+<h1>vsearch<a class="headerlink" href="#vsearch" title="Permalink to this headline">¶</a></h1>
+<table class="table plugin-info">
+  <tbody>
+    <tr>
+      <th scope="row">Description</th>
+      <td>
+
+        This plugin wraps the vsearch application, and provides methods for clustering and dereplicating features and sequences.<br/>
+
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Version</th>
+      <td>2020.2.0</td>
+    </tr>
+    <tr>
+      <th scope="row">Website</th>
+      <td><a href="https://github.com/qiime2/q2-vsearch" rel="noopener">https://github.com/qiime2/q2-vsearch</a></td>
+    </tr>
+    <tr>
+      <th scope="row">Support</th>
+      <td>
+
+        Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+
+    <tr>
+      <th scope="row">q2cli Invocation</th>
+      <td><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime vsearch
+</pre></div>
+</div>
+  </td>
+</tr>
+<tr>
+  <th scope="row">Artifact API Import</th>
+  <td><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>from qiime2.plugins import vsearch
+</pre></div>
+</div>
+  </td>
+</tr>  </td>
+</tr>
+<tr>
+  <th scope="row"><p></p>Citations</th>
+  <td><ul class="simple" id="bibtex-bibliography-plugins/available/vsearch/index-0">
+<li><p>Torbjørn Rognes, Tomáš Flouri, Ben Nichols, Christopher Quince, and Frédéric Mahé. Vsearch: a versatile open source tool for metagenomics. <em>PeerJ</em>, 4:e2584, 2016. <a class="reference external" href="https://doi.org/10.7717/peerj.2584">doi:10.7717/peerj.2584</a>.</p></li>
+</ul>
+      </td>
+    </tr>
+  </tbody>
+</table><div class="section" id="pipelines">
+<h2>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cluster-features-open-reference/">cluster-features-open-reference: Open-reference clustering of features.</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cluster-features-closed-reference/">cluster-features-closed-reference: Closed-reference clustering of features.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster-features-de-novo/">cluster-features-de-novo: De novo clustering of features.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dereplicate-sequences/">dereplicate-sequences: Dereplicate sequences.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="join-pairs/">join-pairs: Join paired-end reads.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uchime-denovo/">uchime-denovo: De novo chimera filtering with vsearch.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uchime-ref/">uchime-ref: Reference-based chimera filtering with vsearch.</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

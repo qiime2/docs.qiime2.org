@@ -1,0 +1,103 @@
+sepp: Insert fragment sequences using SEPP into reference phylogenies.
+======================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime fragment-insertion sepp [OPTIONS]
+
+     Perform fragment insertion of sequences using the SEPP algorithm.
+
+   Inputs:
+     --i-representative-sequences ARTIFACT FeatureData[Sequence]
+                          The sequences to insert into the reference tree.
+                                                                       [required]
+     --i-reference-database ARTIFACT SeppReferenceDatabase
+                          The reference database to insert the representative
+                          sequences into.                              [required]
+   Parameters:
+     --p-alignment-subset-size INTEGER
+                          Each placement subset is further broken into subsets
+                          of at most these many sequences and a separate HMM is
+                          trained on each subset.                 [default: 1000]
+     --p-placement-subset-size INTEGER
+                          The tree is divided into subsets such that each subset
+                          includes at most these many subsets. The placement step
+                          places the fragment on only one subset, determined
+                          based on alignment scores. Further reading:
+                          https://github.com/smirarab/sepp/blob/master/tutorial/s
+                          epp-tutorial.md#sample-datasets-default-parameters.
+                                                                  [default: 5000]
+     --p-threads INTEGER  The number of threads to use.              [default: 1]
+     --p-debug / --p-no-debug
+                          Collect additional run information to STDOUT for
+                          debugging. Temporary directories will not be removed if
+                          run fails.                             [default: False]
+   Outputs:
+     --o-tree ARTIFACT    The tree with inserted feature data.
+       Phylogeny[Rooted]                                               [required]
+     --o-placements ARTIFACT
+       Placements         Information about the feature placements within the
+                          reference tree.                              [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.fragment_insertion.methods import sepp
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Insert fragment sequences using SEPP into reference phylogenies.
+
+   Perform fragment insertion of sequences using the SEPP algorithm.
+
+   Parameters
+   ----------
+   representative_sequences : FeatureData[Sequence]
+       The sequences to insert into the reference tree.
+   reference_database : SeppReferenceDatabase
+       The reference database to insert the representative sequences into.
+   alignment_subset_size : Int, optional
+       Each placement subset is further broken into subsets of at most these
+       many sequences and a separate HMM is trained on each subset.
+   placement_subset_size : Int, optional
+       The tree is divided into subsets such that each subset includes at most
+       these many subsets. The placement step places the fragment on only one
+       subset, determined based on alignment scores. Further reading:
+       https://github.com/smirarab/sepp/blob/master/tutorial/sepp-
+       tutorial.md#sample-datasets-default-parameters.
+   threads : Int, optional
+       The number of threads to use.
+   debug : Bool, optional
+       Collect additional run information to STDOUT for debugging. Temporary
+       directories will not be removed if run fails.
+
+   Returns
+   -------
+   tree : Phylogeny[Rooted]
+       The tree with inserted feature data.
+   placements : Placements
+       Information about the feature placements within the reference tree.</pre>
+       </div>
+     </div>
+   </div>
