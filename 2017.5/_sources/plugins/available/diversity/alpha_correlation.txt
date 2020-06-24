@@ -1,0 +1,169 @@
+alpha_correlation: Alpha diversity correlation
+==============================================
+
+Determine whether numeric sample metadata category is correlated with alpha diversity.
+
+.. raw:: html
+
+   <table class="table action-signature">
+     
+     <thead>
+       <tr>
+         <th colspan="4">Inputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">alpha_diversity</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">SampleData[AlphaDiversity]</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           Vector of alpha diversity values by sample.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="4">Parameters</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">metadata</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Metadata</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Required</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The sample metadata.<br/>
+           
+         </td>
+       </tr>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">method</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Str % Choices({'pearson', 'spearman'})</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">spearman</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           The correlation test to be applied.<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+     <thead>
+       <tr>
+         <th colspan="4">Outputs</th>
+       </tr>
+       
+       <tr>
+         <th>Name</th>
+         <th>Type</th>
+         <th>Default</th>
+         <th>Description</th>
+       </tr>
+       
+     </thead>
+     <tbody>
+       
+       <tr>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">visualization</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">Visualization</span>
+           </code>
+         </td>
+         
+         <td>
+           <code class="docutils literal">
+             <span class="pre">N/A</span>
+           </code>
+         </td>
+         
+         <td>
+           
+           No description<br/>
+           
+         </td>
+       </tr>
+       
+     </tbody>
+     
+   </table>

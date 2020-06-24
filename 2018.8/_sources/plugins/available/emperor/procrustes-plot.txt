@@ -1,0 +1,81 @@
+procrustes-plot: Visualize and Interact with a procrustes plot
+==============================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime emperor procrustes-plot [OPTIONS]
+
+     Plot two procrustes-fitted matrices
+
+   Options:
+     --i-reference-pcoa ARTIFACT PATH PCoAResults
+                                     The reference ordination matrix to be
+                                     plotted.  [required]
+     --i-other-pcoa ARTIFACT PATH PCoAResults
+                                     The "other" ordination matrix to be plotted
+                                     (the one that was fitted to the reference).
+                                     [required]
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. The sample
+                                     metadata.  [required]
+     --p-custom-axes MULTIPLE TEXT   Numeric sample metadata columns that should
+                                     be included as axes in the Emperor plot.
+                                     [optional]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.emperor.visualizers import procrustes_plot
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Visualize and Interact with a procrustes plot
+
+   Plot two procrustes-fitted matrices
+
+   Parameters
+   ----------
+   reference_pcoa : PCoAResults
+       The reference ordination matrix to be plotted.
+   other_pcoa : PCoAResults
+       The "other" ordination matrix to be plotted (the one that was fitted to
+       the reference).
+   metadata : Metadata
+       The sample metadata.
+   custom_axes : List[Str], optional
+       Numeric sample metadata columns that should be included as axes in the
+       Emperor plot.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

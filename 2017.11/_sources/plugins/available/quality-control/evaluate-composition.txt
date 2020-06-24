@@ -1,0 +1,152 @@
+evaluate-composition: Evaluate expected vs. observed taxonomic composition of samples
+=====================================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime quality-control evaluate-composition [OPTIONS]
+
+     This visualizer compares the feature composition of pairs of observed and
+     expected samples containing the same sample ID in two separate feature
+     tables. Typically, feature composition will consist of taxonomy
+     classifications or other semicolon-delimited feature annotations. Taxon
+     accuracy rate, taxon detection rate, and linear regression scores between
+     expected and observed observations are calculated at each semicolon-
+     delimited rank, and plots of per-level accuracy and observation
+     correlations are plotted. A histogram of distance between false positive
+     observations and the nearest expected feature is also generated, where
+     distance equals the number of rank differences between the observed
+     feature and the nearest common lineage in the expected feature. This
+     visualizer is most suitable for testing per-run data quality on sequencing
+     runs that contain mock communities or other samples with known
+     composition. Also suitable for sanity checks of bioinformatics pipeline
+     performance.
+
+   Options:
+     --i-expected-features PATH      Artifact: FeatureTable[RelativeFrequency]
+                                     [required]
+                                     Expected feature compositions
+     --i-observed-features PATH      Artifact: FeatureTable[RelativeFrequency]
+                                     [required]
+                                     Observed feature compositions
+     --p-depth INTEGER               [default: 7]
+                                     Maximum depth of semicolon-
+                                     delimited taxonomic ranks to test (e.g., 1 =
+                                     root, 7 = species for the greengenes
+                                     reference sequence database).
+     --p-palette [Pastel2|viridis|tab20b|tab20c|magma|inferno|Paired|Set1|Accent|tab20|Set3|Pastel1|Set2|plasma|terrain|Dark2|rainbow|tab10]
+                                     [default: Set1]
+                                     Color palette to utilize for
+                                     plotting.
+     --p-plot-tar / --p-no-plot-tar  [default: True]
+                                     Plot taxon accuracy rate
+                                     (TAR) on score plot. TAR is the number of
+                                     true positive features divided by the total
+                                     number of observed features (TAR = true
+                                     positives / (true positives + false
+                                     positives)).
+     --p-plot-tdr / --p-no-plot-tdr  [default: True]
+                                     Plot taxon detection rate
+                                     (TDR) on score plot. TDR is the number of
+                                     true positive features divided by the total
+                                     number of expected features (TDR = true
+                                     positives / (true positives + false
+                                     negatives)).
+     --p-plot-r-value / --p-no-plot-r-value
+                                     [default: False]
+                                     Plot expected vs. observed
+                                     linear regression r value on score plot.
+     --p-plot-r-squared / --p-no-plot-r-squared
+                                     [default: True]
+                                     Plot expected vs. observed
+                                     linear regression r-squared value on score
+                                     plot.
+     --p-plot-observed-features / --p-no-plot-observed-features
+                                     [default: False]
+                                     Plot observed features
+                                     count on score plot.
+     --p-plot-observed-features-ratio / --p-no-plot-observed-features-ratio
+                                     [default: True]
+                                     Plot ratio of
+                                     observed:expected features on score plot.
+     --m-metadata-file PATH          Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata  [optional]
+     --m-metadata-category TEXT      Category from metadata file or artifact
+                                     viewable as metadata  [optional]
+                                     Optional
+                                     sample metadata that maps observed_features
+                                     sample IDs to expected_features sample IDs.
+     --o-visualization PATH          Visualization [required if not passing
+                                     --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Evaluate expected vs. observed taxonomic composition of samples
+
+   This visualizer compares the feature composition of pairs of observed and
+   expected samples containing the same sample ID in two separate feature
+   tables. Typically, feature composition will consist of taxonomy
+   classifications or other semicolon-delimited feature annotations. Taxon
+   accuracy rate, taxon detection rate, and linear regression scores between
+   expected and observed observations are calculated at each semicolon-
+   delimited rank, and plots of per-level accuracy and observation
+   correlations are plotted. A histogram of distance between false positive
+   observations and the nearest expected feature is also generated, where
+   distance equals the number of rank differences between the observed feature
+   and the nearest common lineage in the expected feature. This visualizer is
+   most suitable for testing per-run data quality on sequencing runs that
+   contain mock communities or other samples with known composition. Also
+   suitable for sanity checks of bioinformatics pipeline performance.
+
+   Parameters
+   ----------
+   expected_features : FeatureTable[RelativeFrequency]
+       Expected feature compositions
+   observed_features : FeatureTable[RelativeFrequency]
+       Observed feature compositions
+   depth : Int, optional
+       Maximum depth of semicolon-delimited taxonomic ranks to test (e.g., 1 =
+       root, 7 = species for the greengenes reference sequence database).
+   palette : Str % Choices({'Accent', 'Dark2', 'Paired', 'Pastel1', 'Pastel2', 'Set1', 'Set2', 'Set3', 'inferno', 'magma', 'plasma', 'rainbow', 'tab10', 'tab20', 'tab20b', 'tab20c', 'terrain', 'viridis'}), optional
+       Color palette to utilize for plotting.
+   plot_tar : Bool, optional
+       Plot taxon accuracy rate (TAR) on score plot. TAR is the number of true
+       positive features divided by the total number of observed features (TAR
+       = true positives / (true positives + false positives)).
+   plot_tdr : Bool, optional
+       Plot taxon detection rate (TDR) on score plot. TDR is the number of
+       true positive features divided by the total number of expected features
+       (TDR = true positives / (true positives + false negatives)).
+   plot_r_value : Bool, optional
+       Plot expected vs. observed linear regression r value on score plot.
+   plot_r_squared : Bool, optional
+       Plot expected vs. observed linear regression r-squared value on score
+       plot.
+   plot_observed_features : Bool, optional
+       Plot observed features count on score plot.
+   plot_observed_features_ratio : Bool, optional
+       Plot ratio of observed:expected features on score plot.
+   metadata : MetadataCategory, optional
+       Optional sample metadata that maps observed_features sample IDs to
+       expected_features sample IDs.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

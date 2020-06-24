@@ -1,0 +1,105 @@
+alpha-rarefaction: Alpha rarefaction curves
+===========================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity alpha-rarefaction [OPTIONS]
+
+     Generate interactive alpha rarefaction curves by computing rarefactions
+     between `min_depth` and `max_depth`. The number of intermediate depths to
+     compute is controlled by the `steps` parameter, with n `iterations` being
+     computed at each rarefaction depth. If sample metadata is provided,
+     samples may be grouped based on distinct values within a metadata column.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     Feature table to compute rarefaction curves
+                                     from.  [required]
+     --p-max-depth INTEGER RANGE     The maximum rarefaction depth. Must be
+                                     greater than min_depth.  [required]
+     --i-phylogeny ARTIFACT PATH Phylogeny[Rooted]
+                                     Optional phylogeny for phylogenetic metrics.
+                                     [optional]
+     --p-metrics MULTIPLE [mcintosh_e|michaelis_menten_fit|shannon|faith_pd|menhinick|margalef|simpson_e|dominance|lladser_pe|ace|enspie|brillouin_d|singles|observed_otus|pielou_e|berger_parker_d|gini_index|chao1|doubles|goods_coverage|mcintosh_d|simpson|heip_e|robbins|fisher_alpha]
+                                     The metrics to be measured. By default
+                                     computes observed_otus, shannon, and if
+                                     phylogeny is provided, faith_pd.  [optional]
+     --m-metadata-file MULTIPLE FILE
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. The sample
+                                     metadata.  [optional]
+     --p-min-depth INTEGER RANGE     The minimum rarefaction depth.  [default: 1]
+     --p-steps INTEGER RANGE         The number of rarefaction depths to include
+                                     between min_depth and max_depth.  [default:
+                                     10]
+     --p-iterations INTEGER RANGE    The number of rarefied feature tables to
+                                     compute at each step.  [default: 10]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config FILE               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import alpha_rarefaction
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Alpha rarefaction curves
+
+   Generate interactive alpha rarefaction curves by computing rarefactions
+   between `min_depth` and `max_depth`. The number of intermediate depths to
+   compute is controlled by the `steps` parameter, with n `iterations` being
+   computed at each rarefaction depth. If sample metadata is provided, samples
+   may be grouped based on distinct values within a metadata column.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table to compute rarefaction curves from.
+   max_depth : Int % Range(1, None)
+       The maximum rarefaction depth. Must be greater than min_depth.
+   phylogeny : Phylogeny[Rooted], optional
+       Optional phylogeny for phylogenetic metrics.
+   metrics : Set[Str % Choices({'ace', 'berger_parker_d', 'brillouin_d', 'chao1', 'dominance', 'doubles', 'enspie', 'faith_pd', 'fisher_alpha', 'gini_index', 'goods_coverage', 'heip_e', 'lladser_pe', 'margalef', 'mcintosh_d', 'mcintosh_e', 'menhinick', 'michaelis_menten_fit', 'observed_otus', 'pielou_e', 'robbins', 'shannon', 'simpson', 'simpson_e', 'singles'})], optional
+       The metrics to be measured. By default computes observed_otus, shannon,
+       and if phylogeny is provided, faith_pd.
+   metadata : Metadata, optional
+       The sample metadata.
+   min_depth : Int % Range(1, None), optional
+       The minimum rarefaction depth.
+   steps : Int % Range(2, None), optional
+       The number of rarefaction depths to include between min_depth and
+       max_depth.
+   iterations : Int % Range(1, None), optional
+       The number of rarefied feature tables to compute at each step.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

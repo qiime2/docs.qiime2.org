@@ -1,0 +1,102 @@
+rarefy: Rarefy table
+====================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: feature-table:rarefy.bib
+   :list: bullet
+   :all:
+   :keyprefix: feature-table:rarefy:
+   :labelprefix: feature-table:rarefy:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table rarefy [OPTIONS]
+
+     Subsample frequencies from all samples so that the sum of frequencies in
+     each sample is equal to sampling-depth.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          The feature table to be rarefied.            [required]
+   Parameters:
+     --p-sampling-depth INTEGER
+       Range(1, None)     The total frequency that each sample should be
+                          rarefied to. Samples where the sum of frequencies is
+                          less than the sampling depth will be not be included in
+                          the resulting table unless subsampling is performed
+                          with replacement.                            [required]
+     --p-with-replacement / --p-no-with-replacement
+                          Rarefy with replacement by sampling from the
+                          multinomial distribution instead of rarefying without
+                          replacement.                           [default: False]
+   Outputs:
+     --o-rarefied-table ARTIFACT FeatureTable[Frequency]
+                          The resulting rarefied feature table.        [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.methods import rarefy
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Rarefy table
+
+   Subsample frequencies from all samples so that the sum of frequencies in
+   each sample is equal to sampling-depth.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table to be rarefied.
+   sampling_depth : Int % Range(1, None)
+       The total frequency that each sample should be rarefied to. Samples
+       where the sum of frequencies is less than the sampling depth will be
+       not be included in the resulting table unless subsampling is performed
+       with replacement.
+   with_replacement : Bool, optional
+       Rarefy with replacement by sampling from the multinomial distribution
+       instead of rarefying without replacement.
+
+   Returns
+   -------
+   rarefied_table : FeatureTable[Frequency]
+       The resulting rarefied feature table.</pre>
+       </div>
+     </div>
+   </div>

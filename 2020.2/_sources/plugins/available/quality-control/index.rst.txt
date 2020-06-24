@@ -1,0 +1,93 @@
+quality-control
+===============
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin supports methods for assessing and controlling the quality of feature and sequence data.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2020.2.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-quality-control" rel="noopener">https://github.com/qiime2/q2-quality-control</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+       <tr>
+         <th scope="row">q2cli Invocation</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   qiime quality-control
+
+.. raw:: html
+
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Artifact API Import</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins import quality_control
+
+.. raw:: html
+
+         </td>
+       </tr>
+
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   exclude-seqs
+   
+
+
+
+Visualizers
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   evaluate-composition
+   
+   evaluate-seqs
+   
+   evaluate-taxonomy
+   

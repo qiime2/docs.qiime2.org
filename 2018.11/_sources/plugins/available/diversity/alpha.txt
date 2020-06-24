@@ -1,0 +1,73 @@
+alpha: Alpha diversity
+======================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity alpha [OPTIONS]
+
+     Computes a user-specified alpha diversity metric for all samples in a
+     feature table.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     The feature table containing the samples for
+                                     which alpha diversity should be computed.
+                                     [required]
+     --p-metric [heip_e|kempton_taylor_q|dominance|enspie|osd|mcintosh_e|chao1_ci|singles|chao1|goods_coverage|berger_parker_d|robbins|lladser_ci|michaelis_menten_fit|menhinick|pielou_e|fisher_alpha|ace|gini_index|mcintosh_d|simpson_e|shannon|observed_otus|esty_ci|lladser_pe|strong|doubles|brillouin_d|margalef|simpson]
+                                     The alpha diversity metric to be computed.
+                                     [required]
+     --o-alpha-diversity ARTIFACT PATH SampleData[AlphaDiversity]
+                                     Vector containing per-sample alpha
+                                     diversities.  [required if not passing
+                                     --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config FILE               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.methods import alpha
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Alpha diversity
+
+   Computes a user-specified alpha diversity metric for all samples in a
+   feature table.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table containing the samples for which alpha diversity
+       should be computed.
+   metric : Str % Choices({'ace', 'berger_parker_d', 'brillouin_d', 'chao1', 'chao1_ci', 'dominance', 'doubles', 'enspie', 'esty_ci', 'fisher_alpha', 'gini_index', 'goods_coverage', 'heip_e', 'kempton_taylor_q', 'lladser_ci', 'lladser_pe', 'margalef', 'mcintosh_d', 'mcintosh_e', 'menhinick', 'michaelis_menten_fit', 'observed_otus', 'osd', 'pielou_e', 'robbins', 'shannon', 'simpson', 'simpson_e', 'singles', 'strong'})
+       The alpha diversity metric to be computed.
+
+   Returns
+   -------
+   alpha_diversity : SampleData[AlphaDiversity]
+       Vector containing per-sample alpha diversities.</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,91 @@
+volatility: Volatility analysis
+===============================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime longitudinal volatility [OPTIONS]
+
+     Plot an interactive control chart of a single dependent variable,
+     "metric", across multiple groups contained in sample metadata column
+     "group_column".
+
+   Options:
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. Sample
+                                     metadata file containing
+                                     individual_id_column.  [required]
+     --p-state-column TEXT           Metadata column containing state (e.g.,
+                                     Time) across which samples are paired.
+                                     [required]
+     --p-individual-id-column TEXT   Metadata column containing IDs for
+                                     individual subjects.  [required]
+     --p-default-group-column TEXT   The default metadata column on which to
+                                     separate groups for comparison (all
+                                     categorical metadata columns will be
+                                     available in the visualization).  [optional]
+     --p-default-metric TEXT         Numeric metadata or artifact column to test
+                                     by default (all numeric metadata columns
+                                     will be available in the visualization).
+                                     [optional]
+     --i-table ARTIFACT PATH FeatureTable[RelativeFrequency]
+                                     Feature table to optionally use for paired
+                                     comparisons.  [optional]
+     --p-yscale [pow|linear|sqrt|log]
+                                     y-axis scaling strategy to apply.  [default:
+                                     linear]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Volatility analysis
+
+   Plot an interactive control chart of a single dependent variable, "metric",
+   across multiple groups contained in sample metadata column "group_column".
+
+   Parameters
+   ----------
+   table : FeatureTable[RelativeFrequency], optional
+       Feature table to optionally use for paired comparisons.
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   state_column : Str
+       Metadata column containing state (e.g., Time) across which samples are
+       paired.
+   individual_id_column : Str
+       Metadata column containing IDs for individual subjects.
+   default_group_column : Str, optional
+       The default metadata column on which to separate groups for comparison
+       (all categorical metadata columns will be available in the
+       visualization).
+   default_metric : Str, optional
+       Numeric metadata or artifact column to test by default (all numeric
+       metadata columns will be available in the visualization).
+   yscale : Str % Choices({'linear', 'log', 'pow', 'sqrt'}), optional
+       y-axis scaling strategy to apply.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

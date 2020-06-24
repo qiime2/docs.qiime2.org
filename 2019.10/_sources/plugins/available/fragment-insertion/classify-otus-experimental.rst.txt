@@ -1,0 +1,79 @@
+classify-otus-experimental: Experimental: Obtain taxonomic lineages, by finding closest OTU in reference phylogeny.
+===================================================================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime fragment-insertion classify-otus-experimental 
+              [OPTIONS]
+
+     Experimental: Use the resulting tree from 'sepp' and find closest OTU-ID
+     for every inserted fragment. Then, look up the reference lineage string in
+     the reference taxonomy.
+
+   Inputs:
+     --i-representative-sequences ARTIFACT FeatureData[Sequence]
+                          The sequences used for a 'sepp' run to produce the
+                          'tree'.                                      [required]
+     --i-tree ARTIFACT    The tree resulting from inserting fragments into a
+       Phylogeny[Rooted]  reference phylogeny, i.e. the output of function 'sepp'
+                                                                       [required]
+     --i-reference-taxonomy ARTIFACT FeatureData[Taxonomy]
+                          Reference taxonomic table that maps every OTU-ID into
+                          a taxonomic lineage string.                  [required]
+   Outputs:
+     --o-classification ARTIFACT FeatureData[Taxonomy]
+                          Taxonomic lineages for inserted fragments.   [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.fragment_insertion.methods import classify_otus_experimental
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Experimental: Obtain taxonomic lineages, by finding closest OTU in
+   reference phylogeny.
+
+   Experimental: Use the resulting tree from 'sepp' and find closest OTU-ID
+   for every inserted fragment. Then, look up the reference lineage string in
+   the reference taxonomy.
+
+   Parameters
+   ----------
+   representative_sequences : FeatureData[Sequence]
+       The sequences used for a 'sepp' run to produce the 'tree'.
+   tree : Phylogeny[Rooted]
+       The tree resulting from inserting fragments into a reference phylogeny,
+       i.e. the output of function 'sepp'
+   reference_taxonomy : FeatureData[Taxonomy]
+       Reference taxonomic table that maps every OTU-ID into a taxonomic
+       lineage string.
+
+   Returns
+   -------
+   classification : FeatureData[Taxonomy]
+       Taxonomic lineages for inserted fragments.</pre>
+       </div>
+     </div>
+   </div>

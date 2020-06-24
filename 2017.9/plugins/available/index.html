@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Available plugins &#8212; QIIME 2 2017.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2017.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="top" title="QIIME 2 2017.9.0 documentation" href="../../" />
+    <link rel="up" title="Plugins" href="../" />
+    <link rel="next" title="alignment" href="alignment/" />
+    <link rel="prev" title="Plugins" href="../" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="available-plugins">
+<h1>Available plugins<a class="headerlink" href="#available-plugins" title="Permalink to this headline">¶</a></h1>
+<p>QIIME 2 microbiome analysis functionality is made available to users via plugins. The following official plugins are currently included in QIIME 2 train releases:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="alignment/">alignment: Plugin for generating and manipulating alignments.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="alignment/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="alignment/mafft/">mafft: De novo multiple sequence alignment with MAFFT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alignment/mask/">mask: Positional conservation and gap filtering.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="alignment/#visualizers">Visualizers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="composition/">composition: Plugin for compositional data analysis.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="composition/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="composition/add-pseudocount/">add-pseudocount: Add pseudocount to table</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="composition/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="composition/ancom/">ancom: Apply ANCOM to identify features that differ in abundance.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dada2/">dada2: Plugin for sequence quality control with DADA2.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dada2/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dada2/denoise-paired/">denoise-paired: Denoise and dereplicate paired-end sequences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dada2/denoise-single/">denoise-single: Denoise and dereplicate single-end sequences</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dada2/#visualizers">Visualizers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deblur/">deblur: Plugin for sequence quality control with Deblur.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deblur/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deblur/denoise-16S/">denoise-16S: Deblur sequences using a 16S positive filter.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deblur/denoise-other/">denoise-other: Deblur sequences using a user-specified positive filter.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deblur/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deblur/visualize-stats/">visualize-stats: Visualize Deblur stats per sample.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="demux/">demux: Plugin for demultiplexing &amp; viewing sequence quality.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demux/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="demux/emp-paired/">emp-paired: Demultiplex paired-end sequence data generated with the EMP protocol.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demux/emp-single/">emp-single: Demultiplex sequence data generated with the EMP protocol.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="demux/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="demux/summarize/">summarize: Summarize counts per sample.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="diversity/">diversity: Plugin for exploring community diversity.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="diversity/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="diversity/alpha/">alpha: Alpha diversity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/alpha-phylogenetic/">alpha-phylogenetic: Alpha diversity (phylogenetic)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/beta/">beta: Beta diversity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/beta-phylogenetic/">beta-phylogenetic: Beta diversity (phylogenetic)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/beta-phylogenetic-alt/">beta-phylogenetic-alt: Beta diversity (phylogenetic) - High Performance Computation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/core-metrics/">core-metrics: Core diversity metrics (non-phylogenetic)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/core-metrics-phylogenetic/">core-metrics-phylogenetic: Core diversity metrics (phylogenetic and non-phylogenetic)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/filter-distance-matrix/">filter-distance-matrix: Filter samples from a distance matrix.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/pcoa/">pcoa: Principal Coordinate Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="diversity/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="diversity/alpha-correlation/">alpha-correlation: Alpha diversity correlation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/alpha-group-significance/">alpha-group-significance: Alpha diversity comparisons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/alpha-rarefaction/">alpha-rarefaction: Alpha rarefaction curves</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/beta-correlation/">beta-correlation: Beta diversity correlation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/beta-group-significance/">beta-group-significance: Beta diversity group significance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/beta-rarefaction/">beta-rarefaction: Beta diversity rarefaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity/bioenv/">bioenv: bioenv</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="emperor/">emperor: Plugin for ordination plotting with Emperor.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="emperor/#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="emperor/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="emperor/plot/">plot: Visualize and Interact with Principal Coordinates Analysis Plots</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feature-classifier/">feature-classifier: Plugin for taxonomic classification.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="feature-classifier/classify-consensus-blast/">classify-consensus-blast: BLAST+ consensus taxonomy classifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-classifier/classify-consensus-vsearch/">classify-consensus-vsearch: VSEARCH consensus taxonomy classifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-classifier/classify-sklearn/">classify-sklearn: Pre-fitted sklearn-based taxonomy classifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-classifier/extract-reads/">extract-reads: Extract reads from reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-classifier/fit-classifier-naive-bayes/">fit-classifier-naive-bayes: Train the naive_bayes classifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-classifier/fit-classifier-sklearn/">fit-classifier-sklearn: Train an almost arbitrary scikit-learn classifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="feature-classifier/#visualizers">Visualizers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feature-table/">feature-table: Plugin for working with sample by feature tables.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature-table/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/filter-features/">filter-features: Filter features from table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/filter-samples/">filter-samples: Filter samples from table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/filter-seqs/">filter-seqs: Filter features from sequences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/group/">group: Group samples or features by a metadata category</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/merge/">merge: Combine two tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/merge-seq-data/">merge-seq-data: Combine two collections of feature sequences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/merge-taxa-data/">merge-taxa-data: Combine two collections of feature taxonomies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/presence-absence/">presence-absence: Convert to presence/absence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/rarefy/">rarefy: Rarefy table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/relative-frequency/">relative-frequency: Convert to relative frequencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="feature-table/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/core-features/">core-features: Identify core features in table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/heatmap/">heatmap: Generate a heatmap representation of a feature table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/summarize/">summarize: Summarize table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="feature-table/tabulate-seqs/">tabulate-seqs: View sequence associated with each feature</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gneiss/">gneiss: Plugin for building compositional models.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/add-pseudocount/">add-pseudocount: Add pseudocount to table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/assign-ids/">assign-ids: Assigns ids on internal nodes in the tree.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/correlation-clustering/">correlation-clustering: Hierarchical clustering using feature correlation.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/gradient-clustering/">gradient-clustering: Hierarchical clustering using gradient information.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/ilr-transform/">ilr-transform: Isometric Log-ratio Transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gneiss/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/balance-taxonomy/">balance-taxonomy: Balance Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/dendrogram-heatmap/">dendrogram-heatmap: Dendrogram heatmap.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/lme-regression/">lme-regression: Simplicial Linear mixed effects regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gneiss/ols-regression/">ols-regression: Simplicial Ordinary Least Squares Regression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="longitudinal/">longitudinal: Plugin for paired sample and time series analyses.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="longitudinal/nmit/">nmit: Nonparametric microbial interdependence test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="longitudinal/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="longitudinal/linear-mixed-effects/">linear-mixed-effects: Linear mixed effects modeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="longitudinal/pairwise-differences/">pairwise-differences: Paired difference testing and boxplots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="longitudinal/pairwise-distances/">pairwise-distances: Paired pairwise distance testing and boxplots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="longitudinal/volatility/">volatility: Volatility analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata/">metadata: Plugin for working with Metadata.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="metadata/tabulate/">tabulate: Interactively explore Metadata in an HTML table</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="phylogeny/">phylogeny: Plugin for generating and manipulating phylogenies.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="phylogeny/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="phylogeny/fasttree/">fasttree: Construct a phylogenetic tree with FastTree.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="phylogeny/filter-table/">filter-table: Remove features from table if they&#8217;re not present in tree.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="phylogeny/midpoint-root/">midpoint-root: Midpoint root an unrooted phylogenetic tree.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="phylogeny/#visualizers">Visualizers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quality-filter/">quality-filter: Plugin for PHRED-based filtering and trimming.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quality-filter/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quality-filter/q-score/">q-score: Quality filter based on sequence quality scores.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quality-filter/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quality-filter/visualize-stats/">visualize-stats: Visualize filtering stats per sample.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sample-classifier/">sample-classifier: Plugin for machine learning prediction of sample metadata.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sample-classifier/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sample-classifier/classify-samples/">classify-samples: Supervised learning classifier.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sample-classifier/maturity-index/">maturity-index: Microbial maturity index prediction.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sample-classifier/regress-samples/">regress-samples: Supervised learning regressor.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="taxa/">taxa: Plugin for working with feature taxonomy annotations.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="taxa/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="taxa/collapse/">collapse: Collapse features by their taxonomy at the specified level</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="taxa/#visualizers">Visualizers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="taxa/barplot/">barplot: Visualize taxonomy with an interactive bar plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="types/">types: Plugin defining types for microbiome analysis.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="types/#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types/#visualizers">Visualizers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vsearch/">vsearch: Plugin for clustering and dereplicating with vsearch.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vsearch/#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="vsearch/cluster-features-closed-reference/">cluster-features-closed-reference: Closed-reference clustering of features.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vsearch/cluster-features-de-novo/">cluster-features-de-novo: De novo clustering of features.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vsearch/dereplicate-sequences/">dereplicate-sequences: Dereplicate sequences.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vsearch/#visualizers">Visualizers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2017, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

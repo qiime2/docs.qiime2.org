@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>evaluate-composition: Evaluate expected vs. observed taxonomic composition of samples &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+    <link rel="next" title="evaluate-seqs: Compare query (observed) vs. reference (expected) sequences." href="../evaluate-seqs/" />
+    <link rel="prev" title="exclude-seqs: Exclude sequences by alignment" href="../exclude-seqs/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <script src="../../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="evaluate-composition-evaluate-expected-vs-observed-taxonomic-composition-of-samples">
+<h1>evaluate-composition: Evaluate expected vs. observed taxonomic composition of samples<a class="headerlink" href="#evaluate-composition-evaluate-expected-vs-observed-taxonomic-composition-of-samples" title="Permalink to this headline">¶</a></h1>
+<table class="table action-info">
+  <tbody>
+    <tr>
+      <th scope="row"><p></p>Citations</th>
+      <td><ul class="simple" id="bibtex-bibliography-plugins/available/quality-control/evaluate-composition-0">
+<li><p>Nicholas A Bokulich, Benjamin D Kaehler, Jai Ram Rideout, Matthew Dillon, Evan Bolyen, Rob Knight, Gavin A Huttley, and J Gregory Caporaso. Optimizing taxonomic classification of marker-gene amplicon sequences with qiime 2’s q2-feature-classifier plugin. <em>Microbiome</em>, 2018.</p></li>
+</ul>
+      </td>
+    </tr>
+  </tbody>
+</table><div class="tabbed">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+    <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="cli" class="tab-pane fade in active">
+      <h4>Docstring:</h4>
+      <pre>Usage: qiime quality-control evaluate-composition [OPTIONS]
+
+  This visualizer compares the feature composition of pairs of observed and
+  expected samples containing the same sample ID in two separate feature
+  tables. Typically, feature composition will consist of taxonomy
+  classifications or other semicolon-delimited feature annotations. Taxon
+  accuracy rate, taxon detection rate, and linear regression scores between
+  expected and observed observations are calculated at each semicolon-
+  delimited rank, and plots of per-level accuracy and observation
+  correlations are plotted. A histogram of distance between false positive
+  observations and the nearest expected feature is also generated, where
+  distance equals the number of rank differences between the observed
+  feature and the nearest common lineage in the expected feature. This
+  visualizer is most suitable for testing per-run data quality on sequencing
+  runs that contain mock communities or other samples with known
+  composition. Also suitable for sanity checks of bioinformatics pipeline
+  performance.
+
+Inputs:
+  --i-expected-features ARTIFACT FeatureTable[RelativeFrequency]
+                       Expected feature compositions                [required]
+  --i-observed-features ARTIFACT FeatureTable[RelativeFrequency]
+                       Observed feature compositions                [required]
+Parameters:
+  --p-depth INTEGER    Maximum depth of semicolon-delimited taxonomic ranks
+                       to test (e.g., 1 = root, 7 = species for the greengenes
+                       reference sequence database).              [default: 7]
+  --p-palette TEXT Choices('Set1', 'Set2', 'Set3', 'Pastel1', 'Pastel2',
+    'Paired', 'Accent', 'Dark2', 'tab10', 'tab20', 'tab20b', 'tab20c',
+    'viridis', 'plasma', 'inferno', 'magma', 'terrain', 'rainbow')
+                       Color palette to utilize for plotting.
+                                                             [default: 'Set1']
+  --p-plot-tar / --p-no-plot-tar
+                       Plot taxon accuracy rate (TAR) on score plot. TAR is
+                       the number of true positive features divided by the
+                       total number of observed features (TAR = true positives
+                       / (true positives + false positives)).  [default: True]
+  --p-plot-tdr / --p-no-plot-tdr
+                       Plot taxon detection rate (TDR) on score plot. TDR is
+                       the number of true positive features divided by the
+                       total number of expected features (TDR = true positives
+                       / (true positives + false negatives)).  [default: True]
+  --p-plot-r-value / --p-no-plot-r-value
+                       Plot expected vs. observed linear regression r value
+                       on score plot.                         [default: False]
+  --p-plot-r-squared / --p-no-plot-r-squared
+                       Plot expected vs. observed linear regression r-squared
+                       value on score plot.                    [default: True]
+  --p-plot-bray-curtis / --p-no-plot-bray-curtis
+                       Plot expected vs. observed Bray-Curtis dissimilarity
+                       scores on score plot.                  [default: False]
+  --p-plot-jaccard / --p-no-plot-jaccard
+                       Plot expected vs. observed Jaccard distances scores on
+                       score plot.                            [default: False]
+  --p-plot-observed-features / --p-no-plot-observed-features
+                       Plot observed features count on score plot.
+                                                              [default: False]
+  --p-plot-observed-features-ratio / --p-no-plot-observed-features-ratio
+                       Plot ratio of observed:expected features on score
+                       plot.                                   [default: True]
+  --m-metadata-file METADATA
+  --m-metadata-column COLUMN  MetadataColumn[Categorical]
+                       Optional sample metadata that maps observed-features
+                       sample IDs to expected-features sample IDs.  [optional]
+Outputs:
+  --o-visualization VISUALIZATION
+                                                                    [required]
+Miscellaneous:
+  --output-dir PATH    Output unspecified results to a directory
+  --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                       execution of this action. Or silence output if
+                       execution is successful (silence is golden).
+  --citations          Show citations and exit.
+  --help               Show this message and exit.</pre>
+    </div>
+    <div id="api" class="tab-pane fade">
+    <h4>Import:</h4><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>from qiime2.plugins.quality_control.visualizers import evaluate_composition
+</pre></div>
+</div>
+    <h4>Docstring:</h4>
+      <pre>Evaluate expected vs. observed taxonomic composition of samples
+
+This visualizer compares the feature composition of pairs of observed and
+expected samples containing the same sample ID in two separate feature
+tables. Typically, feature composition will consist of taxonomy
+classifications or other semicolon-delimited feature annotations. Taxon
+accuracy rate, taxon detection rate, and linear regression scores between
+expected and observed observations are calculated at each semicolon-
+delimited rank, and plots of per-level accuracy and observation
+correlations are plotted. A histogram of distance between false positive
+observations and the nearest expected feature is also generated, where
+distance equals the number of rank differences between the observed feature
+and the nearest common lineage in the expected feature. This visualizer is
+most suitable for testing per-run data quality on sequencing runs that
+contain mock communities or other samples with known composition. Also
+suitable for sanity checks of bioinformatics pipeline performance.
+
+Parameters
+----------
+expected_features : FeatureTable[RelativeFrequency]
+    Expected feature compositions
+observed_features : FeatureTable[RelativeFrequency]
+    Observed feature compositions
+depth : Int, optional
+    Maximum depth of semicolon-delimited taxonomic ranks to test (e.g., 1 =
+    root, 7 = species for the greengenes reference sequence database).
+palette : Str % Choices('Set1', 'Set2', 'Set3', 'Pastel1', 'Pastel2', 'Paired', 'Accent', 'Dark2', 'tab10', 'tab20', 'tab20b', 'tab20c', 'viridis', 'plasma', 'inferno', 'magma', 'terrain', 'rainbow'), optional
+    Color palette to utilize for plotting.
+plot_tar : Bool, optional
+    Plot taxon accuracy rate (TAR) on score plot. TAR is the number of true
+    positive features divided by the total number of observed features (TAR
+    = true positives / (true positives + false positives)).
+plot_tdr : Bool, optional
+    Plot taxon detection rate (TDR) on score plot. TDR is the number of
+    true positive features divided by the total number of expected features
+    (TDR = true positives / (true positives + false negatives)).
+plot_r_value : Bool, optional
+    Plot expected vs. observed linear regression r value on score plot.
+plot_r_squared : Bool, optional
+    Plot expected vs. observed linear regression r-squared value on score
+    plot.
+plot_bray_curtis : Bool, optional
+    Plot expected vs. observed Bray-Curtis dissimilarity scores on score
+    plot.
+plot_jaccard : Bool, optional
+    Plot expected vs. observed Jaccard distances scores on score plot.
+plot_observed_features : Bool, optional
+    Plot observed features count on score plot.
+plot_observed_features_ratio : Bool, optional
+    Plot ratio of observed:expected features on score plot.
+metadata : MetadataColumn[Categorical], optional
+    Optional sample metadata that maps observed_features sample IDs to
+    expected_features sample IDs.
+
+Returns
+-------
+visualization : Visualization</pre>
+    </div>
+  </div>
+</div></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

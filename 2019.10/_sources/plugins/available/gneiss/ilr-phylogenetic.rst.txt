@@ -1,0 +1,90 @@
+ilr-phylogenetic: Isometric Log-ratio Transform applied to a phylogenetic tree
+==============================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime gneiss ilr-phylogenetic [OPTIONS]
+
+     Calculate balances given a rooted phylogeny.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency | Composition]
+                             The feature table containing the samples in which
+                             the ilr transform will be performed.      [required]
+     --i-tree ARTIFACT       A rooted phylogeny of feature identifiers that
+       Phylogeny[Rooted]     defines the partitions of features.  Each tip in the
+                             hierarchycorresponds to the feature identifiers in
+                             the table. This tree can contain tip ids that are
+                             not present in the table, but all feature ids in the
+                             table must be present in this tree.  This assumes
+                             that all of the internal nodes in the tree have
+                             labels. This tree may contain polytomic nodes (i.e.,
+                             nodes with more than two children), in which case
+                             they will be bifurcated.                  [required]
+   Parameters:
+     --p-pseudocount NUMBER  The value to add to zero counts in the feature
+                             table.                                [default: 0.5]
+   Outputs:
+     --o-balances ARTIFACT FeatureTable[Balance]
+                             The resulting balances from the ilr transform.
+                                                                       [required]
+     --o-hierarchy ARTIFACT  Hierarchy from bifurcated phylogeny
+       Hierarchy                                                       [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.gneiss.methods import ilr_phylogenetic
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Isometric Log-ratio Transform applied to a phylogenetic tree
+
+   Calculate balances given a rooted phylogeny.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency | Composition]
+       The feature table containing the samples in which the ilr transform
+       will be performed.
+   tree : Phylogeny[Rooted]
+       A rooted phylogeny of feature identifiers that defines the partitions
+       of features.  Each tip in the hierarchycorresponds to the feature
+       identifiers in the table. This tree can contain tip ids that are not
+       present in the table, but all feature ids in the table must be present
+       in this tree.  This assumes that all of the internal nodes in the tree
+       have labels. This tree may contain polytomic nodes (i.e., nodes with
+       more than two children), in which case they will be bifurcated.
+   pseudocount : Float, optional
+       The value to add to zero counts in the feature table.
+
+   Returns
+   -------
+   balances : FeatureTable[Balance]
+       The resulting balances from the ilr transform.
+   hierarchy : Hierarchy
+       Hierarchy from bifurcated phylogeny</pre>
+       </div>
+     </div>
+   </div>

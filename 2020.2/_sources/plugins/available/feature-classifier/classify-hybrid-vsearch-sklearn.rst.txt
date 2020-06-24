@@ -1,0 +1,225 @@
+classify-hybrid-vsearch-sklearn: ALPHA Hybrid classifier: VSEARCH exact match + sklearn classifier
+==================================================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-classifier classify-hybrid-vsearch-sklearn 
+              [OPTIONS]
+
+     NOTE: THIS PIPELINE IS AN ALPHA RELEASE. Please report bugs to
+     https://forum.qiime2.org! Assign taxonomy to query sequences using hybrid
+     classifier. First performs rough positive filter to remove artifact and
+     low-coverage sequences (use "prefilter" parameter to toggle this step on
+     or off). Second, performs VSEARCH exact match between query and
+     reference_reads to find exact matches, followed by least common ancestor
+     consensus taxonomy assignment from among maxaccepts top hits,
+     min_consensus of which share that taxonomic assignment. Query sequences
+     without an exact match are then classified with a pre-trained sklearn
+     taxonomy classifier to predict the most likely taxonomic lineage.
+
+   Inputs:
+     --i-query ARTIFACT FeatureData[Sequence]
+                           Sequences to classify taxonomically.        [required]
+     --i-reference-reads ARTIFACT FeatureData[Sequence]
+                           reference sequences.                        [required]
+     --i-reference-taxonomy ARTIFACT FeatureData[Taxonomy]
+                           reference taxonomy labels.                  [required]
+     --i-classifier ARTIFACT TaxonomicClassifier
+                           Pre-trained sklearn taxonomic classifier for
+                           classifying the reads.                      [required]
+   Parameters:
+     --p-maxaccepts VALUE Int % Range(1, None) | Str % Choices('all')
+                           Maximum number of hits to keep for each query. Set to
+                           "all" to keep all hits > perc-identity similarity.
+                           Note that if strand=both, maxaccepts will keep N hits
+                           for each direction (if searches in the opposite
+                           direction yield results that exceed the minimum
+                           perc-identity). In those cases use maxhits to control
+                           the total number of hits returned. This option works
+                           in pair with maxrejects. The search process sorts
+                           target sequences by decreasing number of k-mers they
+                           have in common with the query sequence, using that
+                           information as a proxy for sequence similarity. After
+                           pairwise alignments, if the first target sequence
+                           passes the acceptation criteria, it is accepted as
+                           best hit and the search process stops for that query.
+                           If maxaccepts is set to a higher value, more hits are
+                           accepted. If maxaccepts and maxrejects are both set to
+                           "all", the complete database is searched.
+                                                                    [default: 10]
+     --p-perc-identity PROPORTION Range(0.0, 1.0, inclusive_end=True)
+                           Percent sequence similarity to use for PREFILTER.
+                           Reject match if percent identity to query is lower.
+                           Set to a lower value to perform a rough pre-filter.
+                           This parameter is ignored if `prefilter` is disabled.
+                                                                   [default: 0.5]
+     --p-query-cov PROPORTION Range(0.0, 1.0, inclusive_end=True)
+                           Query coverage threshold to use for PREFILTER. Reject
+                           match if query alignment coverage per high-scoring
+                           pair is lower. Set to a lower value to perform a rough
+                           pre-filter. This parameter is ignored if `prefilter`
+                           is disabled.                            [default: 0.8]
+     --p-strand TEXT Choices('both', 'plus')
+                           Align against reference sequences in forward ("plus")
+                           or both directions ("both").         [default: 'both']
+     --p-min-consensus NUMBER Range(0.5, 1.0, inclusive_start=False,
+       inclusive_end=True) Minimum fraction of assignments must match top hit to
+                           be accepted as consensus assignment.   [default: 0.51]
+     --p-maxhits VALUE Int % Range(1, None) | Str % Choices('all')
+                                                                 [default: 'all']
+     --p-maxrejects VALUE Int % Range(1, None) | Str % Choices('all')
+                                                                 [default: 'all']
+     --p-reads-per-batch INTEGER
+       Range(0, None)      Number of reads to process in each batch for sklearn
+                           classification. If "auto", this parameter is
+                           autoscaled to min(number of query sequences / threads,
+                           20000).                                   [default: 0]
+     --p-confidence VALUE Float % Range(0, 1, inclusive_end=True) | Str %
+       Choices('disable')  Confidence threshold for limiting taxonomic depth.
+                           Set to "disable" to disable confidence calculation, or
+                           0 to calculate confidence but not apply it to limit
+                           the taxonomic depth of the assignments. [default: 0.7]
+     --p-read-orientation TEXT Choices('same', 'reverse-complement', 'auto')
+                           Direction of reads with respect to reference
+                           sequences in pre-trained sklearn classifier. same will
+                           cause reads to be classified unchanged;
+                           reverse-complement will cause reads to be reversed and
+                           complemented prior to classification. "auto" will
+                           autodetect orientation based on the confidence
+                           estimates for the first 100 reads.   [default: 'auto']
+     --p-threads INTEGER   Number of threads to use for job parallelization.
+       Range(1, None)                                                [default: 1]
+     --p-prefilter / --p-no-prefilter
+                           Toggle positive filter of query sequences on or off.
+                                                                  [default: True]
+     --p-sample-size INTEGER
+       Range(1, None)      Randomly extract the given number of sequences from
+                           the reference database to use for prefiltering. This
+                           parameter is ignored if `prefilter` is disabled.
+                                                                  [default: 1000]
+     --p-randseed INTEGER  Use integer as a seed for the pseudo-random generator
+       Range(0, None)      used during prefiltering. A given seed always produces
+                           the same output, which is useful for replicability.
+                           Set to 0 to use a pseudo-random seed. This parameter
+                           is ignored if `prefilter` is disabled.    [default: 0]
+   Outputs:
+     --o-classification ARTIFACT FeatureData[Taxonomy]
+                           The resulting taxonomy classifications.     [required]
+   Miscellaneous:
+     --output-dir PATH     Output unspecified results to a directory
+     --verbose / --quiet   Display verbose output to stdout and/or stderr during
+                           execution of this action. Or silence output if
+                           execution is successful (silence is golden).
+     --citations           Show citations and exit.
+     --help                Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_classifier.pipelines import classify_hybrid_vsearch_sklearn
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>ALPHA Hybrid classifier: VSEARCH exact match + sklearn classifier
+
+   NOTE: THIS PIPELINE IS AN ALPHA RELEASE. Please report bugs to
+   https://forum.qiime2.org! Assign taxonomy to query sequences using hybrid
+   classifier. First performs rough positive filter to remove artifact and
+   low-coverage sequences (use "prefilter" parameter to toggle this step on or
+   off). Second, performs VSEARCH exact match between query and
+   reference_reads to find exact matches, followed by least common ancestor
+   consensus taxonomy assignment from among maxaccepts top hits, min_consensus
+   of which share that taxonomic assignment. Query sequences without an exact
+   match are then classified with a pre-trained sklearn taxonomy classifier to
+   predict the most likely taxonomic lineage.
+
+   Parameters
+   ----------
+   query : FeatureData[Sequence]
+       Sequences to classify taxonomically.
+   reference_reads : FeatureData[Sequence]
+       reference sequences.
+   reference_taxonomy : FeatureData[Taxonomy]
+       reference taxonomy labels.
+   classifier : TaxonomicClassifier
+       Pre-trained sklearn taxonomic classifier for classifying the reads.
+   maxaccepts : Int % Range(1, None) | Str % Choices('all'), optional
+       Maximum number of hits to keep for each query. Set to "all" to keep all
+       hits > perc_identity similarity. Note that if strand=both, maxaccepts
+       will keep N hits for each direction (if searches in the opposite
+       direction yield results that exceed the minimum perc_identity). In
+       those cases use maxhits to control the total number of hits returned.
+       This option works in pair with maxrejects. The search process sorts
+       target sequences by decreasing number of k-mers they have in common
+       with the query sequence, using that information as a proxy for sequence
+       similarity. After pairwise alignments, if the first target sequence
+       passes the acceptation criteria, it is accepted as best hit and the
+       search process stops for that query. If maxaccepts is set to a higher
+       value, more hits are accepted. If maxaccepts and maxrejects are both
+       set to "all", the complete database is searched.
+   perc_identity : Float % Range(0.0, 1.0, inclusive_end=True), optional
+       Percent sequence similarity to use for PREFILTER. Reject match if
+       percent identity to query is lower. Set to a lower value to perform a
+       rough pre-filter. This parameter is ignored if `prefilter` is disabled.
+   query_cov : Float % Range(0.0, 1.0, inclusive_end=True), optional
+       Query coverage threshold to use for PREFILTER. Reject match if query
+       alignment coverage per high-scoring pair is lower. Set to a lower value
+       to perform a rough pre-filter. This parameter is ignored if `prefilter`
+       is disabled.
+   strand : Str % Choices('both', 'plus'), optional
+       Align against reference sequences in forward ("plus") or both
+       directions ("both").
+   min_consensus : Float % Range(0.5, 1.0, inclusive_start=False, inclusive_end=True), optional
+       Minimum fraction of assignments must match top hit to be accepted as
+       consensus assignment.
+   maxhits : Int % Range(1, None) | Str % Choices('all'), optional
+   maxrejects : Int % Range(1, None) | Str % Choices('all'), optional
+   reads_per_batch : Int % Range(0, None), optional
+       Number of reads to process in each batch for sklearn classification. If
+       "auto", this parameter is autoscaled to min(number of query sequences /
+       threads, 20000).
+   confidence : Float % Range(0, 1, inclusive_end=True) | Str % Choices('disable'), optional
+       Confidence threshold for limiting taxonomic depth. Set to "disable" to
+       disable confidence calculation, or 0 to calculate confidence but not
+       apply it to limit the taxonomic depth of the assignments.
+   read_orientation : Str % Choices('same', 'reverse-complement', 'auto'), optional
+       Direction of reads with respect to reference sequences in pre-trained
+       sklearn classifier. same will cause reads to be classified unchanged;
+       reverse-complement will cause reads to be reversed and complemented
+       prior to classification. "auto" will autodetect orientation based on
+       the confidence estimates for the first 100 reads.
+   threads : Int % Range(1, None), optional
+       Number of threads to use for job parallelization.
+   prefilter : Bool, optional
+       Toggle positive filter of query sequences on or off.
+   sample_size : Int % Range(1, None), optional
+       Randomly extract the given number of sequences from the reference
+       database to use for prefiltering. This parameter is ignored if
+       `prefilter` is disabled.
+   randseed : Int % Range(0, None), optional
+       Use integer as a seed for the pseudo-random generator used during
+       prefiltering. A given seed always produces the same output, which is
+       useful for replicability. Set to 0 to use a pseudo-random seed. This
+       parameter is ignored if `prefilter` is disabled.
+
+   Returns
+   -------
+   classification : FeatureData[Taxonomy]
+       The resulting taxonomy classifications.</pre>
+       </div>
+     </div>
+   </div>

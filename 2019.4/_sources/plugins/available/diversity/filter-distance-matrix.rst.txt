@@ -1,0 +1,96 @@
+filter-distance-matrix: Filter samples from a distance matrix.
+==============================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity filter-distance-matrix [OPTIONS]
+
+     Filter samples from a distance matrix, retaining only the samples matching
+     search criteria specified by `metadata` and `where` parameters (or
+     retaining only the samples not matching that criteria, if `exclude_ids` is
+     True). See the filtering tutorial on https://docs.qiime2.org for
+     additional details.
+
+   Inputs:
+     --i-distance-matrix ARTIFACT
+       DistanceMatrix     Distance matrix to filter by sample.         [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple          Sample metadata used with `where` parameter when
+        arguments will    selecting samples to retain, or with `exclude-ids` when
+        be merged)        selecting samples to discard.                [required]
+     --p-where TEXT       SQLite WHERE clause specifying sample metadata
+                          criteria that must be met to be included in the
+                          filtered distance matrix. If not provided, all samples
+                          in `metadata` that are also in the input distance
+                          matrix will be retained.                     [optional]
+     --p-exclude-ids / --p-no-exclude-ids
+                          If `True`, the samples selected by `metadata` or
+                          `where` parameters will be excluded from the filtered
+                          distance matrix instead of being retained.
+                                                                 [default: False]
+   Outputs:
+     --o-filtered-distance-matrix ARTIFACT
+       DistanceMatrix     Distance matrix filtered to include samples matching
+                          search criteria                              [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.methods import filter_distance_matrix
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Filter samples from a distance matrix.
+
+   Filter samples from a distance matrix, retaining only the samples matching
+   search criteria specified by `metadata` and `where` parameters (or
+   retaining only the samples not matching that criteria, if `exclude_ids` is
+   True). See the filtering tutorial on https://docs.qiime2.org for additional
+   details.
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       Distance matrix to filter by sample.
+   metadata : Metadata
+       Sample metadata used with `where` parameter when selecting samples to
+       retain, or with `exclude_ids` when selecting samples to discard.
+   where : Str, optional
+       SQLite WHERE clause specifying sample metadata criteria that must be
+       met to be included in the filtered distance matrix. If not provided,
+       all samples in `metadata` that are also in the input distance matrix
+       will be retained.
+   exclude_ids : Bool, optional
+       If `True`, the samples selected by `metadata` or `where` parameters
+       will be excluded from the filtered distance matrix instead of being
+       retained.
+
+   Returns
+   -------
+   filtered_distance_matrix : DistanceMatrix
+       Distance matrix filtered to include samples matching search criteria</pre>
+       </div>
+     </div>
+   </div>

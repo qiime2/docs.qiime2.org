@@ -1,0 +1,148 @@
+classify-consensus-blast: BLAST+ consensus taxonomy classifier
+==============================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: feature-classifier:classify-consensus-blast.bib
+   :list: bullet
+   :all:
+   :keyprefix: feature-classifier:classify-consensus-blast:
+   :labelprefix: feature-classifier:classify-consensus-blast:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-classifier classify-consensus-blast [OPTIONS]
+
+     Assign taxonomy to query sequences using BLAST+. Performs BLAST+ local
+     alignment between query and reference_reads, then assigns consensus
+     taxonomy to each query sequence from among maxaccepts hits, min_consensus
+     of which share that taxonomic assignment. Note that maxaccepts selects the
+     first N hits with > perc_identity similarity to query, not the top N
+     matches. For top N hits, use classify-consensus-vsearch.
+
+   Inputs:
+     --i-query ARTIFACT FeatureData[Sequence]
+                             Sequences to classify taxonomically.      [required]
+     --i-reference-reads ARTIFACT FeatureData[Sequence]
+                             reference sequences.                      [required]
+     --i-reference-taxonomy ARTIFACT FeatureData[Taxonomy]
+                             reference taxonomy labels.                [required]
+   Parameters:
+     --p-maxaccepts INTEGER  Maximum number of hits to keep for each query. Must
+       Range(1, None)        be in range [1, infinity]. BLAST will choose the
+                             first N hits in the reference database that exceed
+                             perc-identity similarity to query.     [default: 10]
+     --p-perc-identity PROPORTION Range(0.0, 1.0, inclusive_end=True)
+                             Reject match if percent identity to query is lower.
+                             Must be in range [0.0, 1.0].          [default: 0.8]
+     --p-query-cov PROPORTION Range(0.0, 1.0, inclusive_end=True)
+                             Reject match if query alignment coverage per
+                             high-scoring pair is lower. Note: this uses blastn's
+                             qcov_hsp_perc parameter, and may not behave
+                             identically to the query-cov parameter used by
+                             classify-consensus-vsearch. Must be in range [0.0,
+                             1.0].                                 [default: 0.8]
+     --p-strand TEXT Choices('both', 'plus', 'minus')
+                             Align against reference sequences in forward
+                             ("plus"), reverse ("minus"), or both directions
+                             ("both").                          [default: 'both']
+     --p-evalue NUMBER       BLAST expectation value (E) threshold for saving
+                             hits.                               [default: 0.001]
+     --p-min-consensus NUMBER Range(0.5, 1.0, inclusive_start=False,
+       inclusive_end=True)   Minimum fraction of assignments must match top hit
+                             to be accepted as consensus assignment. Must be in
+                             range (0.5, 1.0].                    [default: 0.51]
+     --p-unassignable-label TEXT
+                                                          [default: 'Unassigned']
+   Outputs:
+     --o-classification ARTIFACT FeatureData[Taxonomy]
+                             Taxonomy classifications of query sequences.
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_classifier.methods import classify_consensus_blast
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>BLAST+ consensus taxonomy classifier
+
+   Assign taxonomy to query sequences using BLAST+. Performs BLAST+ local
+   alignment between query and reference_reads, then assigns consensus
+   taxonomy to each query sequence from among maxaccepts hits, min_consensus
+   of which share that taxonomic assignment. Note that maxaccepts selects the
+   first N hits with > perc_identity similarity to query, not the top N
+   matches. For top N hits, use classify-consensus-vsearch.
+
+   Parameters
+   ----------
+   query : FeatureData[Sequence]
+       Sequences to classify taxonomically.
+   reference_reads : FeatureData[Sequence]
+       reference sequences.
+   reference_taxonomy : FeatureData[Taxonomy]
+       reference taxonomy labels.
+   maxaccepts : Int % Range(1, None), optional
+       Maximum number of hits to keep for each query. Must be in range [1,
+       infinity]. BLAST will choose the first N hits in the reference database
+       that exceed perc_identity similarity to query.
+   perc_identity : Float % Range(0.0, 1.0, inclusive_end=True), optional
+       Reject match if percent identity to query is lower. Must be in range
+       [0.0, 1.0].
+   query_cov : Float % Range(0.0, 1.0, inclusive_end=True), optional
+       Reject match if query alignment coverage per high-scoring pair is
+       lower. Note: this uses blastn's qcov_hsp_perc parameter, and may not
+       behave identically to the query_cov parameter used by classify-
+       consensus-vsearch. Must be in range [0.0, 1.0].
+   strand : Str % Choices('both', 'plus', 'minus'), optional
+       Align against reference sequences in forward ("plus"), reverse
+       ("minus"), or both directions ("both").
+   evalue : Float, optional
+       BLAST expectation value (E) threshold for saving hits.
+   min_consensus : Float % Range(0.5, 1.0, inclusive_start=False, inclusive_end=True), optional
+       Minimum fraction of assignments must match top hit to be accepted as
+       consensus assignment. Must be in range (0.5, 1.0].
+   unassignable_label : Str, optional
+
+   Returns
+   -------
+   classification : FeatureData[Taxonomy]
+       Taxonomy classifications of query sequences.</pre>
+       </div>
+     </div>
+   </div>

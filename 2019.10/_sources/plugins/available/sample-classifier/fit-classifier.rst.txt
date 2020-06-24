@@ -1,0 +1,142 @@
+fit-classifier: Fit a supervised learning classifier.
+=====================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime sample-classifier fit-classifier [OPTIONS]
+
+     Fit a supervised learning classifier. Outputs the fit estimator (for
+     prediction of test samples and/or unknown samples) and the relative
+     importance of each feature for model accuracy. Optionally use k-fold
+     cross-validation for automatic recursive feature elimination and
+     hyperparameter tuning.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          Feature table containing all features that should be
+                          used for target prediction.                  [required]
+   Parameters:
+     --m-metadata-file METADATA
+     --m-metadata-column COLUMN  MetadataColumn[Categorical]
+                          Numeric metadata column to use as prediction target.
+                                                                       [required]
+     --p-step PROPORTION Range(0.0, 1.0, inclusive_start=False)
+                          If optimize-feature-selection is True, step is the
+                          percentage of features to remove at each iteration.
+                                                                  [default: 0.05]
+     --p-cv INTEGER       Number of k-fold cross-validations to perform.
+       Range(1, None)                                                [default: 5]
+     --p-random-state INTEGER
+                          Seed used by random number generator.        [optional]
+     --p-n-jobs INTEGER   Number of jobs to run in parallel.         [default: 1]
+     --p-n-estimators INTEGER
+       Range(1, None)     Number of trees to grow for estimation. More trees
+                          will improve predictive accuracy up to a threshold
+                          level, but will also increase time and memory
+                          requirements. This parameter only affects ensemble
+                          estimators, such as Random Forest, AdaBoost,
+                          ExtraTrees, and GradientBoosting.        [default: 100]
+     --p-estimator TEXT Choices('RandomForestClassifier',
+       'ExtraTreesClassifier', 'GradientBoostingClassifier',
+       'AdaBoostClassifier', 'KNeighborsClassifier', 'LinearSVC', 'SVC')
+                          Estimator method to use for sample prediction.
+                                              [default: 'RandomForestClassifier']
+     --p-optimize-feature-selection / --p-no-optimize-feature-selection
+                          Automatically optimize input feature selection using
+                          recursive feature elimination.         [default: False]
+     --p-parameter-tuning / --p-no-parameter-tuning
+                          Automatically tune hyperparameters using random grid
+                          search.                                [default: False]
+     --p-missing-samples TEXT Choices('error', 'ignore')
+                          How to handle missing samples in metadata. "error"
+                          will fail if missing samples are detected. "ignore"
+                          will cause the feature table and metadata to be
+                          filtered, so that only samples found in both files are
+                          retained.                            [default: 'error']
+   Outputs:
+     --o-sample-estimator ARTIFACT SampleEstimator[Classifier]
+                          Trained sample classifier.                   [required]
+     --o-feature-importance ARTIFACT FeatureData[Importance]
+                          Importance of each input feature to model accuracy.
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.sample_classifier.methods import fit_classifier
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Fit a supervised learning classifier.
+
+   Fit a supervised learning classifier. Outputs the fit estimator (for
+   prediction of test samples and/or unknown samples) and the relative
+   importance of each feature for model accuracy. Optionally use k-fold cross-
+   validation for automatic recursive feature elimination and hyperparameter
+   tuning.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table containing all features that should be used for target
+       prediction.
+   metadata : MetadataColumn[Categorical]
+       Numeric metadata column to use as prediction target.
+   step : Float % Range(0.0, 1.0, inclusive_start=False), optional
+       If optimize_feature_selection is True, step is the percentage of
+       features to remove at each iteration.
+   cv : Int % Range(1, None), optional
+       Number of k-fold cross-validations to perform.
+   random_state : Int, optional
+       Seed used by random number generator.
+   n_jobs : Int, optional
+       Number of jobs to run in parallel.
+   n_estimators : Int % Range(1, None), optional
+       Number of trees to grow for estimation. More trees will improve
+       predictive accuracy up to a threshold level, but will also increase
+       time and memory requirements. This parameter only affects ensemble
+       estimators, such as Random Forest, AdaBoost, ExtraTrees, and
+       GradientBoosting.
+   estimator : Str % Choices('RandomForestClassifier', 'ExtraTreesClassifier', 'GradientBoostingClassifier', 'AdaBoostClassifier', 'KNeighborsClassifier', 'LinearSVC', 'SVC'), optional
+       Estimator method to use for sample prediction.
+   optimize_feature_selection : Bool, optional
+       Automatically optimize input feature selection using recursive feature
+       elimination.
+   parameter_tuning : Bool, optional
+       Automatically tune hyperparameters using random grid search.
+   missing_samples : Str % Choices('error', 'ignore'), optional
+       How to handle missing samples in metadata. "error" will fail if missing
+       samples are detected. "ignore" will cause the feature table and
+       metadata to be filtered, so that only samples found in both files are
+       retained.
+
+   Returns
+   -------
+   sample_estimator : SampleEstimator[Classifier]
+       Trained sample classifier.
+   feature_importance : FeatureData[Importance]
+       Importance of each input feature to model accuracy.</pre>
+       </div>
+     </div>
+   </div>

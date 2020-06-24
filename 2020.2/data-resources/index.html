@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Data resources &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about/" />
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Supplementary resources" href="../supplementary-resources/" />
+    <link rel="prev" title="Community" href="../community/" />
+  <script src="../_static/bootstrap.min.js"></script>
+  <script src="../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="data-resources">
+<h1>Data resources<a class="headerlink" href="#data-resources" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="taxonomy-classifiers-for-use-with-q2-feature-classifier">
+<h2>Taxonomy classifiers for use with q2-feature-classifier<a class="headerlink" href="#taxonomy-classifiers-for-use-with-q2-feature-classifier" title="Permalink to this headline">¶</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>Pre-trained classifiers that can be used with <code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code> currently present a security risk. If using a pre-trained classifier such as the ones provided here, you should trust the person who trained the classifier and the person who provided you with the qza file. This security risk will be addressed in a future version of <code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These classifiers were trained using scikit-learn 0.22.1, and therefore can only be used with scikit-learn 0.22.1. If you are using a native installation of QIIME 2, before using these classifiers you should run the following to ensure that you are using the correct version of scikit-learn. If you are using a QIIME 2020.2 virtual machine, scikit-learn 0.21.2 will be installed and you do not need to run this command. The scikit-learn version restriction will be relaxed in a future version of <code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install --override-channels -c defaults scikit-learn<span class="o">=</span><span class="m">0</span>.22.1
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Taxonomic classifiers perform best when they are trained based on your specific sample preparation and sequencing parameters, including the primers that were used for amplification and the length of your sequence reads. Therefore in general you should follow the instructions in <a class="reference internal" href="../tutorials/feature-classifier/"><span class="doc">Training feature classifiers with q2-feature-classifier</span></a> to train your own taxonomic classifiers (for example, from the marker gene reference databases below).</p>
+</div>
+<p>Naive Bayes classifiers trained on:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://data.qiime2.org/2020.2/common/silva-132-99-nb-classifier.qza">Silva 132 99% OTUs full-length sequences</a> (MD5: <code class="docutils literal notranslate"><span class="pre">8c5371fb59740f57185f772e4cb77a5b</span></code>)</p></li>
+<li><p><a class="reference external" href="https://data.qiime2.org/2020.2/common/silva-132-99-515-806-nb-classifier.qza">Silva 132 99% OTUs from 515F/806R region of sequences</a> (MD5: <code class="docutils literal notranslate"><span class="pre">a0a71ceece385aae495c0ce798ceb6d1</span></code>)</p></li>
+<li><p><a class="reference external" href="https://data.qiime2.org/2020.2/common/gg-13-8-99-nb-classifier.qza">Greengenes 13_8 99% OTUs full-length sequences</a> (MD5: <code class="docutils literal notranslate"><span class="pre">03cfed92bf2e5da2d1029b7c6b998e92</span></code>)</p></li>
+<li><p><a class="reference external" href="https://data.qiime2.org/2020.2/common/gg-13-8-99-515-806-nb-classifier.qza">Greengenes 13_8 99% OTUs from 515F/806R region of sequences</a> (MD5: <code class="docutils literal notranslate"><span class="pre">6df67fb01e2f3305e76c61a1c16136b4</span></code>)</p></li>
+</ul>
+</div>
+<div class="section" id="marker-gene-reference-databases">
+<span id="marker-gene-db"></span><h2>Marker gene reference databases<a class="headerlink" href="#marker-gene-reference-databases" title="Permalink to this headline">¶</a></h2>
+<p>These marker gene reference databases are formatted for use with QIIME 1 and QIIME 2. If you’re using these databases with QIIME 2, you’ll need to <a class="reference internal" href="../tutorials/importing/"><span class="doc">import them into artifacts</span></a> before using them.</p>
+<div class="section" id="greengenes-16s-rrna">
+<h3>Greengenes (16S rRNA)<a class="headerlink" href="#greengenes-16s-rrna" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_8_otus.tar.gz">13_8</a> (most recent)</p></li>
+<li><p><a class="reference external" href="ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5_otus.tar.gz">13_5</a></p></li>
+<li><p><a class="reference external" href="ftp://greengenes.microbio.me/greengenes_release/gg_12_10/gg_12_10_otus.tar.gz">12_10</a></p></li>
+<li><p><a class="reference external" href="http://greengenes.lbl.gov/Download/Sequence_Data/Fasta_data_files/Caporaso_Reference_OTUs/gg_otus_4feb2011.tgz">February 4th, 2011</a></p></li>
+</ul>
+<p>Find more information about Greengenes in the <a class="reference external" href="http://aem.asm.org/content/72/7/5069.full">DeSantis (2006)</a> and <a class="reference external" href="https://www.nature.com/articles/ismej2011139">McDonald (2012)</a> papers.</p>
+</div>
+<div class="section" id="silva-16s-18s-rrna">
+<h3>Silva (16S/18S rRNA)<a class="headerlink" href="#silva-16s-18s-rrna" title="Permalink to this headline">¶</a></h3>
+<p>QIIME-compatible SILVA releases, as well as the licensing information for commercial and non-commercial use, are available at <a class="reference external" href="https://www.arb-silva.de/download/archive/qiime">https://www.arb-silva.de/download/archive/qiime</a>.</p>
+</div>
+<div class="section" id="unite-fungal-its">
+<h3>UNITE (fungal ITS)<a class="headerlink" href="#unite-fungal-its" title="Permalink to this headline">¶</a></h3>
+<p>All releases are available for download at <a class="reference external" href="https://unite.ut.ee/repository.php">https://unite.ut.ee/repository.php</a>.</p>
+<p>Find more information about UNITE at <a class="reference external" href="https://unite.ut.ee">https://unite.ut.ee</a>.</p>
+</div>
+</div>
+<div class="section" id="microbiome-bioinformatics-benchmarking">
+<h2>Microbiome bioinformatics benchmarking<a class="headerlink" href="#microbiome-bioinformatics-benchmarking" title="Permalink to this headline">¶</a></h2>
+<p>Many microbiome bioinformatics benchmarking studies use <em>mock communities</em> (artificial communities constructed by pooling isolated microorganisms together in known abundances). For example, see <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3531572/">Bokulich et al., (2013)</a> and <a class="reference external" href="http://www.pnas.org/content/108/Supplement_1/4516.full">Caporaso et al., (2011)</a>. Public mock community data can be downloaded from <a class="reference external" href="http://mockrobiota.caporasolab.us">mockrobiota</a>, which is described in <a class="reference external" href="http://msystems.asm.org/content/1/5/e00062-16">Bokulich et al., (2016)</a>.</p>
+</div>
+<div class="section" id="public-microbiome-data">
+<h2>Public microbiome data<a class="headerlink" href="#public-microbiome-data" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://qiita.ucsd.edu/">Qiita</a> provides access to many public microbiome datasets. If you’re looking for microbiome data for testing or for meta-analyses, Qiita is a good place to start.</p>
+</div>
+<div class="section" id="sepp-reference-databases">
+<h2>SEPP reference databases<a class="headerlink" href="#sepp-reference-databases" title="Permalink to this headline">¶</a></h2>
+<p>The following databases are intended for use with q2-fragment-insertion, and
+are constructed directly from the
+<a class="reference external" href="https://github.com/smirarab/sepp-refs/">SEPP-Refs project</a>.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://data.qiime2.org/2020.2/common/sepp-refs-silva-128.qza">Silva 128 SEPP reference database</a> (MD5: <code class="docutils literal notranslate"><span class="pre">7879792a6f42c5325531de9866f5c4de</span></code>)</p></li>
+<li><p><a class="reference external" href="https://data.qiime2.org/2020.2/common/sepp-refs-gg-13-8.qza">Greengenes 13_8 SEPP reference database</a> (MD5: <code class="docutils literal notranslate"><span class="pre">9ed215415b52c362e25cb0a8a46e1076</span></code>)</p></li>
+</ul>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/">Community</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data resources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#taxonomy-classifiers-for-use-with-q2-feature-classifier">Taxonomy classifiers for use with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#marker-gene-reference-databases">Marker gene reference databases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#microbiome-bioinformatics-benchmarking">Microbiome bioinformatics benchmarking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#public-microbiome-data">Public microbiome data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sepp-reference-databases">SEPP reference databases</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+dada2
+=====
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin wraps DADA2 and supports sequence quality control for single-end and paired-end reads using the DADA2 R library.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.11.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="http://benjjneb.github.io/dada2/" rel="noopener">http://benjjneb.github.io/dada2/</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           DADA2: High-resolution sample inference from Illumina amplicon data. Benjamin J Callahan, Paul J McMurdie, Michael J Rosen, Andrew W Han, Amy Jo A Johnson, Susan P Holmes. Nature Methods 13, 581–583 (2016) doi:10.1038/nmeth.3869.<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   denoise-paired
+   
+   denoise-single
+   
+
+

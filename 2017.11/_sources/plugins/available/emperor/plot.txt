@@ -1,0 +1,58 @@
+plot: Visualize and Interact with Principal Coordinates Analysis Plots
+======================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime emperor plot [OPTIONS]
+
+     Generate visualization of your ordination.
+
+   Options:
+     --i-pcoa PATH           Artifact: PCoAResults  [required]
+                             The principal
+                             coordinates matrix to be plotted.
+     --m-metadata-file PATH  Metadata file or artifact viewable as metadata. This
+                             option may be supplied multiple times to merge
+                             metadata  [required]
+                             The sample metadata.
+     --p-custom-axis TEXT    [optional]
+                             A sample metadata category containing
+                             continuous values that should be included as an axis
+                             in the Emperor plot.
+     --o-visualization PATH  Visualization [required if not passing --output-dir]
+     --output-dir DIRECTORY  Output unspecified results to a directory
+     --cmd-config PATH       Use config file for command options
+     --verbose               Display verbose output to stdout and/or stderr
+                             during execution of this action.  [default: False]
+     --quiet                 Silence output if execution is successful (silence
+                             is golden).  [default: False]
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Visualize and Interact with Principal Coordinates Analysis Plots
+
+   Generate visualization of your ordination.
+
+   Parameters
+   ----------
+   pcoa : PCoAResults
+       The principal coordinates matrix to be plotted.
+   metadata : Metadata
+       The sample metadata.
+   custom_axis : Str, optional
+       A sample metadata category containing continuous values that should be
+       included as an axis in the Emperor plot.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

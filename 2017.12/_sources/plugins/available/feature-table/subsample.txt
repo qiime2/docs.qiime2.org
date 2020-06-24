@@ -1,0 +1,66 @@
+subsample: Subsample table
+==========================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime feature-table subsample [OPTIONS]
+
+     Randomly pick samples or features, without replacement, from the table.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     The feature table to be sampled.  [required]
+     --p-subsampling-depth INTEGER RANGE
+                                     The total number of samples or features to
+                                     be randomly sampled. Samples or features
+                                     that are reduced to a zero sum will not be
+                                     included in the resulting table.  [required]
+     --p-axis [sample|feature]       The axis to sample over. If "sample" then
+                                     samples will be randomly selected to be
+                                     retained. If "feature" then a random set of
+                                     features will be selected to be retained.
+                                     [required]
+     --o-sampled-table ARTIFACT PATH FeatureTable[Frequency]
+                                     The resulting subsampled feature table.
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Subsample table
+
+   Randomly pick samples or features, without replacement, from the table.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table to be sampled.
+   subsampling_depth : Int % Range(1, None)
+       The total number of samples or features to be randomly sampled. Samples
+       or features that are reduced to a zero sum will not be included in the
+       resulting table.
+   axis : Str % Choices({'feature', 'sample'})
+       The axis to sample over. If "sample" then samples will be randomly
+       selected to be retained. If "feature" then a random set of features
+       will be selected to be retained.
+
+   Returns
+   -------
+   sampled_table : FeatureTable[Frequency]
+       The resulting subsampled feature table.</pre>
+       </div>
+     </div>
+   </div>

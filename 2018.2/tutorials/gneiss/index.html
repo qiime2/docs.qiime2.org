@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Differential abundance analysis with gneiss &#8212; QIIME 2 2018.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2018.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="top" title="QIIME 2 2018.2.0 documentation" href="../../" />
+    <link rel="up" title="Tutorials" href="../" />
+    <link rel="next" title="Importing data" href="../importing/" />
+    <link rel="prev" title="“Atacama soil microbiome” tutorial" href="../atacama-soils/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="differential-abundance-analysis-with-gneiss">
+<h1>Differential abundance analysis with gneiss<a class="headerlink" href="#differential-abundance-analysis-with-gneiss" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a> and completed the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial</span></a>.</p>
+</div>
+<p>In this tutorial you will learn how to perform differential abundance analysis using balances in gneiss.  The main problem that we will focus on is how to identify differentially abundant taxa in a compositionally coherent way.</p>
+<p>Compositionality refers to the issue of dealing with proportions.  Since the sequencing depth is not typically biologically relevant, the microbial abundances are best interpreted as proportions.  Because of this, it becomes challenging to infer exactly which microbes are changing &#8211; since proportions add to one, the change of a single microbe will also change the proportions of the remaining microbes.</p>
+<p>Consider the following example:</p>
+<img alt="../../_images/gneiss-bars.jpg" src="../../_images/gneiss-bars.jpg" />
+<p>On the left, we have the true abundances of ten species, and the first species doubles between Time point 1 and Time point 2.  When we normalize these to proportions, it appears as if all of the species have changed between the two time points.  Looking at proportions alone, we would never realize this problem, and we actually cannot exactly determine which species are changing based on proportions alone.</p>
+<p>While we cannot exactly solve the problem of identifying differentially abundant species, we can relax this problem and ask which partitions of microbes are changing.  In the case above, if we compute the ratio between the first species and the second species, that ratio will be 1:1 at Time point 1, and 2:1 at Time point 2 for both the original abundances and the proportions.  This is the type of question that balances try to solve.
+Rather than focusing on individual taxa, we can focus on the log ratios, since the log ratios are consist between the original abundances and the observed proportions of the species are observed.  The concept of calculating balances for multiple species can be extended to trees as shown in the following example.</p>
+<img alt="../../_images/gneiss-balances.jpg" src="../../_images/gneiss-balances.jpg" />
+<p>On the left, we define a tree, where each of the tips corresponds to a taxon and their corresponding proportions.  The internal nodes define the log ratio between the taxa underneath.  On the right, we have the same tree, but one of the taxa abundances changes.  As we have observed before, the proportions of all of the taxa will change, but looking at the balances, only the balances containing the purple taxa will change.  In this case, balance <span class="math">\(b_3\)</span> won&#8217;t change, since it only considers the ratio between the red and green taxa.  By looking at balances instead proportions, we can control for the variance by restricting observations to only focus on the taxa within the balance.</p>
+<p>The outstanding question here is, how do we construct a tree to control for the variation, and identify interesting differentially abundant partitions of taxa?  In gneiss, there are two main ways that this can be done</p>
+<ol class="arabic simple">
+<li>Gradient clustering.  For example, if we want to evaluate if pH is a driving factor, we can group together according to the pH that they are observed in, and observe whether the ratios of low-pH organisms to high-pH organisms change as the pH changes.  This is available in the <code class="docutils literal"><span class="pre">gradient-clustering</span></code> command.</li>
+<li>Correlation clustering.  If we don&#8217;t have relevant prior information about how to cluster together organisms, we can group together organisms based on how often they co-occur with each other.</li>
+</ol>
+<p>Once we have a tree, we can calculate balances using the following equation</p>
+<div class="math">
+\[b_i = \sqrt{\frac{rs}{r+s}} \log \frac{g(x_r)}{g(x_s)}\]</div>
+<p>where <span class="math">\(i\)</span> represents the <span class="math">\(i^{th}\)</span> internal node in the tree, <span class="math">\(g(x)\)</span> represents the geometric mean within set <span class="math">\(x\)</span>, and <span class="math">\(x_r\)</span> represents the set of taxa abundances in the numerator of the balance, <span class="math">\(x_s\)</span> represents the set of taxa abundances in the denominator of the balance, and <span class="math">\(r\)</span> and <span class="math">\(s\)</span> represents the number of taxa within <span class="math">\(x_r\)</span> and <span class="math">\(x_s\)</span> respectively.</p>
+<p>After the balances are calculated, standard statistical procedures such as ANOVA and linear regression can be performed.  We will see how we can run these procedures using the Chronic Fatigue Syndrome dataset.</p>
+<div class="section" id="building-linear-models-using-balances">
+<h2>Building linear models using balances<a class="headerlink" href="#building-linear-models-using-balances" title="Permalink to this headline">¶</a></h2>
+<p>In the Chronic Fatigue Syndrome dataset published in <a class="reference external" href="https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-016-0171-4">Giloteaux et al (2016)</a>, there are 87 individuals with 48 diseased patients and 39 healthy controls. The data used in this tutorial were sequenced on an Illumina MiSeq using the <a class="reference external" href="http://earthmicrobiome.org/">Earth Microbiome Project</a> hypervariable region 4 (V4) 16S rRNA sequencing protocol.</p>
+<p>Before beginning this tutorial, create a new directory and change to that directory.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>mkdir qiime2-chronic-fatigue-syndrome-tutorial
+<span class="nb">cd</span> qiime2-chronic-fatigue-syndrome-tutorial
+</pre></div>
+</div>
+<p>The datasets required for this tutorial can be found below (to learn how these would be generated, see the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial</span></a>).</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2018.2/tutorials/gneiss/sample-metadata.tsv">
+            https://data.qiime2.org/2018.2/tutorials/gneiss/sample-metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> sample-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget -O "sample-metadata.tsv" "https://data.qiime2.org/2018.2/tutorials/gneiss/sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL "https://data.qiime2.org/2018.2/tutorials/gneiss/sample-metadata.tsv" > "sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2018.2/tutorials/gneiss/table.qza">
+            https://data.qiime2.org/2018.2/tutorials/gneiss/table.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> table.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget -O "table.qza" "https://data.qiime2.org/2018.2/tutorials/gneiss/table.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL "https://data.qiime2.org/2018.2/tutorials/gneiss/table.qza" > "table.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2018.2/tutorials/gneiss/taxa.qza">
+            https://data.qiime2.org/2018.2/tutorials/gneiss/taxa.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> taxa.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget -O "taxa.qza" "https://data.qiime2.org/2018.2/tutorials/gneiss/taxa.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL "https://data.qiime2.org/2018.2/tutorials/gneiss/taxa.qza" > "taxa.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>The differential abundance techniques that we will be running will utilize log ratio transforms. Since it is not possible to take the logarithm of zero, we will be adding in a pseudocount to all of the counts via the <code class="docutils literal"><span class="pre">add-pseudocount</span></code> method.  In this way, we can apply logarithms on this transformed table.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime gneiss add-pseudocount <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-pseudocount <span class="m">1</span> <span class="se">\</span>
+  --o-composition-table composition.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2018.2%2Fdata%2Ftutorials%2Fgneiss%2Ftable.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2018.2/data/tutorials/gneiss/table.qza">download</a></li>
+<li><code class="file docutils literal"><span class="pre">taxa.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2018.2%2Fdata%2Ftutorials%2Fgneiss%2Ftaxa.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2018.2/data/tutorials/gneiss/taxa.qza">download</a></li>
+<li><code class="file docutils literal"><span class="pre">composition.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2018.2%2Fdata%2Ftutorials%2Fgneiss%2Fcomposition.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2018.2/data/tutorials/gneiss/composition.qza">download</a></li>
+</ul>
+</div>
+<p>In the next step, we will define partitions of microbes for which we want to construct balances.  If we have additional information about the types of habitats that microbes prefer to live in, such as pH, we can employ <code class="docutils literal"><span class="pre">gradient-clustering</span></code> to group together microbes based on their preferred habitat.  Since we don&#8217;t have that sort of information here, we will employ unsupervised clustering via Ward&#8217;s hierarchical clustering to obtain Principal Balances.  In essence, this will define the partitions of microbes that commonly co-occur with each other using Ward hierarchical clustering, which is defined by the following metric.</p>
+<div class="math">
+\[d(x, y) = V [ \ln \frac{x}{y} ]\]</div>
+<p>Where <span class="math">\(x\)</span> and <span class="math">\(y\)</span> represent the proportions of two microbes across all of the samples.   If two microbes are highly correlated, then this quantity will shrink close to zero.  Ward hierarchical cluster will then use this distance metric to iteratively cluster together groups of microbes that are correlated with each other.  In the end, the tree that we obtain will highlight the high level structure and identify the blocks within in the data.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime gneiss correlation-clustering <span class="se">\</span>
+  --i-table composition.qza <span class="se">\</span>
+  --o-clustering hierarchy.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">hierarchy.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2018.2%2Fdata%2Ftutorials%2Fgneiss%2Fhierarchy.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2018.2/data/tutorials/gneiss/hierarchy.qza">download</a></li>
+</ul>
+</div>
+<p>Now that we have a tree that defines our partitions, we can perform the ILR transform.  Note that the ILR transform just computes the log ratios between groups; in this case we will be computing log ratios between groups of anti-correlated features.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime gneiss ilr-transform <span class="se">\</span>
+  --i-table composition.qza <span class="se">\</span>
+  --i-tree hierarchy.qza <span class="se">\</span>
+  --o-balances balances.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">balances.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2018.2%2Fdata%2Ftutorials%2Fgneiss%2Fbalances.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2018.2/data/tutorials/gneiss/balances.qza">download</a></li>
+</ul>
+</div>
+<p>Once we have obtained a means to partition the features, we can now run linear regression on the balances.  In this module, the abundances will be converted to principal balances using the partition scheme that we defined earlier.  The linear regression that we will be running is called a <a class="reference external" href="http://www.public.iastate.edu/~maitra/stat501/lectures/MultivariateRegression.pdf">multivariate response linear regression</a>, which boils down to performing a linear regression on each balance separately.</p>
+<p>We can use this to attempt to predict the microbial abundances based on environmental variables.  Running these models has multiple advantages over standard univariate regression, as it avoids many of the issues associated with overfitting, and can gain perspective about community-wide perturbations based on environmental parameters.</p>
+<p>Since the microbial abundances can be mapped directly to balances, we can perform this multivariate response directly on the balances.  The model that we will be building is represented as follows</p>
+<div class="math">
+\[\vec{y} = \vec{\beta_0} + \vec{\beta_{Subject}}\vec{X_{subject}} + \vec{\beta_{sex}}\vec{X_{sex}} + \vec{\beta_{age}}\vec{X_{Age}} + \vec{\beta_{sCD14ugml}}\vec{X_{sCD14ugml}} + \vec{\beta_{LBPugml}}\vec{X_{LBPugml}}\]</div>
+<p>Where <span class="math">\(\vec{y}\)</span> represents the matrix of balances to be predicted, <span class="math">\(\vec{\beta_i}\)</span> represents a vector of coefficients for covariate <span class="math">\(i\)</span> and math:<cite>vec{X_i}</cite> represents the measures for covariate <span class="math">\(i\)</span>.</p>
+<p>Remember that ANOVA is a special case of linear regression - every problem that can be solved by ANOVA can be reformulated as a linear regression.  See <a class="reference external" href="https://stats.stackexchange.com/a/76292/79569">this post</a> for more details.  So we can still answer the same sort of differential abundance questions using this technique, but we can start asking more precise questions, controlling for different potential confounding variables or even interaction effects.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime gneiss ols-regression <span class="se">\</span>
+  --p-formula <span class="s2">&quot;Subject+Sex+Age+BMI+sCD14ugml+LBPugml+LPSpgml&quot;</span> <span class="se">\</span>
+  --i-table balances.qza <span class="se">\</span>
+  --i-tree hierarchy.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --o-visualization regression_summary.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">regression_summary.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2018.2%2Fdata%2Ftutorials%2Fgneiss%2Fregression_summary.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2018.2/data/tutorials/gneiss/regression_summary.qzv">download</a></li>
+</ul>
+</div>
+<p>Now we have a summary of the regression model.  Specifically we want to see which covariates impact the model the most, which balances are meaningful, and how much potential overfitting is going on.</p>
+<p>There are a few things to note in the regression summary.  There is an <span class="math">\(R^2\)</span> in the summary, which gives information about the variance in the community is explained by the regression model.  From what we can see, the regression can explain about 10% of the community.  This is typical for what we see in human gut microbes, since there is a very high amount of confounding variation due to genetics, diet, environment, etc.</p>
+<p>To evaluate the explanatory model of a single covariate, a leave-one-variable-out approach is used.  One variable is left out, and the change in <span class="math">\(R^2\)</span> is calculated.  The larger the change is, the stronger the effect of the covariate is.  In this case,  Subject is the largest explanatory factor, explaining 2% of the variation.</p>
+<p>To make sure that we aren&#8217;t overfitting, 10-fold cross validation is performed.  This will split the data into 10 partitions, build the model on 9 of the those partitions and use the remaining partition to measure the prediction accuracy.  This process is repeat 10 times, once for each round of cross-validation.  The within model error (<code class="docutils literal"><span class="pre">mse</span></code>), <span class="math">\(R^2\)</span> and the prediction accuracy (<code class="docutils literal"><span class="pre">pred_mse</span></code>) are reported for each round of cross validation.  Here, the prediction accuracy is less than the within model error, suggesting that over fitting is not happening.</p>
+<p>Next, we have a heatmap visualizing all of the coefficient p-values for all of the balances.  The columns of the heatmap represent balances, and the rows of the heatmap represent covariates.  The heatmap is colored by the negative log of the p-value, highlighting potentially significant p-values.  A hover tool is enabled to allow for specific coefficient values and their corresponding p-values to be obtained, and zooming is enabled to allow for navigation of interesting covariates and balances.</p>
+<p>Next are the prediction and residual plots.  Here, only the top two balances are plotted, and the prediction residuals from the model are projected onto these two balances.  From these plots we can see that the predicted points lie within the same region as the original communities.  However, we can see that the residuals have roughly the same variance as the predictions.  This is a little unsettling - but note that we can only explain 10% of the community variance, so these sorts of calculations aren&#8217;t completely unexpected.</p>
+<p>The branch lengths in the visualized tree are also scaled by the explained sum of squares in the models.  The longest branch lengths correspond to the most informative balances.  This can allow us to get a high-level overview of the most important balances in the model.  From this plot and the above heatmap, we can see that balance <span class="math">\(y0\)</span> is important.  These balances not only have very small p-values (with <span class="math">\(p &lt; 0.05\)</span>) for differentiating subjects, but they also have the largest branch lengths in the tree diagram.  This suggests that these two partitions of microbes could differentiate the CFS patients from the controls.</p>
+<p>We can visualize these balances on a heatmap to see which groups of OTUs they represent.  By default, the values within the feature table are log-scaled, with the sample means centered around zero.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime gneiss dendrogram-heatmap <span class="se">\</span>
+  --i-table composition.qza <span class="se">\</span>
+  --i-tree hierarchy.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-column Subject <span class="se">\</span>
+  --p-color-map seismic <span class="se">\</span>
+  --o-visualization heatmap.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">heatmap.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2018.2%2Fdata%2Ftutorials%2Fgneiss%2Fheatmap.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2018.2/data/tutorials/gneiss/heatmap.qzv">download</a></li>
+</ul>
+</div>
+<p>As noted in the legend, the numerators for each balance are highlighted in light red, while the denominators are highlighted in dark red. From here, we can see that the denominator of <span class="math">\(y0\)</span> has few OTUs compared to the numerator of <span class="math">\(y0\)</span>.  These taxa in the denominator could be interesting, so let&#8217;s investigate the taxonomies making up this balance with <code class="docutils literal"><span class="pre">balance_taxonomy</span></code>.</p>
+<p>Specifically we&#8217;ll plot a boxplot and identify taxa that could be explaining the differences between the control and patient groups.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime gneiss balance-taxonomy <span class="se">\</span>
+  --i-table composition.qza <span class="se">\</span>
+  --i-tree hierarchy.qza <span class="se">\</span>
+  --i-taxonomy taxa.qza <span class="se">\</span>
+  --p-taxa-level <span class="m">2</span> <span class="se">\</span>
+  --p-balance-name <span class="s1">&#39;y0&#39;</span> <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-column Subject <span class="se">\</span>
+  --o-visualization y0_taxa_summary.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">y0_taxa_summary.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2018.2%2Fdata%2Ftutorials%2Fgneiss%2Fy0_taxa_summary.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2018.2/data/tutorials/gneiss/y0_taxa_summary.qzv">download</a></li>
+</ul>
+</div>
+<p>In this particular case, the log ratio is lower in the patient group compared to the control group.  In essence, this means that the taxa in the <span class="math">\(y0_{numerator}\)</span> on average are more abundant than the taxa in <span class="math">\(y0_{denominator}\)</span> in the healthy control group compared to the patient group.</p>
+<p>Remember, based on the toy examples given in the beginning of this tutorial, it is not possible to infer absolute changes of microbes in a given sample.  Balances will not be able to provide this sort of answer, but it can limit the number of possible scenarios.  Specifically, one of the five following scenarios could have happened.</p>
+<ol class="arabic simple">
+<li>The taxa in the <span class="math">\(y0_{numerator}\)</span> on average have increased between patient group and the healthy control.</li>
+<li>The taxa in the <span class="math">\(y0_{denominator}\)</span> on average have decreased between patient group and the healthy control.</li>
+<li>A combination of the above occurred</li>
+<li>Taxa abundances in both <span class="math">\(y0_{numerator}\)</span> and <span class="math">\(y0_{denominator}\)</span> both increased, but taxa abundances in <span class="math">\(y0_{numerator}\)</span> increased more compared to <span class="math">\(y0_{denominator}\)</span></li>
+<li>Taxa abundances in both <span class="math">\(y0_{numerator}\)</span> and <span class="math">\(y0_{denominator}\)</span> both decreased, but taxa abundances in <span class="math">\(y0_{denominator}\)</span> increased more compared to <span class="math">\(y0_{numerator}\)</span></li>
+</ol>
+<p>To further narrow down these hypothesis,  biological prior knowledge or experimental validation will be required.</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">&#8220;Moving Pictures&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">&#8220;Atacama soil microbiome&#8221; tutorial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2018, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

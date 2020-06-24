@@ -1,0 +1,137 @@
+sample-classifier
+=================
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin supports methods for supervised classification and regression of sample metadata, and other supervised machine learning methods.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2020.2.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-sample-classifier" rel="noopener">https://github.com/qiime2/q2-sample-classifier</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+       <tr>
+         <th scope="row">q2cli Invocation</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   qiime sample-classifier
+
+.. raw:: html
+
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Artifact API Import</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins import sample_classifier
+
+.. raw:: html
+
+         </td>
+       </tr>
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: citations.bib
+   :list: bullet
+   :all:
+   :keyprefix: sample-classifier:
+   :labelprefix: sample-classifier:
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+Pipelines
+---------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   classify-samples
+   
+   classify-samples-from-dist
+   
+   heatmap
+   
+   metatable
+   
+   regress-samples
+   
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   classify-samples-ncv
+   
+   fit-classifier
+   
+   fit-regressor
+   
+   predict-classification
+   
+   predict-regression
+   
+   regress-samples-ncv
+   
+   split-table
+   
+
+
+
+Visualizers
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   confusion-matrix
+   
+   scatterplot
+   
+   summarize
+   

@@ -1,0 +1,75 @@
+collapse: Collapse features by their taxonomy at the specified level
+====================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime taxa collapse [OPTIONS]
+
+     Collapse groups of features that have the same taxonomic assignment
+     through the specified level. The frequencies of all features will be
+     summed when they are collapsed.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     Feature table to be collapsed.  [required]
+     --i-taxonomy ARTIFACT PATH FeatureData[Taxonomy]
+                                     Taxonomic annotations for features in the
+                                     provided feature table. All features in the
+                                     feature table must have a corresponding
+                                     taxonomic annotation. Taxonomic annotations
+                                     that are not present in the feature table
+                                     will be ignored.  [required]
+     --p-level INTEGER               The taxonomic level at which the features
+                                     should be collapsed. All ouput features will
+                                     have exactly this many levels of taxonomic
+                                     annotation.  [required]
+     --o-collapsed-table ARTIFACT PATH FeatureTable[Frequency]
+                                     The resulting feature table, where all
+                                     features are now taxonomic annotations with
+                                     the user-specified number of levels.
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Collapse features by their taxonomy at the specified level
+
+   Collapse groups of features that have the same taxonomic assignment through
+   the specified level. The frequencies of all features will be summed when
+   they are collapsed.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table to be collapsed.
+   taxonomy : FeatureData[Taxonomy]
+       Taxonomic annotations for features in the provided feature table. All
+       features in the feature table must have a corresponding taxonomic
+       annotation. Taxonomic annotations that are not present in the feature
+       table will be ignored.
+   level : Int
+       The taxonomic level at which the features should be collapsed. All
+       ouput features will have exactly this many levels of taxonomic
+       annotation.
+
+   Returns
+   -------
+   collapsed_table : FeatureTable[Frequency]
+       The resulting feature table, where all features are now taxonomic
+       annotations with the user-specified number of levels.</pre>
+       </div>
+     </div>
+   </div>

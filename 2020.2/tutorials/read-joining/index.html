@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Alternative methods of read-joining in QIIME 2 &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Clustering sequences into OTUs using q2-vsearch" href="../otu-clustering/" />
+    <link rel="prev" title="Identifying and filtering chimeric feature sequences with q2-vsearch" href="../chimera/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="alternative-methods-of-read-joining-in-qiime-2">
+<h1>Alternative methods of read-joining in QIIME 2<a class="headerlink" href="#alternative-methods-of-read-joining-in-qiime-2" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This tutorial does not cover read-joining and denoising with
+DADA2. Instead, this tutorial focuses on alternative approaches to analyzing
+paired-end reads in QIIME 2. If you are interested in joining and denoising
+reads with DADA2, the <a class="reference internal" href="../atacama-soils/"><span class="doc">Atacama soil microbiome tutorial</span></a> illustrates how to use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">dada2</span> <span class="pre">denoise-paired</span></code> for
+this purpose.  If you plan to use DADA2 to join and denoise your paired end
+data, <strong>do not join your reads prior to denoising with DADA2;</strong> DADA2
+expects reads that have not yet been joined, and will join the reads for you
+during the denoising process.</p>
+</div>
+<p>In QIIME 2, we use the term <em>single-end reads</em> to refer to forward or reverse
+reads in isolation; we use the term <em>paired-end reads</em> to refer to forward and
+reverse reads that have not yet been joined; and we use the term <em>joined reads</em>
+to refer to forward and reverse reads that have already been joined (or
+merged). <strong>It is important to understand which of these terms apply to your
+data, as this will determine what steps are necessary to analyze your
+paired-end data.</strong></p>
+<p>It is currently possible to join paired-end reads in QIIME 2 using the
+<code class="docutils literal notranslate"><span class="pre">q2-vsearch</span></code> plugin, or to import reads that have been joined outside of
+QIIME 2 (for example, with <a class="reference external" href="https://github.com/brwnj/fastq-join">fastq-join</a>, see <a class="reference internal" href="#importing-pre-joined-reads">Importing pre-joined reads</a> for
+more details).  This tutorial will cover both of these processes.</p>
+<div class="section" id="obtain-the-data">
+<h2>Obtain the data<a class="headerlink" href="#obtain-the-data" title="Permalink to this headline">¶</a></h2>
+<p>Start by creating a directory to work in.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir qiime2-read-joining-tutorial
+<span class="nb">cd</span> qiime2-read-joining-tutorial
+</pre></div>
+</div>
+<p>Next, download the following <code class="docutils literal notranslate"><span class="pre">SampleData[PairedEndSequencesWithQuality]</span></code>
+artifact, which contains the demultiplexed reads from the <a class="reference internal" href="../atacama-soils/"><span class="doc">Atacama soil
+microbiome tutorial</span></a>.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/read-joining/atacama-seqs.qza">
+            https://data.qiime2.org/2020.2/tutorials/read-joining/atacama-seqs.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> demux.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "demux.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/read-joining/atacama-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/read-joining/atacama-seqs.qza" > \
+  "demux.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="section" id="joining-reads">
+<h2>Joining reads<a class="headerlink" href="#joining-reads" title="Permalink to this headline">¶</a></h2>
+<p>Next, use the <code class="docutils literal notranslate"><span class="pre">join-pairs</span></code> method in the <code class="docutils literal notranslate"><span class="pre">q2-vsearch</span></code> plugin to join the
+reads:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime vsearch join-pairs <span class="se">\</span>
+  --i-demultiplexed-seqs demux.qza <span class="se">\</span>
+  --o-joined-sequences demux-joined.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Fdemux.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/demux.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux-joined.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Fdemux-joined.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/demux-joined.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="viewing-a-summary-of-joined-data-with-read-quality">
+<h2>Viewing a summary of joined data with read quality<a class="headerlink" href="#viewing-a-summary-of-joined-data-with-read-quality" title="Permalink to this headline">¶</a></h2>
+<p>You can next generate a summary of the <code class="docutils literal notranslate"><span class="pre">demux-joined.qza</span></code> artifact.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime demux summarize <span class="se">\</span>
+  --i-data demux-joined.qza <span class="se">\</span>
+  --o-visualization demux-joined.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux-joined.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Fdemux-joined.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/demux-joined.qzv">download</a></p></li>
+</ul>
+</div>
+<p>This summary is particularly useful for determining approximately how long your
+joined reads are (we’ll come back to this when we denoise with Deblur). When
+looking at the quality plots in this visualization, if you hover over a
+specific position you’ll see how many reads are at least that long (of the
+reads that were sampled for computing sequence quality). Make note of the
+highest sequence position where most (say, &gt; 99%) of your reads are at least
+that long.</p>
+<p>For example, when hovering over a black box in this visualization (which is
+generated from a larger data set than the one used in this tutorial), I see
+that 10000 out of the 40126 sequences were used to estimate the quality score
+distribution at this position.</p>
+<p>When I hover over position 250, which is illustrated with a red box, I see that
+some sequences are not this long because only 9994 sequences were used for
+estimating the quality score distribution at this position. The red box and the
+red text below tell me that some sequences were not at least this long.</p>
+<p>When I hover over position 254, which is also illustrated with a red box, I see
+that many sequences are not this long because only 845 sequences were used for
+estimating the quality score distribution at this position.</p>
+<p><strong>Based on a comparison of these plots, I will note that most of my sequences
+are at least 250 bases long.</strong> We plan to simplify this process in <a class="reference external" href="https://github.com/qiime2/q2-demux/issues/71">the near
+future</a>.</p>
+</div>
+<div class="section" id="sequence-quality-control">
+<h2>Sequence quality control<a class="headerlink" href="#sequence-quality-control" title="Permalink to this headline">¶</a></h2>
+<p>Next we’ll apply quality control to our sequences using <code class="docutils literal notranslate"><span class="pre">quality-filter</span>
+<span class="pre">q-score-joined</span></code>. This method is identical to <code class="docutils literal notranslate"><span class="pre">quality-filter</span> <span class="pre">q-score</span></code>,
+except that it operated on joined reads. The parameters to this method have not
+been extensively benchmarked on joined read data, so we recommend experimenting
+with different parameter settings.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime quality-filter q-score-joined <span class="se">\</span>
+  --i-demux demux-joined.qza <span class="se">\</span>
+  --o-filtered-sequences demux-joined-filtered.qza <span class="se">\</span>
+  --o-filter-stats demux-joined-filter-stats.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux-joined-filter-stats.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Fdemux-joined-filter-stats.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/demux-joined-filter-stats.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux-joined-filtered.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Fdemux-joined-filtered.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/demux-joined-filtered.qza">download</a></p></li>
+</ul>
+</div>
+<p>At this stage you can choose to proceed using <a class="reference external" href="http://msystems.asm.org/content/2/2/e00191-16">Deblur</a> for additional quality
+control, or you can dereplicate sequences and optionally <a class="reference internal" href="../../plugins/available/vsearch/"><span class="doc">cluster them</span></a> into OTUs with <code class="docutils literal notranslate"><span class="pre">q2-vsearch</span></code>. Deblur
+should give much higher quality results, so we recommend that procedure and
+will illustrate that approach in the next steps of this tutorial.</p>
+<p>If you are instead interested in experimenting with an analysis workflow that
+is more like QIIME 1 processing (for example, to compare your Deblur or DADA2
+result with a QIIME 1-like pipeline), you should next dereplicate and cluster
+your sequences. If you try this option, we strongly encourage you to call
+<code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">quality-filter</span> <span class="pre">q-score-joined</span></code> with a higher <code class="docutils literal notranslate"><span class="pre">min-quality</span></code> threshold
+- possibly <code class="docutils literal notranslate"><span class="pre">--p-min-quality</span> <span class="pre">20</span></code> or <code class="docutils literal notranslate"><span class="pre">--p-min-quality</span> <span class="pre">30</span></code> (see <a class="reference external" href="https://doi.org/10.1038/nmeth.2276">Bokulich et
+al. 2013</a> for more details). You can then follow the steps in the <a class="reference external" href="https://forum.qiime2.org/t/clustering-sequences-into-otus-using-q2-vsearch/1348">OTU
+clustering tutorial</a>. After clustering, you will likely want to filter
+features that are observed in only one sample using <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">feature-table</span>
+<span class="pre">filter-features</span> <span class="pre">--p-min-samples</span></code>. In addition, removing singletons with an
+abundance filter is also advisable (see <a class="reference external" href="https://doi.org/10.1038/nmeth.2276">Bokulich et al. 2013</a> for more
+details), as well as <a class="reference internal" href="../chimera/"><span class="doc">filtering chimeric sequences</span></a>.</p>
+</div>
+<div class="section" id="deblur">
+<h2>Deblur<a class="headerlink" href="#deblur" title="Permalink to this headline">¶</a></h2>
+<p>You’re now ready to denoise your sequences with Deblur. You should pass
+the sequence length value you selected from the quality score plots for
+<code class="docutils literal notranslate"><span class="pre">--p-trim-length</span></code>. This will trim all sequences to this length, and
+discard any sequences which are not at least this long.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We use a trim length of 250 based on the quality score plots
+generated from the tutorial data set. Do not use 250 with your own data set,
+as this value will depend on your data set’s read lengths. Use the quality
+score plots to choose an appropriate trim length for your data.</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime deblur denoise-16S <span class="se">\</span>
+  --i-demultiplexed-seqs demux-joined-filtered.qza <span class="se">\</span>
+  --p-trim-length <span class="m">250</span> <span class="se">\</span>
+  --p-sample-stats <span class="se">\</span>
+  --o-representative-sequences rep-seqs.qza <span class="se">\</span>
+  --o-table table.qza <span class="se">\</span>
+  --o-stats deblur-stats.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">rep-seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Frep-seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/rep-seqs.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">deblur-stats.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Fdeblur-stats.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/deblur-stats.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Ftable.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/table.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="view-summary-of-deblur-feature-table">
+<h2>View summary of Deblur feature table<a class="headerlink" href="#view-summary-of-deblur-feature-table" title="Permalink to this headline">¶</a></h2>
+<p>You can next summarize the feature table resulting from q2-deblur. This table
+and the corresponding representative sequences are now ready to be analyzed
+with the same methods and visualizers that would be used on single-end read
+data.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table summarize <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --o-visualization table.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Ftable.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/table.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="importing-pre-joined-reads">
+<h2>Importing pre-joined reads<a class="headerlink" href="#importing-pre-joined-reads" title="Permalink to this headline">¶</a></h2>
+<p>If you have joined your reads outside of QIIME 2, for example with
+<code class="docutils literal notranslate"><span class="pre">fastq-join</span></code>, this section will illustrate how to import those reads.
+First, download the following demultiplexed and joined read data, which
+has been joined on a per-sample basis with <code class="docutils literal notranslate"><span class="pre">fastq-join</span></code>.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/read-joining/fj-joined.zip">
+            https://data.qiime2.org/2020.2/tutorials/read-joining/fj-joined.zip
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> fj-joined.zip
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "fj-joined.zip" \
+  "https://data.qiime2.org/2020.2/tutorials/read-joining/fj-joined.zip"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/read-joining/fj-joined.zip" > \
+  "fj-joined.zip"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Unzip this file as follows:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>unzip fj-joined.zip
+</pre></div>
+</div>
+<div class="section" id="import-reads">
+<h3>Import reads<a class="headerlink" href="#import-reads" title="Permalink to this headline">¶</a></h3>
+<p>Next, use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">import</span></code> to import these data. The format that is
+currently used here is <code class="docutils literal notranslate"><span class="pre">SingleEndFastqManifestPhred33</span></code> - this will
+likely be <a class="reference external" href="https://github.com/qiime2/q2-types/issues/162">updated in the future</a> to a format
+that clearly describes this as joined read data, but in the meantime you
+should follow the <a class="reference internal" href="../importing/"><span class="doc">formatting guidelines for the single-end “Fastq
+Manifest” formats</span></a>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --input-path fj-joined/manifest <span class="se">\</span>
+  --output-path fj-joined-demux.qza <span class="se">\</span>
+  --type SampleData<span class="o">[</span>JoinedSequencesWithQuality<span class="o">]</span> <span class="se">\</span>
+  --input-format SingleEndFastqManifestPhred33
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">fj-joined-demux.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Ffj-joined-demux.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/fj-joined-demux.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="viewing-summary-of-imported-data-with-read-quality">
+<h3>Viewing summary of imported data with read quality<a class="headerlink" href="#viewing-summary-of-imported-data-with-read-quality" title="Permalink to this headline">¶</a></h3>
+<p>You can generate a summary of the resulting artifact as follows:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime demux summarize <span class="se">\</span>
+  --i-data fj-joined-demux.qza <span class="se">\</span>
+  --o-visualization fj-joined-demux.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">fj-joined-demux.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fread-joining%2Ffj-joined-demux.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/read-joining/fj-joined-demux.qzv">download</a></p></li>
+</ul>
+</div>
+<p>You can now continue analyses with your joined reads as described above,
+e.g. quality filtering with q2-quality-filter, denoising with q2-deblur, or
+dereplicating and picking OTUs with q2-vsearch.</p>
+<p>Happy QIIMEing!</p>
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Importing data &#8212; QIIME 2 2.0.5 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.0.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="QIIME 2 2.0.5 documentation" href="../" />
+    <link rel="next" title="Semantic types" href="../semantic-types/" />
+    <link rel="prev" title="“88 soils” tutorial" href="../tutorials/88soils/" />
+  <link rel="icon" href="../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+<div id="wrapper" class="container clearfix">
+  <div id="header">
+    <a href="/">
+      <img
+        id="header-img"
+        src="../_static/logo400.png" alt="QIIME 2"
+      />
+    </a>
+  </div>
+  <div id="content">
+    
+    <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+      
+  <div class="section" id="importing-data">
+<h1>Importing data<a class="headerlink" href="#importing-data" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This guide assumes you have performed the steps in the <a class="reference internal" href="../install/"><span class="doc">install guide</span></a>.</p>
+</div>
+<p>In order to use QIIME 2, we require input data to be stored in <em>artifacts</em> (i.e. <code class="docutils literal"><span class="pre">.qza</span></code> files). This is what enables distributed and automatic provenance tracking, as well as semantic type validation and transformations between data formats. This guide will demonstrate how to import data into an artifact. This will typically happen with your initial data (e.g. raw sequences obtained from a sequencing facility), but importing can be performed at any step in your analysis pipeline. For example, if a collaborator provides you with a <code class="docutils literal"><span class="pre">.biom</span></code> file, you can import it into an artifact to perform &#8220;downstream&#8221; statistical analyses.</p>
+<p>Importing can be accomplished using any of the QIIME 2 <a class="reference internal" href="../interfaces/"><span class="doc">interfaces</span></a>. This guide will focus on using the QIIME 2 command-line interface (<code class="docutils literal"><span class="pre">q2cli</span></code>) to import data.</p>
+<p>First, let&#8217;s download an example <code class="docutils literal"><span class="pre">.biom</span></code> file:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>curl -sLO https://data.qiime2.org/2.0.5/tutorials/examples/feature-table.biom
+</pre></div>
+</div>
+<p>Next we will use the <code class="docutils literal"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">import</span></code> command, providing a semantic type of <code class="docutils literal"><span class="pre">FeatureTable[Frequency]</span></code> for the <code class="docutils literal"><span class="pre">.biom</span></code> file because this is a feature table of counts (i.e. frequencies):</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime tools import --input-path feature-table.biom --output-path feature-table --type <span class="s2">&quot;FeatureTable[Frequency]&quot;</span> --source-format BIOMV100Format
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">feature-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.5%2Fdata%2Fimport%2Ffeature-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.5/data/import/feature-table.qza">download</a></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We didn&#8217;t specify a file extension for the output file (<code class="docutils literal"><span class="pre">--output-path</span> <span class="pre">feature-table</span></code>). The command-line interface will automatically append the <code class="docutils literal"><span class="pre">.qza</span></code> file extension (if it isn&#8217;t present) to output artifacts, and the <code class="docutils literal"><span class="pre">.qzv</span></code> file extension to visualizations.</p>
+</div>
+<p>We now have a QIIME 2 artifact called <code class="docutils literal"><span class="pre">feature-table.qza</span></code> that we can start using in QIIME 2 analyses! For example, we can create a summary of the feature table as follows:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table summarize --i-table feature-table.qza --o-visualization table-summary
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output visualizations:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">table-summary.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.5%2Fdata%2Fimport%2Ftable-summary.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.5/data/import/table-summary.qzv">download</a></li>
+</ul>
+</div>
+<p>To see what semantic types are available in QIIME 2 and to learn more about them, see the <a class="reference internal" href="../semantic-types/"><span class="doc">semantic types</span></a> section of our documentation.</p>
+</div>
+
+
+    </div>
+    
+
+    
+    <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+      
+    </div>
+    
+  </div>
+</div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, QIIME 2 Development Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </body>
+</html>

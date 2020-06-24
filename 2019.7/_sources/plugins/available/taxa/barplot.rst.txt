@@ -1,0 +1,82 @@
+barplot: Visualize taxonomy with an interactive bar plot
+========================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime taxa barplot [OPTIONS]
+
+     This visualizer produces an interactive barplot visualization of
+     taxonomies. Interactive features include multi-level sorting, plot
+     recoloring, sample relabeling, and SVG figure export.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                            Feature table to visualize at various taxonomic
+                            levels.                                    [required]
+     --i-taxonomy ARTIFACT FeatureData[Taxonomy]
+                            Taxonomic annotations for features in the provided
+                            feature table. All features in the feature table must
+                            have a corresponding taxonomic annotation. Taxonomic
+                            annotations that are not present in the feature table
+                            will be ignored.                           [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple            The sample metadata.
+        arguments will be   
+        merged)                                                        [required]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH      Output unspecified results to a directory
+     --verbose / --quiet    Display verbose output to stdout and/or stderr
+                            during execution of this action. Or silence output if
+                            execution is successful (silence is golden).
+     --citations            Show citations and exit.
+     --help                 Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.taxa.visualizers import barplot
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Visualize taxonomy with an interactive bar plot
+
+   This visualizer produces an interactive barplot visualization of
+   taxonomies. Interactive features include multi-level sorting, plot
+   recoloring, sample relabeling, and SVG figure export.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table to visualize at various taxonomic levels.
+   taxonomy : FeatureData[Taxonomy]
+       Taxonomic annotations for features in the provided feature table. All
+       features in the feature table must have a corresponding taxonomic
+       annotation. Taxonomic annotations that are not present in the feature
+       table will be ignored.
+   metadata : Metadata
+       The sample metadata.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

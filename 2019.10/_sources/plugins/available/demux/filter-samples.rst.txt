@@ -1,0 +1,97 @@
+filter-samples: Filter samples out of demultiplexed data.
+=========================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime demux filter-samples [OPTIONS]
+
+     Filter samples indicated in given metadata out of demultiplexed data.
+     Specific samples can be further selected with the WHERE clause, and the
+     `exclude_ids` parameter allows for filtering of all samples not specified.
+
+   Inputs:
+     --i-demux ARTIFACT SampleData[SequencesWithQuality¹ |
+       PairedEndSequencesWithQuality² | JoinedSequencesWithQuality³]
+                          The demultiplexed data from which samples should be
+                          filtered.                                    [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple          Sample metadata indicating which sample ids to filter.
+        arguments will    The optional `where` parameter may be used to filter
+        be merged)        ids based on specified conditions in the metadata. The
+                          optional `exclude-ids` parameter may be used to exclude
+                          the ids specified in the metadata from the filter.
+                                                                       [required]
+     --p-where TEXT       Optional SQLite WHERE clause specifying sample
+                          metadata criteria that must be met to be included in
+                          the filtered data. If not provided, all samples in
+                          `metadata` that are also in the demultiplexed data will
+                          be retained.                                 [optional]
+     --p-exclude-ids / --p-no-exclude-ids
+                          Defaults to False. If True, the samples selected by
+                          the `metadata` and optional `where` parameter will be
+                          excluded from the filtered data.       [default: False]
+   Outputs:
+     --o-filtered-demux ARTIFACT SampleData[SequencesWithQuality¹ |
+       PairedEndSequencesWithQuality² | JoinedSequencesWithQuality³]
+                          Filtered demultiplexed data.                 [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.demux.methods import filter_samples
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Filter samples out of demultiplexed data.
+
+   Filter samples indicated in given metadata out of demultiplexed data.
+   Specific samples can be further selected with the WHERE clause, and the
+   `exclude_ids` parameter allows for filtering of all samples not specified.
+
+   Parameters
+   ----------
+   demux : SampleData[SequencesWithQuality¹ | PairedEndSequencesWithQuality² | JoinedSequencesWithQuality³]
+       The demultiplexed data from which samples should be filtered.
+   metadata : Metadata
+       Sample metadata indicating which sample ids to filter. The optional
+       `where` parameter may be used to filter ids based on specified
+       conditions in the metadata. The optional `exclude_ids` parameter may be
+       used to exclude the ids specified in the metadata from the filter.
+   where : Str, optional
+       Optional SQLite WHERE clause specifying sample metadata criteria that
+       must be met to be included in the filtered data. If not provided, all
+       samples in `metadata` that are also in the demultiplexed data will be
+       retained.
+   exclude_ids : Bool, optional
+       Defaults to False. If True, the samples selected by the `metadata` and
+       optional `where` parameter will be excluded from the filtered data.
+
+   Returns
+   -------
+   filtered_demux : SampleData[SequencesWithQuality¹ | PairedEndSequencesWithQuality² | JoinedSequencesWithQuality³]
+       Filtered demultiplexed data.</pre>
+       </div>
+     </div>
+   </div>

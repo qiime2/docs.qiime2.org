@@ -1,0 +1,72 @@
+vsearch
+=======
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This plugin wraps the vsearch application, and provides methods for clustering and dereplicating features and sequences.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.11.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-vsearch" rel="noopener">https://github.com/qiime2/q2-vsearch</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           Rognes T, Flouri T, Nichols B, Quince C, Mahé F. (2016) VSEARCH: a versatile open source tool for metagenomics. PeerJ 4:e2584. doi: 10.7717/peerj.2584<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+Pipelines
+---------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   cluster-features-open-reference
+   
+
+
+
+Methods
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   cluster-features-closed-reference
+   
+   cluster-features-de-novo
+   
+   dereplicate-sequences
+   
+   join-pairs
+   
+
+

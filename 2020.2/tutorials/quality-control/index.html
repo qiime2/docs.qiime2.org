@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Evaluating and controlling data quality with q2-quality-control &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Predicting sample metadata values with q2-sample-classifier" href="../sample-classifier/" />
+    <link rel="prev" title="Training feature classifiers with q2-feature-classifier" href="../feature-classifier/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="evaluating-and-controlling-data-quality-with-q2-quality-control">
+<h1>Evaluating and controlling data quality with q2-quality-control<a class="headerlink" href="#evaluating-and-controlling-data-quality-with-q2-quality-control" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a> and completed the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial</span></a>.</p>
+</div>
+<p>This tutorial will demonstrate how to use the <code class="docutils literal notranslate"><span class="pre">q2-quality-control</span></code> plugin to evaluate data quality based on mock communities (or other samples with known compositions) and filter sequence data.</p>
+<p>We will download and create several files, so first create a working directory.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir quality-control-tutorial
+<span class="nb">cd</span> quality-control-tutorial
+</pre></div>
+</div>
+<p>Let’s download some example data and get started.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/quality-control/query-seqs.qza">
+            https://data.qiime2.org/2020.2/tutorials/quality-control/query-seqs.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> query-seqs.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "query-seqs.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/query-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/query-seqs.qza" > \
+  "query-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/quality-control/reference-seqs.qza">
+            https://data.qiime2.org/2020.2/tutorials/quality-control/reference-seqs.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> reference-seqs.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "reference-seqs.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/reference-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/reference-seqs.qza" > \
+  "reference-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/quality-control/query-table.qza">
+            https://data.qiime2.org/2020.2/tutorials/quality-control/query-table.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> query-table.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "query-table.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/query-table.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/query-table.qza" > \
+  "query-table.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/quality-control/qc-mock-3-expected.qza">
+            https://data.qiime2.org/2020.2/tutorials/quality-control/qc-mock-3-expected.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> qc-mock-3-expected.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "qc-mock-3-expected.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/qc-mock-3-expected.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/qc-mock-3-expected.qza" > \
+  "qc-mock-3-expected.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-4" aria-controls="browser-4" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-4" aria-controls="wget-4" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-4" aria-controls="messages-4" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-4">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/quality-control/qc-mock-3-observed.qza">
+            https://data.qiime2.org/2020.2/tutorials/quality-control/qc-mock-3-observed.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> qc-mock-3-observed.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-4">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "qc-mock-3-observed.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/qc-mock-3-observed.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-4">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/quality-control/qc-mock-3-observed.qza" > \
+  "qc-mock-3-observed.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="section" id="excluding-sequences-by-alignment">
+<h2>Excluding sequences by alignment<a class="headerlink" href="#excluding-sequences-by-alignment" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">exclude-seqs</span></code> method aligns a set of query sequences contained in a <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> file against a set of reference sequences. This method employs a number of different alignment criteria (BLAST evalue, percent identity to top reference sequence, and percent of query that aligns to top reference sequence) to decide whether that sequence “hits” the reference sequences, and outputs separate files of sequences that hit/do not hit the reference sequences. This method can be used for a variety of applications, including removing known contaminant sequences, excluding host sequences (e.g., human DNA), or removing non-target sequences (e.g., non-bacterial) from your data.</p>
+<p>First, we will separate a small set of query sequences into those that hit/do not hit a set of reference sequences.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime quality-control exclude-seqs <span class="se">\</span>
+  --i-query-sequences query-seqs.qza <span class="se">\</span>
+  --i-reference-sequences reference-seqs.qza <span class="se">\</span>
+  --p-method blast <span class="se">\</span>
+  --p-perc-identity <span class="m">0</span>.97 <span class="se">\</span>
+  --p-perc-query-aligned <span class="m">0</span>.97 <span class="se">\</span>
+  --o-sequence-hits hits.qza <span class="se">\</span>
+  --o-sequence-misses misses.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">qc-mock-3-expected.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Fqc-mock-3-expected.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/qc-mock-3-expected.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">hits.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Fhits.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/hits.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">query-seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Fquery-seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/query-seqs.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">query-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Fquery-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/query-table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">misses.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Fmisses.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/misses.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">reference-seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Freference-seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/reference-seqs.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">qc-mock-3-observed.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Fqc-mock-3-observed.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/qc-mock-3-observed.qza">download</a></p></li>
+</ul>
+</div>
+<p>This method currently supports <code class="docutils literal notranslate"><span class="pre">blast</span></code>, <code class="docutils literal notranslate"><span class="pre">vsearch</span></code>, and <code class="docutils literal notranslate"><span class="pre">blastn-short</span></code> as alignment methods. Note that <code class="docutils literal notranslate"><span class="pre">blastn-short</span></code> should be used if the query sequences include very short sequences (&lt; 30 nt).</p>
+<p>Now that you have split your sequences into groups of sequences that hit/miss the reference sequences, you will most likely want to filter your feature table to remove hits or misses prior to further analysis. Filtering features from feature tables is fully covered in the <a class="reference internal" href="../filtering/"><span class="doc">filtering tutorial</span></a>, but here we will demonstrate an example of filtering a feature table using sequence data. In some cases, you may want to remove the <cite>misses</cite> from your feature table, e.g., if you are trying to select sequences that align to bacterial sequences (or a more specific clade). In other cases, you may want to remove the <cite>hits</cite> from your feature table, e.g., if you are trying to filter out contaminants or sequences that align to host DNA. Here we will filter out <cite>hits</cite> to demonstrate how to filter sequences from a filter table; one can replace <code class="docutils literal notranslate"><span class="pre">hits.qza</span></code> with <code class="docutils literal notranslate"><span class="pre">misses.qza</span></code> in the following command to filter out misses instead.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table query-table.qza <span class="se">\</span>
+  --m-metadata-file hits.qza <span class="se">\</span>
+  --o-filtered-table no-hits-filtered-table.qza <span class="se">\</span>
+  --p-exclude-ids
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">no-hits-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Fno-hits-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/no-hits-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>Enjoy.</p>
+</div>
+<div class="section" id="evaluating-quality-of-samples-with-known-composition">
+<h2>Evaluating quality of samples with known composition<a class="headerlink" href="#evaluating-quality-of-samples-with-known-composition" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://doi.org/10.1128/mSystems.00062-16">Mock communities</a> consist of known microbial strains that are intentionally mixed at defined proportions, such that the composition of the sample is known. Mock communities are useful for benchmarking bioinformatics methods, e.g., to determine how well a given method or pipeline estimates the expected composition. Many investigators also include mock communities or other samples with known compositions on sequencing runs to determine run quality and method optimization on a per-run basis. The q2-quality-control plugin contains two actions to assess mock community accuracy in each of these use cases. <code class="docutils literal notranslate"><span class="pre">evaluate_composition</span></code> assesses the accuracy with which the expected taxonomic composition (or other feature composition) is reconstructed. <code class="docutils literal notranslate"><span class="pre">evaluate_seqs</span></code> assesses the similarity of observed sequences to expected sequences, e.g., to determine the accuracy of denoising or OTU picking methods, and is described in the next section.</p>
+<p><code class="docutils literal notranslate"><span class="pre">evaluate_composition</span></code> compares the feature composition of pairs of observed and expected samples containing the same sample ID in two separate feature tables. Typically, feature composition will consist of taxonomy classifications or other semicolon-delimited feature annotations. Let’s give it a spin.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime quality-control evaluate-composition <span class="se">\</span>
+  --i-expected-features qc-mock-3-expected.qza <span class="se">\</span>
+  --i-observed-features qc-mock-3-observed.qza <span class="se">\</span>
+  --o-visualization qc-mock-3-comparison.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">qc-mock-3-comparison.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Fqc-mock-3-comparison.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/qc-mock-3-comparison.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Taxon accuracy rate, taxon detection rate, and linear regression scores between expected and observed feature abundances are calculated at each semicolon-delimited rank, and plots of per-level accuracy and observation correlations are plotted. A histogram of distance between false positive observations and the nearest expected feature is also generated, where distance equals the number of rank differences between the observed feature and the nearest common lineage in the expected feature. Finally, lists of false positive (misclassified and underclassified) and false negative features are given at the bottom of the visualization. Misclassifications are features that do not match any expected features at the deepest level of classification (e.g., species level), and usually represent either sample contaminants or sub-optimal bioinformatics pipelines (e.g., the presence of chimeric sequences or the use of an overconfident taxonomic classifier). Underclassifications are observed features that match expected features, but are not classified to the expected taxonomic depth (e.g., they are only classified to genus level but that genus classification is correct); these are often valid features (i.e., not contaminants) but are not classified to the desired level either because of technical limitations (e.g., sequences too short), degraded sequence quality, or sub-optimal methods (only a poor carpenter blames his/her tools, but one tool can do better than another). False negatives are features that were expected to be observed, but were not; these can be compared to the false-positives to get an idea of what features may have been mis-/underclassified.</p>
+</div>
+<div class="section" id="evaluating-sequence-quality">
+<h2>Evaluating sequence quality<a class="headerlink" href="#evaluating-sequence-quality" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">evaluate_seqs</span></code> aligns a set of query (e.g., observed) sequences against a set of reference (e.g., expected) sequences to evaluate the quality of alignment. The intended use is to align observed sequences against expected sequences (e.g., from a mock community) to determine the frequency of mismatches between observed sequences and the most similar expected sequences, e.g., as a measure of sequencing/method errors. However, any sequences may be provided as input to generate a report on pairwise alignment quality against a set of reference sequences.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime quality-control evaluate-seqs <span class="se">\</span>
+  --i-query-sequences query-seqs.qza <span class="se">\</span>
+  --i-reference-sequences reference-seqs.qza <span class="se">\</span>
+  --o-visualization eval-seqs-test.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">eval-seqs-test.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fquality-control%2Feval-seqs-test.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/quality-control/eval-seqs-test.qzv">download</a></p></li>
+</ul>
+</div>
+<p>This visualization shows the alignment results for each query sequence, the number of mismatches between expected and observed sequences, and finally pairwise alignments between each query sequence and its closest match among the reference sequences (if <code class="docutils literal notranslate"><span class="pre">--p-show-alignments</span></code> is set). This ouptut is still quite basic, but is planned for expansion in the near future. Keep your eyes peeled!</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

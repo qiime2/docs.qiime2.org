@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Importing sequence data &#8212; QIIME 2 2.0.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="top" title="QIIME 2 2.0.6 documentation" href="../../" />
+    <link rel="up" title="Tutorials" href="../" />
+    <link rel="next" title="Filtering feature tables" href="../table-filtering/" />
+    <link rel="prev" title="Training feature classifiers with q2-feature-classifier" href="../feature-classifier/" />
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/logo400.png" alt="QIIME 2"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="importing-sequence-data">
+<h1>Importing sequence data<a class="headerlink" href="#importing-sequence-data" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a> and have read <a class="reference internal" href="../import/"><span class="doc">Importing Data</span></a>.</p>
+</div>
+<p>To begin a QIIME 2 analysis with sequence data, for example as generated on an Illumina MiSeq instrument, it must be imported into a QIIME 2 artifact (<code class="docutils literal"><span class="pre">.qza</span></code>) file. This document illustrates how to import data in various starting formats, and will be expanded as additional relevant formats are identified. Each section below briefly describes a format of sequence data, provides commands to download example data files, and illustrates how to import data in that format.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">QIIME 2 is not designed for use with any specific sequence data format, but rather is intended to be general to many different data formats. If you need to import data in a format that is not covered here, please post to the <a class="reference external" href="https://forum.qiime2.org">QIIME 2 Forum</a> for help.</p>
+</div>
+<div class="section" id="emp-protocol-multiplexed-fastq">
+<h2>&#8220;EMP protocol&#8221; multiplexed fastq<a class="headerlink" href="#emp-protocol-multiplexed-fastq" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="format-description">
+<h3>Format description<a class="headerlink" href="#format-description" title="Permalink to this headline">¶</a></h3>
+<p>In the &#8220;Earth Microbiome Project (EMP) protocol&#8221; format, there are two <code class="docutils literal"><span class="pre">fastq.gz</span></code> files, one containing sequence reads and one containing the associated barcode reads, and the data are still multiplexed. The order of the records in the two <code class="docutils literal"><span class="pre">fastq.gz</span></code> files defines the association between a sequence read and its barcode read. These can be imported as follows.</p>
+</div>
+<div class="section" id="obtaining-example-data">
+<h3>Obtaining example data<a class="headerlink" href="#obtaining-example-data" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>mkdir raw-sequences
+curl -sL https://data.qiime2.org/2.0.6/tutorials/moving-pictures/raw-sequences/barcodes.fastq.gz &gt; raw-sequences/barcodes.fastq.gz
+curl -sL https://data.qiime2.org/2.0.6/tutorials/moving-pictures/raw-sequences/sequences.fastq.gz &gt; raw-sequences/sequences.fastq.gz
+</pre></div>
+</div>
+</div>
+<div class="section" id="importing-data">
+<h3>Importing data<a class="headerlink" href="#importing-data" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type RawSequences <span class="se">\</span>
+  --input-path raw-sequences/ <span class="se">\</span>
+  --output-path raw-sequences.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">raw-sequences.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Fimport-sequence-data%2Fraw-sequences.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/import-sequence-data/raw-sequences.qza">download</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="casava-1-8-single-end-demultiplexed-fastq">
+<h2>Casava 1.8 single-end demultiplexed fastq<a class="headerlink" href="#casava-1-8-single-end-demultiplexed-fastq" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Format description<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>In this format, there is one <code class="docutils literal"><span class="pre">fastq.gz</span></code> file for each sample in the study, and the file name includes the sample identifier. The file name for a single sample might look like <code class="docutils literal"><span class="pre">L2S357_15_L001_R1_001.fastq.gz</span></code>. The underscore-separated fields in this file name are the sample identifier, the barcode sequence or a barcode identifier, the lane number, the read number, and the set number.</p>
+</div>
+<div class="section" id="id2">
+<h3>Obtaining example data<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>curl -sLO https://data.qiime2.org/2.0.6/tutorials/importing-sequence-data/casava-18-single-end-demultiplexed.zip
+unzip -q casava-18-single-end-demultiplexed.zip
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>Importing data<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type <span class="s1">&#39;SampleData[SequencesWithQuality]&#39;</span> <span class="se">\</span>
+  --input-path casava-18-single-end-demultiplexed <span class="se">\</span>
+  --source-format CasavaOneEightSingleLanePerSampleDirFmt <span class="se">\</span>
+  --output-path demux.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">demux.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Fimport-sequence-data%2Fdemux.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/import-sequence-data/demux.qza">download</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu dropdown-menu-right"></ul>
+        </div>
+        
+<h3><a href="../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">&#8220;Moving Pictures&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../88soils/">&#8220;88 soils&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../import/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Importing sequence data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../table-filtering/">Filtering feature tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, QIIME 2 Development Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

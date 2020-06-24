@@ -1,0 +1,77 @@
+procrustes-analysis: Procrustes Analysis
+========================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity procrustes-analysis [OPTIONS]
+
+     Fit two ordination matrices with Procrustes analysis
+
+   Options:
+     --i-reference ARTIFACT PATH PCoAResults
+                                     The ordination matrix to which data is
+                                     fitted to.  [required]
+     --i-other ARTIFACT PATH PCoAResults
+                                     The ordination matrix that's fitted to the
+                                     reference ordination.  [required]
+     --p-dimensions INTEGER RANGE    [default: 5]
+     --o-transformed-reference ARTIFACT PATH PCoAResults
+                                     A normalized version of the "reference"
+                                     ordination matrix.  [required if not passing
+                                     --output-dir]
+     --o-transformed-other ARTIFACT PATH PCoAResults
+                                     A normalized and fitted version of the
+                                     "other" ordination matrix.  [required if not
+                                     passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.methods import procrustes_analysis
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Procrustes Analysis
+
+   Fit two ordination matrices with Procrustes analysis
+
+   Parameters
+   ----------
+   reference : PCoAResults
+       The ordination matrix to which data is fitted to.
+   other : PCoAResults
+       The ordination matrix that's fitted to the reference ordination.
+   dimensions : Int % Range(1, None), optional
+
+   Returns
+   -------
+   transformed_reference : PCoAResults
+       A normalized version of the "reference" ordination matrix.
+   transformed_other : PCoAResults
+       A normalized and fitted version of the "other" ordination matrix.</pre>
+       </div>
+     </div>
+   </div>

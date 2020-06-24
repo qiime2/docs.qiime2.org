@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Performing longitudinal and paired sample comparisons with q2-longitudinal &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Identifying and filtering chimeric feature sequences with q2-vsearch" href="../chimera/" />
+    <link rel="prev" title="Predicting sample metadata values with q2-sample-classifier" href="../sample-classifier/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="performing-longitudinal-and-paired-sample-comparisons-with-q2-longitudinal">
+<h1>Performing longitudinal and paired sample comparisons with q2-longitudinal<a class="headerlink" href="#performing-longitudinal-and-paired-sample-comparisons-with-q2-longitudinal" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a>.</p>
+</div>
+<p>This tutorial will demonstrate the various features of <code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code>, a plugin that supports statistical and visual comparisons of longitudinal study designs and paired samples, to determine if/how samples change between observational “states”. “States” will most commonly be related to time or an environmental gradient, and for paired analyses (<code class="docutils literal notranslate"><span class="pre">pairwise-distances</span></code> and <code class="docutils literal notranslate"><span class="pre">pairwise-differences</span></code>) the sample pairs should typically consist of the same individual subject observed at two different time points. For example, patients in a clinical study whose stool samples are collected before and after receiving treatment.</p>
+<p>“States” can also commonly be methodological, in which case sample pairs will usually be the same individual at the same time with two different methods. For example, q2-longitudinal could compare the effects of different collection methods, storage methods, DNA extraction methods, or any bioinformatic processing steps on the feature composition of individual samples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Many of the actions in q2-longitudinal take a <code class="docutils literal notranslate"><span class="pre">metric</span></code> value as input, which is usually a column name in a metadata file or a metadata-transformable artifact (including alpha diversity vectors, PCoA results, and many other QIIME 2 artifacts), or a feature ID in a feature table. The names of valid <code class="docutils literal notranslate"><span class="pre">metric</span></code> values in metadata files and metadata-transformable artifacts can be checked with the <a class="reference internal" href="../metadata/"><span class="doc">metadata tabulate</span></a> command. Valid feature names (to use as <code class="docutils literal notranslate"><span class="pre">metric</span></code> values associated with a feature table) can be checked with the <code class="docutils literal notranslate"><span class="pre">feature-data</span> <span class="pre">summarize</span></code> command.</p>
+</div>
+<p>The following flowchart illustrates the workflow involved in all <code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code> analyses (<a class="reference internal" href="../overview/#key"><span class="std std-ref">figure key</span></a>). Each of these actions is described in more detail in the tutorials below.</p>
+<img alt="../../_images/longitudinal.png" src="../../_images/longitudinal.png" />
+<p>In the examples below, we use data from the <a class="reference external" href="https://doi.org/10.1126/scitranslmed.aad7121">ECAM study</a>, a longitudinal study of infants’ and mothers’ microbiota from birth through 2 years of life. First let’s create a new directory and download the relevant tutorial data.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir longitudinal-tutorial
+<span class="nb">cd</span> longitudinal-tutorial
+</pre></div>
+</div>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/longitudinal/sample_metadata.tsv">
+            https://data.qiime2.org/2020.2/tutorials/longitudinal/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ecam-sample-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "ecam-sample-metadata.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/sample_metadata.tsv" > \
+  "ecam-sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_shannon.qza">
+            https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_shannon.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> shannon.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "shannon.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_shannon.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_shannon.qza" > \
+  "shannon.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza">
+            https://data.qiime2.org/2020.2/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> unweighted_unifrac_distance_matrix.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "unweighted_unifrac_distance_matrix.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza" > \
+  "unweighted_unifrac_distance_matrix.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="section" id="pairwise-difference-comparisons">
+<h2>Pairwise difference comparisons<a class="headerlink" href="#pairwise-difference-comparisons" title="Permalink to this headline">¶</a></h2>
+<p>Pairwise difference tests determine whether the value of a specific metric changed significantly between pairs of paired samples (e.g., pre- and post-treatment).</p>
+<p>This visualizer currently supports comparison of feature abundance (e.g., microbial sequence variants or taxa) in a feature table, or of metadata values in a sample metadata file. Alpha diversity values (e.g., observed sequence variants) and beta diversity values (e.g., principal coordinates) are useful metrics for comparison with these tests, and should be contained in one of the metadata files given as input. In the example below, we will test whether alpha diversity (Shannon diversity index) changed significantly between two different time points in the ECAM data according to delivery mode.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal pairwise-differences <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file shannon.qza <span class="se">\</span>
+  --p-metric shannon <span class="se">\</span>
+  --p-group-column delivery <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-state-1 <span class="m">0</span> <span class="se">\</span>
+  --p-state-2 <span class="m">12</span> <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --o-visualization pairwise-differences.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">unweighted_unifrac_distance_matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Funweighted_unifrac_distance_matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/unweighted_unifrac_distance_matrix.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">shannon.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fshannon.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/shannon.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">pairwise-differences.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fpairwise-differences.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/pairwise-differences.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="pairwise-distance-comparisons">
+<h2>Pairwise distance comparisons<a class="headerlink" href="#pairwise-distance-comparisons" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">pairwise-distances</span></code> visualizer also assesses changes between paired samples from two different “states”, but instead of taking a metadata column or artifact as input, it operates on a distance matrix to assess the distance between “pre” and “post” sample pairs, and tests whether these paired differences are significantly different between different groups, as specified by the <code class="docutils literal notranslate"><span class="pre">group-column</span></code> parameter. Here we use this action to compare the stability of the microbiota compositions of vaginally born and cesarean-delivered infants over a 12-month time frame in the ECAM data set.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal pairwise-distances <span class="se">\</span>
+  --i-distance-matrix unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-group-column delivery <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-state-1 <span class="m">0</span> <span class="se">\</span>
+  --p-state-2 <span class="m">12</span> <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --o-visualization pairwise-distances.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">pairwise-distances.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fpairwise-distances.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/pairwise-distances.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="linear-mixed-effect-models">
+<h2>Linear mixed effect models<a class="headerlink" href="#linear-mixed-effect-models" title="Permalink to this headline">¶</a></h2>
+<p>Linear mixed effects (LME) models test the relationship between a single response variable and one or more independent variables, where observations are made across dependent samples, e.g., in repeated-measures sampling experiments. This implementation takes at least one numeric <code class="docutils literal notranslate"><span class="pre">state-column</span></code> (e.g., Time) and one or more comma-separated <code class="docutils literal notranslate"><span class="pre">group-columns</span></code> (which may be categorical or numeric metadata columns; these are the fixed effects) as independent variables in a LME model, and plots regression plots of the response variable (“metric”) as a function of the state column and each group column. Additionally, the <code class="docutils literal notranslate"><span class="pre">individual-id-column</span></code> parameter should be a metadata column that indicates the individual subject/site that was sampled repeatedly. The response variable may either be a sample metadata mapping file column or a feature ID in the feature table. A comma-separated list of random effects can also be input to this action; a random intercept for each individual is included by default, but another common random effect that users may wish to use is a random slope for each individual, which can be set by using the <code class="docutils literal notranslate"><span class="pre">state-column</span></code> value as input to the <code class="docutils literal notranslate"><span class="pre">random-effects</span></code> parameter. Here we use LME to test whether alpha diversity (Shannon diversity index) changed over time and in response to delivery mode, diet, and sex in the ECAM data set.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Deciding whether a factor is a fixed effect or a random effect can be complicated. In general, a factor should be a fixed effect if the different factor levels (metadata column values) represent (more or less) all possible discrete values. For example, <code class="docutils literal notranslate"><span class="pre">delivery</span> <span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">sex</span></code>, and <code class="docutils literal notranslate"><span class="pre">diet</span></code> (dominantly breast-fed or formula-fed) are designated as fixed effects in the example below. Conversely, a factor should be a random effect if its values represent random samples from a population. For example, we could imagine having metadata variables like <code class="docutils literal notranslate"><span class="pre">body-weight</span></code>, <code class="docutils literal notranslate"><span class="pre">daily-kcal-from-breastmilk</span></code>, <code class="docutils literal notranslate"><span class="pre">number-of-peanuts-eaten-per-day</span></code>, or <code class="docutils literal notranslate"><span class="pre">mg-of-penicillin-administered-daily</span></code>; such values would represent random samples from within a population, and are unlikely to capture all possible values representative of the whole population. Not sure about the factors in your experiment? 🤔 Consult a statistician or reputable statistical tome for guidance. 📚</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal linear-mixed-effects <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file shannon.qza <span class="se">\</span>
+  --p-metric shannon <span class="se">\</span>
+  --p-group-columns delivery,diet,sex <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --o-visualization linear-mixed-effects.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">linear-mixed-effects.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Flinear-mixed-effects.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/linear-mixed-effects.qzv">download</a></p></li>
+</ul>
+</div>
+<p>The visualizer produced by this command contains several results. First, the input parameters are shown at the top of the visualization for convenience (e.g., when flipping through multiple visualizations it is useful to have a summary). Next, the “model summary” shows some descriptive information about the LME model that was trained. This just shows descriptive information about the “groups”; in this case, groups will be individuals (as set by the <code class="docutils literal notranslate"><span class="pre">--p-individual-id-column</span></code>). The main results to examine will be the “model results” below the “model summary”. These results summarize the effects of each fixed effect (and their interactions) on the dependent variable (shannon diversity). This table shows parameter estimates, estimate standard errors, z scores, P values (P&gt;|z|), and 95% confidence interval upper and lower bounds for each parameter. We see in this table that shannon diversity is significantly impacted by month of life and by diet, as well as several interacting factors. More information about LME models and the interpretation of these data can be found on the <a class="reference external" href="http://www.statsmodels.org/dev/mixed_linear.html">statsmodels LME description page</a>, which provides a number of useful technical references for further reading.</p>
+<p>Finally, scatter plots categorized by each “group column” are shown at the bottom of the visualization, with linear regression lines (plus 95% confidence interval in grey) for each group. If <code class="docutils literal notranslate"><span class="pre">--p-lowess</span></code> is enabled, instead locally weighted averages are shown for each group. Two different groups of scatter plots are shown. First, regression scatterplots show the relationship between <code class="docutils literal notranslate"><span class="pre">state_column</span></code> (x-axis) and <code class="docutils literal notranslate"><span class="pre">metric</span></code> (y-axis) for each sample. These plots are just used as a quick summary for reference; users are recommended to use the <code class="docutils literal notranslate"><span class="pre">volatility</span></code> visualizer for interactive plotting of their longitudinal data. Volatility plots can be used to qualitatively identify outliers that disproportionately drive the variance within individuals and groups, including by inspecting residuals in relation to control limits (see note below and the section on “Volatility analysis” for more details).</p>
+<p>The second set of scatterplots are fit vs. residual plots, which show the relationship between metric predictions for each sample (on the x-axis), and the residual or observation error (prediction - actual value) for each sample (on the y-axis). Residuals should be roughly zero-centered and normal across the range of measured values. Uncentered, systematically high or low, and autocorrelated values could indicate a poor model. If your residual plots look like an ugly mess without any apparent relationship between values, you are doing a good job. If you see a U-shaped curve or other non-random distribution, either your predictor variables (<code class="docutils literal notranslate"><span class="pre">group_columns</span></code> and/or <code class="docutils literal notranslate"><span class="pre">random_effects</span></code>) are failing to capture all explanatory information, causing information to leak into your residuals, or else you are not using an appropriate model for your data 🙁. Check your predictor variables and available metadata columns to make sure you aren’t missing anything.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to dot your i’s and cross your t’s, residual and predicted values for each sample can be obtained in the “Download raw data as tsv” link below the regression scatterplots. This file can be input as metadata to the <code class="docutils literal notranslate"><span class="pre">volatility</span></code> visualizer to check whether residuals are correlated with other metadata columns. If they are, those columns should probably be used as prediction variables in your model! Control limits (± 2 and 3 standard deviations) can be toggled on/off to easily identify outliers, which can be particularly useful for re-examining fit vs. residual plots with this visualizer. 🍝</p>
+</div>
+</div>
+<div class="section" id="volatility-analysis">
+<h2>Volatility analysis<a class="headerlink" href="#volatility-analysis" title="Permalink to this headline">¶</a></h2>
+<p>The volatility visualizer generates interactive line plots that allow us to assess how volatile a dependent variable is over a continuous, independent variable (e.g., time) in one or more groups. Multiple metadata files (including alpha and beta diversity artifacts) and <code class="docutils literal notranslate"><span class="pre">FeatureTable[RelativeFrequency]</span></code> tables can be used as input, and in the interactive visualization we can select different dependent variables to plot on the y-axis.</p>
+<p>Here we examine how variance in Shannon diversity and other metadata changes across time (set with the <code class="docutils literal notranslate"><span class="pre">state-column</span></code> parameter) in the ECAM cohort, both in groups of samples (interactively selected as described below) and in individual subjects (set with the <code class="docutils literal notranslate"><span class="pre">individual-id-column</span></code> parameter).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal volatility <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file shannon.qza <span class="se">\</span>
+  --p-default-metric shannon <span class="se">\</span>
+  --p-default-group-column delivery <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --o-visualization volatility.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">volatility.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fvolatility.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/volatility.qzv">download</a></p></li>
+</ul>
+</div>
+<p>In the resulting visualization, a line plot appears on the left-hand side of the plot and a panel of “Plot Controls” appears to the right. These “Plot Controls” interactively adjust several variables and parameters. This allows us to determine how groups’ and individuals’ values change across a single independent variable, <code class="docutils literal notranslate"><span class="pre">state-column</span></code>. Interective features in this visualization include:</p>
+<ol class="arabic simple">
+<li><p>The “Metric column” tab lets us select which continuous metadata values to plot on the y-axis. All continuous numeric columns found in metadata/artifacts input to this action will appear as options in this drop-down tab. In this example, the initial variable plotted in the visualization is shannon diversity because this column was designated by the optional <code class="docutils literal notranslate"><span class="pre">default-metric</span></code> parameter.</p></li>
+<li><p>The “Group column” tab lets us select which categorical metadata values to use for calculating mean values. All categorical metadata columns found in metadata/artifacts input to this action will appear as options in this drop-down tab. These mean values are plotted on the line plot, and the thickness and opacity of these mean lines can be modified using the slider bars in the “Plot Controls” on the right-hand side of the visualization. Error bars (standard deviation) can be toggled on and off with a button in the “Plot Controls”.</p></li>
+<li><p>Longitudinal values for each individual subject are plotted as “spaghetti” lines (so-called because this tangled mass of individual vectors looks like a ball of spaghetti). The thickness and opacity of spaghetti can be modified using the slider bars in the “Plot Controls” on the right-hand side of the visualization.</p></li>
+<li><p>Color scheme can be adjusted using the “Color scheme” tab.</p></li>
+<li><p>Global mean and warning/control limits (2X and 3X standard deviations from global mean) can be toggled on/off with the buttons in the “Plot Controls”. The goal of plotting these values is to show how a variable is changing over time (or a gradient) in relation to the mean. Large departures from the mean values can cross the warning/control limits, indicating a major disruption at that state; for example, antibiotic use or other disturbances impacting diversity could be tracked with these plots.</p></li>
+<li><p>Group mean lines and spaghetti can also be modified with the “scatter size” and “scatter opacity” slider bars in the “Plot Controls”. These adjust the size and opacity of individual points. Maximize scatter opacity and minimize line opacity to transform these into longitudinal scatter plots!</p></li>
+<li><p>Relevant sample metadata at individual points can be viewed by hovering the mouse over a point of interest.</p></li>
+</ol>
+<p>If the interactive features of this visualization don’t quite scratch your itch, click on the “Open in Vega Editor” button at the top of the “Plot Controls” and customize to your heart’s content. This opens a window for manually editing plot characteristics in <a class="reference external" href="https://vega.github.io/vega/docs/">Vega Editor</a>, a visualization tool external to QIIME2.</p>
+<p>Buon appetito! 🍝</p>
+</div>
+<div class="section" id="first-differencing-to-track-rate-of-change">
+<h2>First differencing to track rate of change<a class="headerlink" href="#first-differencing-to-track-rate-of-change" title="Permalink to this headline">¶</a></h2>
+<p>Another way to view time series data is by assessing how the rate of change differs over time. We can do this through calculating first differences, which is the magnitude of change between successive time points. If <span class="math notranslate nohighlight">\(Y_\text{t}\)</span> is the value of metric <span class="math notranslate nohighlight">\(Y\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>, the first difference at time <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\({\Delta}Y_\text{t} = Y_\text{t} - Y_\text{t-1}\)</span>. This calculation is performed at fixed intervals, so for each interval <span class="math notranslate nohighlight">\({\Delta}Y_\text{t}\)</span> is not calculated for subjects that are missing samples at times <span class="math notranslate nohighlight">\(t\)</span> or <span class="math notranslate nohighlight">\(t-1\)</span>. This transformation is performed in the <code class="docutils literal notranslate"><span class="pre">first-differences</span></code> method in <code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal first-differences <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file shannon.qza <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-metric shannon <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --o-first-differences shannon-first-differences.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">shannon-first-differences.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fshannon-first-differences.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/shannon-first-differences.qza">download</a></p></li>
+</ul>
+</div>
+<p>This outputs a <code class="docutils literal notranslate"><span class="pre">SampleData[FirstDifferences]</span></code> artifact, which can then be viewed, e.g., with the <code class="docutils literal notranslate"><span class="pre">volatility</span></code> visualizer or analyzed with <code class="docutils literal notranslate"><span class="pre">linear-mixed-effects</span></code> or other methods.</p>
+<p>A similar method is <code class="docutils literal notranslate"><span class="pre">first-distances</span></code>, which instead identifies the beta diversity distances between successive samples from the same subject. The pairwise distance between all samples can already be calculated by the <code class="docutils literal notranslate"><span class="pre">beta</span></code> or <code class="docutils literal notranslate"><span class="pre">core-metrics</span></code> methods in <code class="docutils literal notranslate"><span class="pre">q2-diversity</span></code>, so this method simply identifies the distances between successive samples collected from the same subject and outputs this series of values as metadata that can be consumed by other methods.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal first-distances <span class="se">\</span>
+  --i-distance-matrix unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --o-first-distances first-distances.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">first-distances.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Ffirst-distances.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/first-distances.qza">download</a></p></li>
+</ul>
+</div>
+<p>This output can be used in the same way as the output of <code class="docutils literal notranslate"><span class="pre">first-differences</span></code>. The output of <code class="docutils literal notranslate"><span class="pre">first-distances</span></code> is particularly empowering, though, because it allows us to analyze longitudinal changes in beta diversity using actions that cannot operate directly on a distance matrix, such as <code class="docutils literal notranslate"><span class="pre">linear-mixed-effects</span></code>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal linear-mixed-effects <span class="se">\</span>
+  --m-metadata-file first-distances.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-metric Distance <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-group-columns delivery,diet <span class="se">\</span>
+  --o-visualization first-distances-LME.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">first-distances-LME.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Ffirst-distances-LME.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/first-distances-LME.qzv">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="tracking-rate-of-change-from-static-timepoints">
+<h2>Tracking rate of change from static timepoints<a class="headerlink" href="#tracking-rate-of-change-from-static-timepoints" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">first-differences</span></code> and <code class="docutils literal notranslate"><span class="pre">first-distances</span></code> methods both have an optional “baseline” parameter to instead calculate differences from a static point (e.g., baseline or a time point when a treatment is administered: <span class="math notranslate nohighlight">\({\Delta}Y_\text{t} = Y_\text{t} - Y_\text{0}\)</span>). Calculating baseline differences can help tease apart noisy longitudinal data to reveal underlying trends in individual subjects or highlight significant experimental factors related to changes in diversity or other dependent variables.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal first-distances <span class="se">\</span>
+  --i-distance-matrix unweighted_unifrac_distance_matrix.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-replicate-handling random <span class="se">\</span>
+  --p-baseline <span class="m">0</span> <span class="se">\</span>
+  --o-first-distances first-distances-baseline-0.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">first-distances-baseline-0.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Ffirst-distances-baseline-0.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/first-distances-baseline-0.qza">download</a></p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Fun fact!</strong> We can also use the <code class="docutils literal notranslate"><span class="pre">first-distances</span></code> method to track longitudinal change in the proportion of features that are shared between an individual’s samples. This can be performed by calculating pairwise Jaccard distance (proportion of features that are not shared) between each pair of samples and using this as input to <code class="docutils literal notranslate"><span class="pre">first-distances</span></code>. This is particularly useful for pairing with the <code class="docutils literal notranslate"><span class="pre">baseline</span></code> parameter, e.g., to determine how unique features are lost/gained over the course of an experiment.</p>
+</div>
+</div>
+<div class="section" id="non-parametric-microbial-interdependence-test-nmit">
+<h2>Non-parametric microbial interdependence test (NMIT)<a class="headerlink" href="#non-parametric-microbial-interdependence-test-nmit" title="Permalink to this headline">¶</a></h2>
+<p>Within microbial communities, microbial populations do not exist in isolation but instead form complex ecological interaction webs. Whether these interdependence networks display the same temporal characteristics within subjects from the same group may indicate divergent temporal trajectories. NMIT evaluates how interdependencies of features (e.g., microbial taxa, sequence variants, or OTUs) within a community might differ over time between sample groups. NMIT performs a nonparametric microbial interdependence test to determine longitudinal sample similarity as a function of temporal microbial composition. For each subject, NMIT computes pairwise correlations between each pair of features. Between-subject distances are then computed based on a distance norm between each subject’s microbial interdependence correlation matrix. For more details and citation, please see <a class="reference external" href="https://doi.org/10.1002/gepi.22065">Zhang et al., 2017</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>NMIT, as with most longitudinal methods, largely depends on the quality of the input data. This method will only work for longitudinal data (i.e., the same subjects are sampled repeatedly over time). To make the method robust, we suggest a minimum of 5-6 samples (time points) per subject, but the more the merrier. NMIT does not require that samples are collected at identical time points (and hence is robust to missing samples) but this may impact data quality if highly undersampled subjects are included, or if subjects’ sampling times do not overlap in biologically meaningful ways. It is up to the users to ensure that their data are high quality and the methods are used in a biologically relevant fashion.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>NMIT can take a long time to run on very large feature tables. Removing low-abundance features and collapsing feature tables on taxonomy (e.g., to genus level) will improve runtime.</p>
+</div>
+<p>First let’s download a feature table to test. Here we will test genus-level taxa that exhibit a relative abundance &gt; 0.1% in more than 15% of the total samples.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_taxa.qza">
+            https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_taxa.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ecam-table-taxa.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "ecam-table-taxa.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_taxa.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_taxa.qza" > \
+  "ecam-table-taxa.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Now we are ready run NMIT. The output of this command is a distance matrix that we can pass to other QIIME2 commands for significance testing and visualization.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal nmit <span class="se">\</span>
+  --i-table ecam-table-taxa.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-corr-method pearson <span class="se">\</span>
+  --o-distance-matrix nmit-dm.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">nmit-dm.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fnmit-dm.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/nmit-dm.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-table-taxa.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fecam-table-taxa.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/ecam-table-taxa.qza">download</a></p></li>
+</ul>
+</div>
+<p>Now let’s put that distance matrix to work. First we will perform PERMANOVA tests to evaluate whether between-group distances are larger than within-group distance.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>NMIT computes between-subject distances across all time points, so each subject (as defined the <code class="docutils literal notranslate"><span class="pre">--p-individual-id-column</span></code> parameter used above) gets compressed into a single “sample” representing that subject’s longitudinal microbial interdependence. This new “sample” will be labeled with the <code class="docutils literal notranslate"><span class="pre">SampleID</span></code> of one of the subjects with a matching <code class="docutils literal notranslate"><span class="pre">individual-id</span></code>; this is done for the convenience of passing this distance matrix to downstream steps without needing to generate a new sample metadata file but it means that you must <strong>pay attention</strong>. <strong>For significance testing and visualization, only use group columns that are uniform across each</strong> <code class="docutils literal notranslate"><span class="pre">individual-id</span></code>. <strong>DO NOT ATTEMPT TO USE METADATA COLUMNS THAT VARY OVER TIME OR BAD THINGS WILL HAPPEN.</strong> For example, in the tutorial metadata a patient is labeled <code class="docutils literal notranslate"><span class="pre">antiexposedall==y</span></code> only after antibiotics have been used; this is a column that you should not use, as it varies over time. Now have fun and be responsible.</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity beta-group-significance <span class="se">\</span>
+  --i-distance-matrix nmit-dm.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-column delivery <span class="se">\</span>
+  --o-visualization nmit.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">nmit.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fnmit.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/nmit.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Finally, we can compute principal coordinates and use Emperor to visualize similarities among <strong>subjects</strong> (not individual samples; see the note above).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity pcoa <span class="se">\</span>
+  --i-distance-matrix nmit-dm.qza <span class="se">\</span>
+  --o-pcoa nmit-pc.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">nmit-pc.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fnmit-pc.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/nmit-pc.qza">download</a></p></li>
+</ul>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime emperor plot <span class="se">\</span>
+  --i-pcoa nmit-pc.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --o-visualization nmit-emperor.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">nmit-emperor.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fnmit-emperor.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/nmit-emperor.qzv">download</a></p></li>
+</ul>
+</div>
+<p>So there it is. We can use PERMANOVA test or other distance-based statistical tests to determine whether groups exhibit different longitudinal microbial interdependence relationships, and PCoA/emperor to visualize the relationships among groups of subjects. <strong>Don’t forget the caveats mentioned above about using and interpreting NMIT</strong>. Now be safe and have fun.</p>
+</div>
+<div class="section" id="feature-volatility-analysis">
+<h2>Feature volatility analysis<a class="headerlink" href="#feature-volatility-analysis" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This pipeline is a supervised regression method. Read the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a> for more details on the general process, outputs (e.g., feature importance scores), and interpretation of supervised regression models.</p>
+</div>
+<p>This pipeline identifies features that are predictive of a numeric metadata column, “state_column” (e.g., time), and plots their relative frequencies across states using interactive feature volatility plots (only important features are plotted). A supervised learning regressor is used to identify important features and assess their ability to predict sample states. <code class="docutils literal notranslate"><span class="pre">state_column</span></code> will typically be a measure of time, but any numeric metadata column can be used and this is not strictly a longitudinal method, unless if the <code class="docutils literal notranslate"><span class="pre">individual_id_column</span></code> parameter is used (in which case feature volatility plots will contain per-individual spaghetti lines, as described above). 🍝</p>
+<p>Let’s test this out on the ECAM dataset. First download a table to work with:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-4" aria-controls="browser-4" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-4" aria-controls="wget-4" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-4" aria-controls="messages-4" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-4">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_maturity.qza">
+            https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_maturity.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ecam-table.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-4">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "ecam-table.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_maturity.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-4">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_maturity.qza" > \
+  "ecam-table.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal feature-volatility <span class="se">\</span>
+  --i-table ecam-table.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-n-estimators <span class="m">10</span> <span class="se">\</span>
+  --p-random-state <span class="m">17</span> <span class="se">\</span>
+  --output-dir ecam-feat-volatility
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fecam-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/ecam-table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-feat-volatility/filtered_table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fecam-feat-volatility%2Ffiltered_table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/ecam-feat-volatility/filtered_table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-feat-volatility/sample_estimator.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fecam-feat-volatility%2Fsample_estimator.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/ecam-feat-volatility/sample_estimator.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-feat-volatility/feature_importance.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fecam-feat-volatility%2Ffeature_importance.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/ecam-feat-volatility/feature_importance.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-feat-volatility/accuracy_results.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fecam-feat-volatility%2Faccuracy_results.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/ecam-feat-volatility/accuracy_results.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-feat-volatility/volatility_plot.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fecam-feat-volatility%2Fvolatility_plot.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/ecam-feat-volatility/volatility_plot.qzv">download</a></p></li>
+</ul>
+</div>
+<p>All of the parameters used in this pipeline are described for other <code class="docutils literal notranslate"><span class="pre">q2-longitudinal</span></code> actions or in the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a>, so will not be discussed here. This pipeline produces multiple outputs:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">volatility-plot</span></code> contains an interactive feature volatility plot. This is very similar to the plots produced by the <code class="docutils literal notranslate"><span class="pre">volaility</span></code> visualizer described above, with a couple key differences. First, only features are viewable as “metrics” (plotted on the y-axis). Second, feature metadata (feature importances and descriptive statistics) are plotted as bar charts below the volatility plot. The relative frequencies of different features can be plotted in the volatility chart by either selecting the “metric” selection tool, or by clicking on one of the bars in the bar plot. This makes it convenient to select features for viewing based on importance or other feature metadata. By default, the most important feature is plotted in the volatility plot when the visualization is viewed. Different feature metadata can be selected and sorted using the control panel to the right of the bar charts. Most of these should be self-explanatory, except for “cumulative average change” (the cumulative magnitude of change, both positive and negative, across states, and averaged across samples at each state), and “net average change” (positive and negative “cumulative average change” is summed to determine whether a feature increased or decreased in abundance between baseline and end of study).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">accuracy-results</span></code> display the predictive accuracy of the regression model. This is important to view, as important features are meaningless if the model is inaccurate. See the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a> for more description of regressor accuracy results.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature-importance</span></code> contains the importance scores of all features. This is viewable in the feature volatility plot, but this artifact is nonetheless output for convenience. See the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a> for more description of feature importance scores.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filtered-table</span></code> is a <code class="docutils literal notranslate"><span class="pre">FeatureTable[RelativeFrequency]</span></code> artifact containing only important features. This is output for convenience.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample-estimator</span></code> contains the trained sample regressor. This is output for convenience, just in case you plan to regress additional samples. See the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a> for more description of the <code class="docutils literal notranslate"><span class="pre">SampleEstimator</span></code> type.</p></li>
+</ol>
+<p>Now we will cover basic interpretation of these data. By looking at the <code class="docutils literal notranslate"><span class="pre">accuracy-results</span></code>, we see that the regressor model is actually quite accurate, even though only 10 estimators were used for training the regressor (in practice a larger number of estimators should be used, and the default for the <code class="docutils literal notranslate"><span class="pre">--p-n-estimators</span></code> parameter is 100 estimators; see the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a> for more description of this parameter). Great! The feature importances will be meaningful. Month of life can be accurately predicted based on the ASV composition of these samples, suggesting that a programmatic succession of ASVs occurs during early life in this childhood cohort.</p>
+<p>Next we will view the feature volatility plot. We see that the most important feature is more than twice as important as the second most important feature, so this one is really predictive of a subject’s age! Sure enough, looking at the volatility chart we see that this feature is almost entirely absent at birth in most subjects, but increases gradually starting at around 8 months of life. Its average frequency is greater in vaginally born subjects than cesarean-delivered subjects, so could be an interesting candidate for statistical testing, e.g., with <code class="docutils literal notranslate"><span class="pre">linear-mixed-effects</span></code>. We can also use <code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">tabulate</span></code> to merge the feature importance data with taxonomy assignments to determine the taxonomic classification of this ASV (and other important features).</p>
+</div>
+<div class="section" id="maturity-index-prediction">
+<h2>“Maturity Index” prediction<a class="headerlink" href="#maturity-index-prediction" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This analysis currently works best for comparing groups that are sampled fairly evenly across time (the column used for regression). Datasets that contain groups sampled sporadically at different times are not supported, and users should either filter out those samples or “bin” them with other groups prior to using this visualizer.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This analysis will only work on data sets with a large sample size, particularly in the “control” group, and with sufficient biological replication at each time point.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This pipeline is a supervised regression method. Read the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a> for more details on the general process, outputs (e.g., feature importance scores), and interpretation of supervised regression models.</p>
+</div>
+<p>This method calculates a “microbial maturity” index from a regression model trained on feature data to predict a given continuous metadata column (“state_column”), e.g., to predict a subject’s age as a function of microbiota composition. This method is different from standard supervised regression because it quantifies the relative rate of change over time in two or more groups. The model is trained on a subset of control group samples, then predicts the column value for all samples. This visualization computes maturity index z-scores (MAZ) to compare relative “maturity” between each group, as described in <a class="reference external" href="https://doi.org/10.1038/nature13421">Sathish et al. 2014</a>. This method was originally designed to predict between-group differences in intestinal microbiome development by age, so <code class="docutils literal notranslate"><span class="pre">state_column</span></code> should typically be a measure of time. Other types of continuous metadata gradients might be testable, as long as two or more different “treatment” groups are being compared <em>with a large number of biological replicates</em> in the “control” group and treatment groups are sampled at the same “states” (time or position on gradient) for comparison. However, we do not necessarily recommend <em>or offer technical support</em> for unusual approaches.</p>
+<p>Here we will compare microbial maturity between vaginally born and cesarean-delivered infants as a function of age in the ECAM dataset.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime longitudinal maturity-index <span class="se">\</span>
+  --i-table ecam-table.qza <span class="se">\</span>
+  --m-metadata-file ecam-sample-metadata.tsv <span class="se">\</span>
+  --p-state-column month <span class="se">\</span>
+  --p-group-by delivery <span class="se">\</span>
+  --p-individual-id-column studyid <span class="se">\</span>
+  --p-control Vaginal <span class="se">\</span>
+  --p-test-size <span class="m">0</span>.4 <span class="se">\</span>
+  --p-stratify <span class="se">\</span>
+  --p-random-state <span class="m">1010101</span> <span class="se">\</span>
+  --output-dir maturity
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">maturity/maz_scores.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fmaturity%2Fmaz_scores.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/maturity/maz_scores.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">maturity/sample_estimator.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fmaturity%2Fsample_estimator.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/maturity/sample_estimator.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">maturity/feature_importance.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fmaturity%2Ffeature_importance.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/maturity/feature_importance.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">maturity/predictions.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fmaturity%2Fpredictions.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/maturity/predictions.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">maturity/accuracy_results.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fmaturity%2Faccuracy_results.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/maturity/accuracy_results.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">maturity/volatility_plots.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fmaturity%2Fvolatility_plots.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/maturity/volatility_plots.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">maturity/clustermap.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fmaturity%2Fclustermap.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/maturity/clustermap.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">maturity/model_summary.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Flongitudinal%2Fmaturity%2Fmodel_summary.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/longitudinal/maturity/model_summary.qzv">download</a></p></li>
+</ul>
+</div>
+<p>This pipeline produces several output files:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">accuracy_results.qzv</span></code> contains a linear regression plot of predicted vs. expected values on all control test samples (as described in the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a>). This is a subset of “control” samples that were not used for model training (the fraction defined by the <code class="docutils literal notranslate"><span class="pre">test-size</span></code> parameter).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">volatility-plots.qzv</span></code> contains an interactive volitility chart. This visualization can be useful for assessing how MAZ and other metrics change over time in each sample group (by default, the <code class="docutils literal notranslate"><span class="pre">group_by</span></code> column is used but other sample metadata may be selected for grouping samples). The default metric displayed on this chart is MAZ scores for the chosen <code class="docutils literal notranslate"><span class="pre">state_column</span></code>. The “prediction” (predicted “state_column” values) and state_column “maturity” metrics are other metrics calculated by this plugin that can be interesting to explore. See <a class="reference external" href="https://doi.org/10.1038/nature13421">Sathish et al. 2014</a> for more details on the MAZ and maturity metrics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clustermap.qzv</span></code> contains a heatmap showing the frequency of each important feature across time in each group. This plot is useful for visualizing how the frequency of important features changes over time in each group, demonstrating how different patterns of feature abundance (e.g., trajectories of development in the case of age or time-based models) may affect model predictions and MAZ scores. Important features shown along the x-axis; samples grouped and ordered by <code class="docutils literal notranslate"><span class="pre">group_by</span></code> and <code class="docutils literal notranslate"><span class="pre">state_column</span></code> are shown on the y-axis. See <a class="reference internal" href="../../plugins/available/feature-table/heatmap/"><span class="doc">heatmap</span></a> for details on how features are clustered along the x-axis (default parameters are used).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maz_scores.qza</span></code> contains MAZ scores for each sample (excluding training samples). This is useful for downstream testing as described below.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">predictions.qza</span></code> contains “state column” predictions for each sample (excluding training samples). These predictions are used to calculate the MAZ scores, and a subset (control test samples) are used to assess model accuracy. Nonetheless, the predictions are supplied in case they prove useful… These are also available for viewing in the volatility plots.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature_importance.qza</span></code> contains importance scores for all features included in the final regression model. If the <code class="docutils literal notranslate"><span class="pre">optimize-feature-selection</span></code> parameter is used, this will only contain important features; if not, importance scores will be assigned to all features in the original feature table.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample_estimator.qza</span></code> contains the trained <code class="docutils literal notranslate"><span class="pre">SampleEstimator[Regressor]</span></code>. You probably will not want to re-use this estimator for predicting other samples (since it is trained on a subset of samples), but nevertheless it is supplied for the curious and intrepid.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">model_summary.qzv</span></code> contains a summary of the model parameters used by the supervised learning estimator, as described in the <a class="reference internal" href="../sample-classifier/"><span class="doc">sample classifier tutorial</span></a> for the equivalently named outputs from the <code class="docutils literal notranslate"><span class="pre">classify-samples</span></code> pipeline.</p></li>
+</ol>
+<p>So what does this all show us? In the ECAM dataset that we are testing here, we see that MAZ scores are suppressed in Cesarean-delivered subjects in the second year of life, compared to vaginally born subjects (See <code class="docutils literal notranslate"><span class="pre">volatility-plots.qzv</span></code>). Several important sequence variants exhibit reduced frequency during this time frame, suggesting involvement in delayed maturation of the Cesarean cohort (See <code class="docutils literal notranslate"><span class="pre">clustermap.qzv</span></code>).</p>
+<p>Note that none of the results presented so far actually confirm a statistical difference between groups. Want to take this analysis to the next level (with multivariate statistical testing)? Use the MAZ scores (or possibly <code class="docutils literal notranslate"><span class="pre">predictions</span></code>) as input metrics (dependent variables) in linear mixed effects models (as described above).</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

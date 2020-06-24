@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>heatmap: Generate heatmap of important features. &#8212; QIIME 2 2019.10.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/external-links.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+    <link rel="next" title="metatable: Convert (and merge) positive numeric metadata (in)to feature table." href="../metatable/" />
+    <link rel="prev" title="classify-samples-from-dist: Run k-nearest-neighbors on a labeled distance matrix." href="../classify-samples-from-dist/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <script src="../../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="heatmap-generate-heatmap-of-important-features">
+<h1>heatmap: Generate heatmap of important features.<a class="headerlink" href="#heatmap-generate-heatmap-of-important-features" title="Permalink to this headline">¶</a></h1>
+<div class="tabbed">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+    <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="cli" class="tab-pane fade in active">
+      <h4>Docstring:</h4>
+      <pre>Usage: qiime sample-classifier heatmap [OPTIONS]
+
+  Generate a heatmap of important features. Features are filtered based on
+  importance scores; samples are optionally grouped by sample metadata; and
+  a heatmap is generated that displays (normalized) feature abundances per
+  sample.
+
+Inputs:
+  --i-table ARTIFACT FeatureTable[Frequency]
+                         Feature table containing all features that should be
+                         used for target prediction.                [required]
+  --i-importance ARTIFACT FeatureData[Importance]
+                         Feature importances.                       [required]
+Parameters:
+  --m-sample-metadata-file METADATA
+  --m-sample-metadata-column COLUMN  MetadataColumn[Categorical]
+                         Sample metadata column to use for sample labeling or
+                         grouping.                                  [optional]
+  --m-feature-metadata-file METADATA
+  --m-feature-metadata-column COLUMN  MetadataColumn[Categorical]
+                         Feature metadata (e.g., taxonomy) to use for
+                         labeling features in the heatmap.          [optional]
+  --p-feature-count INTEGER
+    Range(0, None)       Filter feature table to include top N most important
+                         features. Set to zero to include all features.
+                                                                 [default: 50]
+  --p-importance-threshold NUMBER
+    Range(0, None)       Filter feature table to exclude any features with an
+                         importance score less than this threshold. Set to
+                         zero to include all features.            [default: 0]
+  --p-group-samples / --p-no-group-samples
+                         Group samples by sample metadata.    [default: False]
+  --p-normalize / --p-no-normalize
+                         Normalize the feature table by adding a psuedocount
+                         of 1 and then taking the log10 of the table.
+                                                               [default: True]
+  --p-missing-samples TEXT Choices('error', 'ignore')
+                         How to handle missing samples in metadata. "error"
+                         will fail if missing samples are detected. "ignore"
+                         will cause the feature table and metadata to be
+                         filtered, so that only samples found in both files
+                         are retained.                     [default: 'ignore']
+  --p-metric TEXT Choices('cityblock', 'yule', 'braycurtis', 'euclidean',
+    'chebyshev', 'correlation', 'matching', 'sqeuclidean', 'sokalsneath',
+    'cosine', 'jaccard', 'canberra', 'kulsinski', 'dice', 'rogerstanimoto',
+    'russellrao', 'sokalmichener', 'seuclidean', 'hamming', 'mahalanobis',
+    'minkowski')         Metrics exposed by seaborn (see
+                         http://seaborn.pydata.org/generated/seaborn.clusterma
+                         p.html#seaborn.clustermap for more detail).
+                                                       [default: 'braycurtis']
+  --p-method TEXT Choices('single', 'weighted', 'complete', 'median',
+    'ward', 'centroid', 'average')
+                         Clustering methods exposed by seaborn (see
+                         http://seaborn.pydata.org/generated/seaborn.clusterma
+                         p.html#seaborn.clustermap for more detail).
+                                                          [default: 'average']
+  --p-cluster TEXT Choices('none', 'both', 'features', 'samples')
+                         Specify which axes to cluster.  [default: 'features']
+  --p-color-scheme TEXT Choices('viridis_r', 'cool', 'rocket_r',
+    'gist_stern_r', 'spring', 'gray_r', 'Set1', 'gist_heat', 'YlOrRd_r',
+    'tab10', 'bone', 'hsv', 'OrRd', 'copper', 'Blues_r', 'RdGy_r', 'terrain',
+    'Purples_r', 'Reds_r', 'pink_r', 'Vega20b_r', 'BuPu_r', 'jet_r',
+    'Purples', 'RdYlBu', 'Dark2_r', 'rainbow_r', 'viridis', 'spectral_r',
+    'cividis_r', 'Pastel1_r', 'nipy_spectral_r', 'Oranges_r', 'PuOr', 'PiYG',
+    'PRGn', 'PuRd', 'YlOrBr', 'YlGn', 'RdYlGn_r', 'PuBuGn', 'Accent',
+    'winter_r', 'afmhot_r', 'BrBG_r', 'prism_r', 'vlag', 'RdGy', 'YlOrRd',
+    'OrRd_r', 'Spectral_r', 'binary_r', 'plasma_r', 'gist_gray_r', 'Set2_r',
+    'seismic_r', 'GnBu_r', 'mako', 'flag_r', 'Wistia_r', 'gist_stern',
+    'gist_rainbow_r', 'coolwarm_r', 'RdYlBu_r', 'prism', 'Vega10_r',
+    'cubehelix', 'Reds', 'BrBG', 'autumn', 'Pastel2', 'Vega20c', 'gist_earth',
+    'Blues', 'hsv_r', 'PuOr_r', 'RdBu_r', 'RdYlGn', 'Set3', 'GnBu',
+    'Greens_r', 'binary', 'CMRmap', 'icefire', 'mako_r', 'RdPu', 'gist_yarg',
+    'gist_yarg_r', 'winter', 'brg_r', 'Dark2', 'afmhot', 'Accent_r', 'Greys',
+    'Greens', 'Paired', 'bwr_r', 'autumn_r', 'ocean_r', 'cool_r', 'gnuplot2',
+    'bone_r', 'inferno_r', 'Vega20_r', 'BuGn_r', 'Paired_r', 'Vega20b',
+    'YlGnBu', 'plasma', 'gnuplot2_r', 'jet', 'gist_rainbow', 'gnuplot',
+    'terrain_r', 'PuRd_r', 'YlGn_r', 'Spectral', 'gray', 'gnuplot_r', 'Set2',
+    'tab20c_r', 'brg', 'icefire_r', 'bwr', 'BuPu', 'cubehelix_r', 'YlOrBr_r',
+    'ocean', 'PRGn_r', 'YlGnBu_r', 'Vega20c_r', 'tab20_r', 'RdPu_r',
+    'Pastel2_r', 'tab20b_r', 'seismic', 'inferno', 'cividis', 'Greys_r',
+    'rainbow', 'Set3_r', 'Vega10', 'CMRmap_r', 'spring_r', 'magma_r',
+    'Pastel1', 'Set1_r', 'gist_ncar_r', 'gist_earth_r', 'hot', 'magma',
+    'PuBuGn_r', 'Wistia', 'Vega20', 'tab20c', 'summer', 'flag', 'summer_r',
+    'gist_heat_r', 'pink', 'spectral', 'BuGn', 'RdBu', 'PuBu', 'gist_ncar',
+    'copper_r', 'rocket', 'tab10_r', 'vlag_r', 'PuBu_r', 'tab20b', 'PiYG_r',
+    'gist_gray', 'hot_r', 'Oranges', 'nipy_spectral', 'coolwarm', 'tab20')
+                         Color scheme for heatmap.         [default: 'rocket']
+Outputs:
+  --o-heatmap VISUALIZATION
+                         Heatmap of important features.             [required]
+  --o-filtered-table ARTIFACT FeatureTable[Frequency]
+                         Filtered feature table containing data displayed in
+                         heatmap.                                   [required]
+Miscellaneous:
+  --output-dir PATH      Output unspecified results to a directory
+  --verbose / --quiet    Display verbose output to stdout and/or stderr
+                         during execution of this action. Or silence output if
+                         execution is successful (silence is golden).
+  --citations            Show citations and exit.
+  --help                 Show this message and exit.</pre>
+    </div>
+    <div id="api" class="tab-pane fade">
+    <h4>Import:</h4><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>from qiime2.plugins.sample_classifier.pipelines import heatmap
+</pre></div>
+</div>
+    <h4>Docstring:</h4>
+      <pre>Generate heatmap of important features.
+
+Generate a heatmap of important features. Features are filtered based on
+importance scores; samples are optionally grouped by sample metadata; and a
+heatmap is generated that displays (normalized) feature abundances per
+sample.
+
+Parameters
+----------
+table : FeatureTable[Frequency]
+    Feature table containing all features that should be used for target
+    prediction.
+importance : FeatureData[Importance]
+    Feature importances.
+sample_metadata : MetadataColumn[Categorical], optional
+    Sample metadata column to use for sample labeling or grouping.
+feature_metadata : MetadataColumn[Categorical], optional
+    Feature metadata (e.g., taxonomy) to use for labeling features in the
+    heatmap.
+feature_count : Int % Range(0, None), optional
+    Filter feature table to include top N most important features. Set to
+    zero to include all features.
+importance_threshold : Float % Range(0, None), optional
+    Filter feature table to exclude any features with an importance score
+    less than this threshold. Set to zero to include all features.
+group_samples : Bool, optional
+    Group samples by sample metadata.
+normalize : Bool, optional
+    Normalize the feature table by adding a psuedocount of 1 and then
+    taking the log10 of the table.
+missing_samples : Str % Choices('error', 'ignore'), optional
+    How to handle missing samples in metadata. "error" will fail if missing
+    samples are detected. "ignore" will cause the feature table and
+    metadata to be filtered, so that only samples found in both files are
+    retained.
+metric : Str % Choices('sokalsneath', 'correlation', 'chebyshev', 'sokalmichener', 'mahalanobis', 'cosine', 'yule', 'hamming', 'cityblock', 'jaccard', 'seuclidean', 'kulsinski', 'russellrao', 'canberra', 'rogerstanimoto', 'matching', 'euclidean', 'sqeuclidean', 'braycurtis', 'minkowski', 'dice'), optional
+    Metrics exposed by seaborn (see http://seaborn.pydata.org/generated/sea
+    born.clustermap.html#seaborn.clustermap for more detail).
+method : Str % Choices('ward', 'centroid', 'single', 'average', 'weighted', 'median', 'complete'), optional
+    Clustering methods exposed by seaborn (see http://seaborn.pydata.org/ge
+    nerated/seaborn.clustermap.html#seaborn.clustermap for more detail).
+cluster : Str % Choices('features', 'both', 'samples', 'none'), optional
+    Specify which axes to cluster.
+color_scheme : Str % Choices('flag_r', 'RdBu_r', 'gist_heat_r', 'icefire_r', 'YlOrBr_r', 'tab20', 'tab20b_r', 'rainbow_r', 'gist_ncar_r', 'vlag_r', 'gist_earth', 'PuOr_r', 'spectral_r', 'Vega10', 'hsv_r', 'icefire', 'hot', 'Reds', 'Set1_r', 'bwr', 'YlGn', 'coolwarm', 'ocean', 'coolwarm_r', 'cubehelix', 'Accent_r', 'seismic_r', 'PuBu_r', 'PuRd', 'inferno_r', 'PuBuGn', 'cool', 'RdYlBu', 'bone_r', 'jet', 'gist_heat', 'RdYlGn', 'Greens', 'binary', 'hsv', 'Accent', 'gray', 'tab10', 'winter_r', 'BuPu', 'tab10_r', 'gist_rainbow_r', 'gist_yarg', 'GnBu', 'Set3_r', 'Set2_r', 'RdBu', 'Spectral', 'Pastel1_r', 'gnuplot2', 'summer_r', 'Vega20_r', 'Pastel1', 'magma_r', 'Wistia_r', 'tab20b', 'PRGn_r', 'vlag', 'Blues_r', 'brg', 'ocean_r', 'plasma', 'rainbow', 'PiYG', 'Vega10_r', 'gist_stern_r', 'magma', 'bwr_r', 'spring', 'PuBu', 'gnuplot', 'BuPu_r', 'summer', 'PuRd_r', 'tab20c', 'gist_gray_r', 'prism', 'rocket', 'Paired', 'gist_ncar', 'Blues', 'Oranges', 'Vega20c_r', 'Paired_r', 'PiYG_r', 'Greys', 'Purples_r', 'RdGy_r', 'mako_r', 'viridis', 'YlOrRd_r', 'gist_yarg_r', 'Greens_r', 'PuBuGn_r', 'bone', 'tab20_r', 'winter', 'Spectral_r', 'tab20c_r', 'prism_r', 'afmhot', 'Set2', 'gist_stern', 'BrBG', 'spring_r', 'OrRd', 'rocket_r', 'viridis_r', 'terrain', 'seismic', 'YlOrRd', 'CMRmap_r', 'mako', 'OrRd_r', 'Set1', 'Wistia', 'RdYlGn_r', 'inferno', 'BuGn', 'binary_r', 'Set3', 'GnBu_r', 'flag', 'gist_earth_r', 'Dark2_r', 'YlGn_r', 'gist_rainbow', 'pink_r', 'BrBG_r', 'YlGnBu_r', 'copper', 'Vega20c', 'RdYlBu_r', 'brg_r', 'RdPu', 'cividis', 'copper_r', 'BuGn_r', 'Reds_r', 'gnuplot2_r', 'jet_r', 'gray_r', 'plasma_r', 'pink', 'RdPu_r', 'spectral', 'RdGy', 'cividis_r', 'Oranges_r', 'gist_gray', 'gnuplot_r', 'Vega20', 'Vega20b', 'autumn', 'YlGnBu', 'PRGn', 'cool_r', 'autumn_r', 'Greys_r', 'CMRmap', 'Pastel2', 'terrain_r', 'Dark2', 'nipy_spectral', 'nipy_spectral_r', 'afmhot_r', 'YlOrBr', 'Purples', 'Pastel2_r', 'Vega20b_r', 'cubehelix_r', 'PuOr', 'hot_r'), optional
+    Color scheme for heatmap.
+
+Returns
+-------
+heatmap : Visualization
+    Heatmap of important features.
+filtered_table : FeatureTable[Frequency]
+    Filtered feature table containing data displayed in heatmap.</pre>
+    </div>
+  </div>
+</div></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2019, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+beta-correlation: Beta diversity correlation
+============================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime diversity beta-correlation [OPTIONS]
+
+     Apply a two-sided Mantel test to identify correlation between the distance
+     matrix and a numeric sample metadata category. Sample metadata pairwise
+     distances are computed as the Euclidean distance between each pair of
+     samples in the metadata category.
+
+   Options:
+     --i-distance-matrix PATH       Artifact: DistanceMatrix  [required]
+                                    Matrix
+                                    of distances between pairs of samples.
+     --m-metadata-file PATH         Metadata file or artifact viewable as
+                                    metadata. This option may be supplied
+                                    multiple times to merge metadata  [required]
+     --m-metadata-category TEXT     Category from metadata file or artifact
+                                    viewable as metadata  [required]
+                                    The sample
+                                    metadata.
+     --p-method [spearman|pearson]  [default: spearman]
+                                    The correlation test to
+                                    be applied in the Mantel test.
+     --p-permutations INTEGER       [default: 999]
+                                    The number of permutations to
+                                    be run when computing p-values.
+     --o-visualization PATH         Visualization [required if not passing
+                                    --output-dir]
+     --output-dir DIRECTORY         Output unspecified results to a directory
+     --cmd-config PATH              Use config file for command options
+     --verbose                      Display verbose output to stdout and/or
+                                    stderr during execution of this action.
+                                    [default: False]
+     --quiet                        Silence output if execution is successful
+                                    (silence is golden).  [default: False]
+     --help                         Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Beta diversity correlation
+
+   Apply a two-sided Mantel test to identify correlation between the distance
+   matrix and a numeric sample metadata category. Sample metadata pairwise
+   distances are computed as the Euclidean distance between each pair of
+   samples in the metadata category.
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   metadata : MetadataCategory
+       The sample metadata.
+   method : Str % Choices({'pearson', 'spearman'}), optional
+       The correlation test to be applied in the Mantel test.
+   permutations : Int, optional
+       The number of permutations to be run when computing p-values.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

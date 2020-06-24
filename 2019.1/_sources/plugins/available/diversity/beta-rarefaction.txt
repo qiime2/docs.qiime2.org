@@ -1,0 +1,154 @@
+beta-rarefaction: Beta diversity rarefaction
+============================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:beta-rarefaction.bib
+   :all:
+   :keyprefix: diversity:beta-rarefaction:
+   :labelprefix: diversity:beta-rarefaction:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity beta-rarefaction [OPTIONS]
+
+     Repeatedly rarefy a feature table to compare beta diversity results within
+     a given rarefaction depth.
+
+     For a given beta diversity metric, this visualizer will provide: an
+     Emperor jackknifed PCoA plot, samples clustered by UPGMA or neighbor
+     joining with support calculation, and a heatmap showing the correlation
+     between rarefaction trials of that beta diversity metric.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     Feature table upon which to perform beta
+                                     diversity rarefaction analyses.  [required]
+     --p-metric [seuclidean|dice|sokalsneath|weighted_unifrac|yule|aitchison|braycurtis|unweighted_unifrac|kulsinski|cityblock|russellrao|hamming|euclidean|cosine|generalized_unifrac|canberra|wminkowski|rogerstanimoto|weighted_normalized_unifrac|matching|sokalmichener|canberra_adkins|jaccard|chebyshev|sqeuclidean|mahalanobis|correlation]
+                                     The beta diversity metric to be computed.
+                                     [required]
+     --p-clustering-method [nj|upgma]
+                                     Samples can be clustered with neighbor
+                                     joining or UPGMA. An arbitrary rarefaction
+                                     trial will be used for the tree, and the
+                                     remaining trials are used to calculate the
+                                     support of the internal nodes of that tree.
+                                     [required]
+     --m-metadata-file MULTIPLE FILE
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. The sample
+                                     metadata used for the Emperor jackknifed
+                                     PCoA plot.  [required]
+     --p-sampling-depth INTEGER RANGE
+                                     The total frequency that each sample should
+                                     be rarefied to prior to computing the
+                                     diversity metric.  [required]
+     --p-iterations INTEGER RANGE    Number of times to rarefy the feature table
+                                     at a given sampling depth.  [default: 10]
+     --i-phylogeny ARTIFACT PATH Phylogeny[Rooted]
+                                     Phylogenetic tree containing tip identifiers
+                                     that correspond to the feature identifiers
+                                     in the table. This tree can contain tip ids
+                                     that are not present in the table, but all
+                                     feature ids in the table must be present in
+                                     this tree. [required for phylogenetic
+                                     metrics]  [optional]
+     --p-correlation-method [pearson|spearman]
+                                     The Mantel correlation test to be applied
+                                     when computing correlation between beta
+                                     diversity distance matrices.  [default:
+                                     spearman]
+     --p-color-scheme [RdBu|RdGy|BrBG|RdYlBu|RdYlGn_r|PRGn_r|RdBu_r|RdGy_r|PiYG_r|RdYlGn|BrBG_r|PRGn|RdYlBu_r|PuOr_r|PuOr|PiYG]
+                                     The matplotlib color scheme to generate the
+                                     heatmap with.  [default: BrBG]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config FILE               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import beta_rarefaction
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Beta diversity rarefaction
+
+   Repeatedly rarefy a feature table to compare beta diversity results within
+   a given rarefaction depth.  For a given beta diversity metric, this
+   visualizer will provide: an Emperor jackknifed PCoA plot, samples clustered
+   by UPGMA or neighbor joining with support calculation, and a heatmap
+   showing the correlation between rarefaction trials of that beta diversity
+   metric.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table upon which to perform beta diversity rarefaction
+       analyses.
+   metric : Str % Choices({'aitchison', 'braycurtis', 'canberra', 'canberra_adkins', 'chebyshev', 'cityblock', 'correlation', 'cosine', 'dice', 'euclidean', 'generalized_unifrac', 'hamming', 'jaccard', 'kulsinski', 'mahalanobis', 'matching', 'rogerstanimoto', 'russellrao', 'seuclidean', 'sokalmichener', 'sokalsneath', 'sqeuclidean', 'unweighted_unifrac', 'weighted_normalized_unifrac', 'weighted_unifrac', 'wminkowski', 'yule'})
+       The beta diversity metric to be computed.
+   clustering_method : Str % Choices({'nj', 'upgma'})
+       Samples can be clustered with neighbor joining or UPGMA. An arbitrary
+       rarefaction trial will be used for the tree, and the remaining trials
+       are used to calculate the support of the internal nodes of that tree.
+   metadata : Metadata
+       The sample metadata used for the Emperor jackknifed PCoA plot.
+   sampling_depth : Int % Range(1, None)
+       The total frequency that each sample should be rarefied to prior to
+       computing the diversity metric.
+   iterations : Int % Range(2, None), optional
+       Number of times to rarefy the feature table at a given sampling depth.
+   phylogeny : Phylogeny[Rooted], optional
+       Phylogenetic tree containing tip identifiers that correspond to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree. [required for phylogenetic metrics]
+   correlation_method : Str % Choices({'pearson', 'spearman'}), optional
+       The Mantel correlation test to be applied when computing correlation
+       between beta diversity distance matrices.
+   color_scheme : Str % Choices({'BrBG', 'BrBG_r', 'PRGn', 'PRGn_r', 'PiYG', 'PiYG_r', 'PuOr', 'PuOr_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r'}), optional
+       The matplotlib color scheme to generate the heatmap with.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

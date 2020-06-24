@@ -1,0 +1,62 @@
+distance-matrix: Create a distance matrix from a numeric Metadata column
+========================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime metadata distance-matrix [OPTIONS]
+
+     Create a distance matrix from a numeric metadata column. The Euclidean
+     distance is computed between each pair of samples or features in the
+     column.
+
+     Tip: the distance matrix produced by this method can be used as input to
+     the Mantel test available in `q2-diversity`.
+
+   Options:
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata.
+                                     [required]
+     --m-metadata-column MetadataColumn[Numeric]
+                                     Column from metadata file or artifact
+                                     viewable as metadata. Numeric metadata
+                                     column to compute pairwise Euclidean
+                                     distances from  [required]
+     --o-distance-matrix ARTIFACT PATH DistanceMatrix
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Create a distance matrix from a numeric Metadata column
+
+   Create a distance matrix from a numeric metadata column. The Euclidean
+   distance is computed between each pair of samples or features in the
+   column.  Tip: the distance matrix produced by this method can be used as
+   input to the Mantel test available in `q2-diversity`.
+
+   Parameters
+   ----------
+   metadata : MetadataColumn[Numeric]
+       Numeric metadata column to compute pairwise Euclidean distances from
+
+   Returns
+   -------
+   distance_matrix : DistanceMatrix</pre>
+       </div>
+     </div>
+   </div>

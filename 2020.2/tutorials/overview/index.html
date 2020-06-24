@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Overview of QIIME 2 Plugin Workflows &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="QIIME 2 for Experienced Microbiome Researchers" href="../qiime2-for-experienced-microbiome-researchers/" />
+    <link rel="prev" title="Tutorials" href="../" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="overview-of-qiime-2-plugin-workflows">
+<h1>Overview of QIIME 2 Plugin Workflows<a class="headerlink" href="#overview-of-qiime-2-plugin-workflows" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Abandon all hope, ye who enter. If you have not read the <a class="reference internal" href="../../glossary/"><span class="doc">glossary</span></a>. 👺</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a guide for novice QIIME 2 users, and particularly for those who are new to microbiome research. For experienced users who are already well versed in microbiome analysis, and those who are adverse to uncontrolled use of emoji, mosey on over to the <a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/"><span class="doc">overview tutorial for experienced users</span></a>.</p>
+</div>
+<p>Welcome all newcomers 👋. This guide will give you an overview of many of the main plugins and actions available in QIIME 2, and guide you to the relevant tutorials for deeper exploration. In other words, it might not answer the question, “how do I use QIIME 2”, but it will point you in the right direction. Consider this your treasure map: QIIME 2 actions are the stepping stones on your path to glory, and the flowcharts below will tell you where all the goodies are buried. 🗺️</p>
+<p>Remember, <em>many paths lead from the foot of the mountain, but at the peak we all gaze at the same moon.</em> 🌕</p>
+<div class="section" id="let-s-get-oriented-flowcharts">
+<h2>Let’s get oriented: flowcharts<a class="headerlink" href="#let-s-get-oriented-flowcharts" title="Permalink to this headline">¶</a></h2>
+<p>Before we begin talking about specific plugins and actions, we will discuss a conceptual overview of a standard QIIME 2 workflow for analyzing amplicon sequence data. And before we look at that overview, we must look at the key to our treasure map:</p>
+<img alt="../../_images/key.png" id="key" src="../../_images/key.png" />
+<p>Each type of data (i.e., Artifacts and Visualizations) and action (i.e., methods, visualizers, and pipelines) is represented by a different color-coded node. The edges connecting each node is either solid (representing either required input or output) or dashed (representing optional input). Don’t know what these terms mean? Arrgh! Read the note at the top of this page.</p>
+<p>In the flowcharts below:</p>
+<ul class="simple">
+<li><p>Actions are labeled with the name of the plugin and the name of the action. To use that action, type “qiime” and then the text contained in that node. E.g., <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">demux</span> <span class="pre">emp-single</span></code>.</p></li>
+<li><p>Note that pipelines are a special type of action, that actually runs multiple actions in a single command. Neat! In (some of) the flowcharts, the pipelines are displayed as boxes encompassing the actions that are run inside. 🌯</p></li>
+<li><p>Artifacts are labeled with the <a class="reference internal" href="../../semantic-types/"><span class="doc">semantic type</span></a> of that file. Don’t worry — you will not need to type out those long names unless if you need to <a class="reference internal" href="../importing/"><span class="doc">import</span></a> a file into that format.</p></li>
+<li><p>Visualizations are variously labeled as “visualization”, some name that represents the information shown in that visualization, or replaced with an image representing some of the tasty information you might find inside that visualization… 🍙</p></li>
+</ul>
+</div>
+<div class="section" id="useful-points-for-beginners">
+<h2>Useful points for beginners<a class="headerlink" href="#useful-points-for-beginners" title="Permalink to this headline">¶</a></h2>
+<p>Just a few more <strong>important points</strong> before we go further:</p>
+<ol class="arabic simple">
+<li><p>The guide below is not exhaustive by any means. It only covers some of the chief actions in most of the “core” QIIME 2 plugins. There are many more actions and plugins to discover. Curious to learn more? See all installed plugins by typing <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">--help</span></code> into your terminal (and hit “enter”). See all actions in the <code class="docutils literal notranslate"><span class="pre">demux</span></code> plugin by typing <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">demux</span> <span class="pre">--help</span></code>. Learn about the <code class="docutils literal notranslate"><span class="pre">emp-single</span></code> method in <code class="docutils literal notranslate"><span class="pre">demux</span></code> by typing <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">demux</span> <span class="pre">emp-single</span> <span class="pre">--help</span></code>. Now you know how to access the help documentation for all other plugins and actions. 😊</p></li>
+<li><p>The flowcharts below are designed to be as simple as possible, and hence omit many of the inputs (particularly optional inputs and metadata) and outputs (particularly statistical summaries and other minor outputs) and all of the possible parameters from most actions. Many additional actions (e.g., for displaying statistical summaries or fiddling with feature tables 🎻) are also omitted. Now that you know all about the help documentation, use it to learn more about individual actions, and other actions present in a plugin (hint: if a plugin has additional actions not described here, they are probably used to examine the output of other actions in that plugin).</p></li>
+<li><p><a class="reference internal" href="../metadata/"><span class="doc">Metadata</span></a> is a central concept in QIIME 2. We do not extensively discuss metadata in this guide, because working with metadata is already thoroughly explained <a class="reference internal" href="../metadata/"><span class="doc">here</span></a>. Read well and go far. 📚</p></li>
+<li><p>Artifacts (<code class="docutils literal notranslate"><span class="pre">.qza</span></code>) and visualizations (<code class="docutils literal notranslate"><span class="pre">.qzv</span></code>) files are really just zipped archives containing one or more data files and accessory files containing provenance information. You can just <code class="docutils literal notranslate"><span class="pre">unzip</span></code> an artifact/visualization at any time to peek inside, but the better way to do this is to use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">export</span></code> as detailed in our <a class="reference internal" href="../exporting/"><span class="doc">exporting tutorials</span></a>. Give it a spin and see if you can figure out what types of file formats are stored inside different types of artifacts! If you really want to read more about the structure of artifact/visualization files, <a class="reference external" href="https://dev.qiime2.org/latest/storing-data/">read on</a>. 🤓</p></li>
+<li><p>There is no one way to do things in QIIME 2. Nor is there a “QIIME 2” approach. Most of the plugins and actions in QIIME 2 are independent software or pre-existing methods. QIIME is the glue that makes the magic happen. <em>Many paths lead from the foot of the mountain…</em> ⛰️</p></li>
+<li><p>Do not forget to cite appropriately! Unsure what to cite? To see the citations for a specific action or plugin, type in the help commands that you learned above, but replace <code class="docutils literal notranslate"><span class="pre">--help</span></code> with <code class="docutils literal notranslate"><span class="pre">--citations</span></code>. Even better: go to <a class="reference external" href="https://view.qiime2.org/">https://view.qiime2.org/</a> and drag and drop any QIIME 2 artifact or visualization into the window. Provided that file was generated in QIIME 2018.4+, the “citations” tab should contain information on <strong>all</strong> relevant citations used for the generation of that file. Groovy. 😎</p></li>
+</ol>
+<p>💃💃💃</p>
+</div>
+<div class="section" id="conceptual-overview-of-qiime-2">
+<h2>Conceptual overview of QIIME 2<a class="headerlink" href="#conceptual-overview-of-qiime-2" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have read the glossary and key, let us examine a conceptual overview of the various possible workflows for examining amplicon sequence data:</p>
+<img alt="../../_images/overview.png" id="overview" src="../../_images/overview.png" />
+<p>The edges and nodes in this overview do not represent specific actions or data types, but instead represent conceptual categories, e.g., the basic types of data or analytical goals we might have in an experiment. All of these steps and terms are discussed in more detail below.</p>
+<p>All data must be <a class="reference internal" href="../importing/"><span class="doc">imported</span></a> as a QIIME 2 artifact to be used by a QIIME 2 action (with the exception of some <a class="reference internal" href="../metadata/"><span class="doc">metadata</span></a>). Different users may enter this workflow at different stages. Most will have some type of raw sequence (e.g., FASTQ or FASTA) data, which should be imported following the appropriate <a class="reference internal" href="../importing/#importing-seqs"><span class="std std-ref">sequence importing</span></a> scheme. Other users may start with demultiplexed sequence data, or even a <a class="reference internal" href="../importing/#importing-feature-tables"><span class="std std-ref">feature table</span></a> given to them by a collaborator. The <a class="reference internal" href="../importing/"><span class="doc">importing</span></a> tutorial covers the most common data types that users need to import into QIIME 2.</p>
+<p>Now that we understand that we can actually enter into this overview workflow at nearly <em>any</em> of the nodes, let us walk through individual sections.</p>
+<ol class="arabic simple">
+<li><p>All amplicon/metagenome sequencing experiments begin, at some point or another, as raw sequence data. This is probably FASTQ data, containing DNA sequences and quality scores for each base.</p></li>
+<li><p>We must <a class="reference internal" href="#demultiplexing"><span class="std std-ref">demultiplex</span></a> these reads to determine which sample each read came from.</p></li>
+<li><dl class="simple">
+<dt>Reads should then be <a class="reference internal" href="#denoising"><span class="std std-ref">denoised</span></a> into amplicon sequence variants (ASVs) or clustered into operational taxonomic units (OTUs) to <a class="reference external" href="https://doi.org/10.1038/s41579-018-0029-9">achieve two goals</a>:</dt><dd><ol class="loweralpha simple">
+<li><p>reducing sequence errors</p></li>
+<li><p>dereplicating sequences</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p>The resulting feature table and representative sequences are key pieces of data. Don’t lose them! A feature table is essentially a matrix of samples x observations, i.e., the number of times each “feature” (OTUs, ASVs, etc) is observed in each sample in a data set.</p></li>
+<li><dl class="simple">
+<dt>We can do many things with this feature table. Common analyses include:</dt><dd><ol class="loweralpha simple">
+<li><p><a class="reference internal" href="#taxonomy"><span class="std std-ref">Taxonomic classification</span></a> of sequences (a.k.a., “what species are present?”)</p></li>
+<li><p><a class="reference internal" href="#diversity"><span class="std std-ref">Alpha and beta diversity analyses</span></a>, or measures of diversity within and between samples, respectively (a.k.a., “how similar are my samples?”)</p></li>
+<li><p>Many diversity analyses rely on the phylogenetic similarity between individual features. If you are sequencing phylogenetic markers (e.g., 16S rRNA genes), you can <a class="reference internal" href="#alignment"><span class="std std-ref">align these sequences to assess the phylogenetic relationship</span></a> between each of your features.</p></li>
+<li><p>Differential abundance measurements determine which features (OTUs, ASVs, taxa, etc) are significantly more/less abundant in different experimental groups.</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+<p>This is just the beginning, and <a class="reference internal" href="#fun"><span class="std std-ref">many other statistical tests and plotting methods are at your finger tips</span></a> (QIIME 2) and in the lands beyond. The world is your oyster. Let’s dive in. 🏊</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Whoa! Hold yer horses there hoss! 🏇 We are going to start using some seriously technical language in the following sections 🤓. Did you read up on your <a class="reference internal" href="../../semantic-types/"><span class="doc">semantic types</span></a> and <a class="reference internal" href="../../concepts/"><span class="doc">core concepts</span></a>? Do so now or proceed at your own risk. ⚡⚡⚡</p>
+</div>
+</div>
+<div class="section" id="demultiplexing">
+<span id="id1"></span><h2>Demultiplexing<a class="headerlink" href="#demultiplexing" title="Permalink to this headline">¶</a></h2>
+<p>Okay! Imagine we have just received some FASTQ data, hot off the sequencing instrument. Most next-gen sequencing instruments have the capacity to analyze hundreds or even thousands of samples in a single lane/run; we do so by <em>multiplexing</em> these samples, which is just a fancy word for mixing a whole bunch of stuff together. How do we know which sample each read came from? This is typically done by appending a unique barcode (a.k.a. index or tag) sequence to one or both ends of each sequence. Detecting these barcode sequences and mapping them back to the samples they belong to allows us to <em>demultiplex</em> our sequences.</p>
+<p>Want to get started demultiplexing? You (or whoever prepared and sequenced your samples) should know which barcode belongs to each sample — if you do not know, talk to your lab mates or sequencing center. Include this barcode information in your <a class="reference internal" href="../metadata/"><span class="doc">sample metadata</span></a> file.</p>
+<p>The process of demultiplexing (as it occurs in QIIME 2) will look something like the following workflow (ignore the right-hand side of this flow chart for now):</p>
+<img alt="../../_images/derep-denoise.png" id="derep-denoise" src="../../_images/derep-denoise.png" />
+<p>This flowchart describes all demultiplexing steps that are currently possible in QIIME 2, depending on the type of raw data you have imported. Usually only one of the different demultiplexing actions available in <code class="docutils literal notranslate"><span class="pre">q2-demux</span></code> or <code class="docutils literal notranslate"><span class="pre">q2-cutadapt</span></code> will be applicable for your data, and that is all you will need.</p>
+<p>Read more about demultiplexing and give it a spin with the <a class="reference internal" href="../moving-pictures/#moving-pics-demux"><span class="std std-ref">moving pictures tutorial</span></a> (for single-end data) and <a class="reference internal" href="../atacama-soils/#atacama-demux"><span class="std std-ref">Atacama soils tutorial</span></a> (for paired-end data). Those tutorials cover EMP format data (as described in the <a class="reference internal" href="../importing/#importing-seqs"><span class="std std-ref">importing docs</span></a>). Have barcodes and primers in-line in your reads? See the <a class="reference external" href="https://forum.qiime2.org/t/demultiplexing-and-trimming-adapters-from-reads-with-q2-cutadapt/2313">cutadapt tutorials</a> for using the demux methods in <code class="docutils literal notranslate"><span class="pre">q2-cutadapt</span></code>. Have dual-indexed reads or mixed-orientation reads or some other unusual format? Pray hard 🙏. Then check out the QIIME 2 forum to see if someone has found a workaround. 😉</p>
+<p>Paired-end reads need to be joined at some point in the analysis. If you followed the <a class="reference internal" href="../atacama-soils/#atacama-demux"><span class="std std-ref">Atacama soils tutorial</span></a>, you will see that this happens automatically during denoising with <code class="docutils literal notranslate"><span class="pre">q2-dada2</span></code>. However, if you want to use <code class="docutils literal notranslate"><span class="pre">q2-deblur</span></code> or an OTU clustering method (as described in more detail below), use <code class="docutils literal notranslate"><span class="pre">q2-vsearch</span></code> to join these reads before proceeding, as shown in the <a class="reference internal" href="#derep-denoise"><span class="std std-ref">demultiplexing workflow</span></a>. To learn more about read joining, see the <a class="reference internal" href="../read-joining/"><span class="doc">read joining tutorial</span></a>.👯</p>
+<p>If you are beginning to pull your hair and foam at the mouth, do not despair: QIIME 2 tends to get easier the further we travel in the <a class="reference internal" href="#overview"><span class="std std-ref">“general overview”</span></a>. Importing and demultiplexing raw sequencing data happens to be the most frustrating part for most new users 😤. But once you get the hang of it, it’s a piece of cake. 🍰</p>
+</div>
+<div class="section" id="denoising-and-clustering">
+<span id="denoising"></span><h2>Denoising and clustering<a class="headerlink" href="#denoising-and-clustering" title="Permalink to this headline">¶</a></h2>
+<p>Congratulations on getting this far! Denoising and clustering steps are slightly less confusing than importing and demultiplexing! 🎉😬🎉</p>
+<p>The names for these steps are very descriptive:</p>
+<ol class="arabic simple">
+<li><p>We <em>denoise</em> our sequences to remove and/or correct noisy reads. 🔊</p></li>
+<li><p>We <em>dereplicate</em> our sequences to reduce repetition and file size/memory requirements in downstream steps (don’t worry! we keep count of each replicate). 🕵️</p></li>
+<li><p>We <em>cluster</em> sequences to collapse similar sequences (e.g., those that are ≥ 97% similar to each other) into single replicate sequences. This process, also known as <em>OTU picking</em>, was once a common procedure, used to simultaneously dereplicate but also perform a sort of quick-and-dirty denoising procedure (to capture stochastic sequencing and PCR errors, which should be rare and similar to more abundant centroid sequences). Use denoising methods instead if you can. Times have changed. Welcome to the future. 😎</p></li>
+</ol>
+<div class="section" id="id2">
+<h3>Denoising<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Let’s start with denoising, which is depicted on the right-hand side of <a class="reference internal" href="#derep-denoise"><span class="std std-ref">the demultiplexing and denoising workflow</span></a>.</p>
+<p>The denoising methods currently available in QIIME 2 include <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pubmed/27214047">DADA2</a> and <a class="reference external" href="http://msystems.asm.org/content/2/2/e00191-16">Deblur</a>. You can learn more about those methods by reading the original publications for each. Examples of DADA2 exist in the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial</span></a> and <a class="reference internal" href="../fmt/"><span class="doc">Fecal Microbiome Transplant study tutorial</span></a> (for single-end data) and <a class="reference internal" href="../atacama-soils/"><span class="doc">Atacama soils tutorial</span></a> (for paired-end data). Examples of Deblur exist in the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial</span></a> (for single-end data) and <a class="reference internal" href="../read-joining/"><span class="doc">read joining tutorial</span></a> (for paired-end data). Note that deblur (and also <code class="docutils literal notranslate"><span class="pre">vsearch</span> <span class="pre">dereplicate-sequences</span></code>) should be preceded by <a class="reference external" href="https://www.nature.com/articles/nmeth.2276">basic quality-score-based filtering</a>, but this is unnecessary for dada2. Both Deblur and DADA2 contain internal chimera checking methods and abundance filtering, so additional filtering should not be necessary following these methods. 🦁🐐🐍</p>
+<p>To put it simply, these methods filter out noisy sequences, correct errors in marginal sequences (in the case of DADA2), remove chimeric sequences, remove singletons, join denoised paired-end reads (in the case of DADA2), and then dereplicate those sequences. 😎</p>
+<p>The features produced by denoising methods go by many names, usually some variant of “sequence variant” (SV), “amplicon SV” (ASV), “actual SV”, “exact SV”… I believe we already referred to these as ASVs in this tutorial, so let’s keep our nomenclature consistent. 📏</p>
+</div>
+<div class="section" id="clustering">
+<h3>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h3>
+<p>Next we will discuss clustering methods. Dereplication (the simplest clustering method, effectively producing 100% OTUs, i.e., all unique sequences observed in the dataset) is also depicted in <a class="reference internal" href="#derep-denoise"><span class="std std-ref">the demultiplexing and denoising workflow</span></a>, and is the necessary starting point to all other clustering methods in QIIME 2, as shown here:</p>
+<img alt="../../_images/clustering.png" src="../../_images/clustering.png" />
+<p><code class="docutils literal notranslate"><span class="pre">q2-vsearch</span></code> implements three different <a class="reference external" href="http://qiime.org/tutorials/otu_picking.html">OTU clustering strategies</a>: de novo, closed reference, and open reference. All should be preceded by <a class="reference external" href="https://www.nature.com/articles/nmeth.2276">basic quality-score-based filtering</a> and followed by <a class="reference internal" href="../chimera/"><span class="doc">chimera filtering</span></a> and <a class="reference external" href="https://www.nature.com/articles/nmeth.2276">aggressive OTU filtering</a> (the treacherous trio, a.k.a. the Bokulich method). 🙈🙉🙊</p>
+<p>The <a class="reference internal" href="../otu-clustering/"><span class="doc">OTU clustering tutorial</span></a> demonstrates use of several <code class="docutils literal notranslate"><span class="pre">q2-vsearch</span></code> clustering methods. Don’t forget to read the <a class="reference internal" href="../chimera/"><span class="doc">chimera filtering tutorial</span></a>!</p>
+<p>The features produced by clustering methods are known as operational taxonomic units (OTUs), which is <a class="reference external" href="https://en.wikipedia.org/wiki/Esperanto">Esperanto</a> for suboptimal, imprecise rubbish. 🚮</p>
+</div>
+<div class="section" id="the-feature-table">
+<h3>The Feature Table<a class="headerlink" href="#the-feature-table" title="Permalink to this headline">¶</a></h3>
+<p>The final products of all denoising and clustering methods/workflows are a <code class="docutils literal notranslate"><span class="pre">FeatureTable[Frequency]</span></code> (feature table) artifact and a <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> (representative sequences) artifact. These are two of the most important artifacts in an amplicon sequencing workflow, and are used for many downstream analyses, as discussed below. Indeed, feature tables are crucial to any QIIME 2 analysis, as the central record of all observations per sample. Such an important artifact deserves its own powerful plugin, <a class="reference external" href="https://docs.qiime2.org/2020.2/plugins/available/feature-table/">q2-feature-table</a>. We will not discuss all actions of this plugin in detail here (some are mentioned below), but it performs many useful operations on feature tables so familiarize yourself with its documentation! 😴</p>
+<p><strong>I repeat</strong>: feature tables are central to analysis in QIIME 2. Almost all analysis steps (i.e., following demultiplexing and denoising/clustering) involve feature tables in some way. <strong>Pay attention!</strong> 😳</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Want to see which sequences are associated with each feature ID? Use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">metadata</span> <span class="pre">tabulate</span></code> with your <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> artifact as input.</p>
+</div>
+<p>Congratulations! 🎉 You’ve made it past importing, demultiplexing, and denoising/clustering your data, which are the most complicated and difficult steps for most users (if only because there are so many ways to do it!). If you’ve made it this far, the rest should be easy peasy. Now begins the fun. 🍾</p>
+</div>
+</div>
+<div class="section" id="taxonomy-classification-and-taxonomic-analyses">
+<span id="taxonomy"></span><h2>Taxonomy classification and taxonomic analyses<a class="headerlink" href="#taxonomy-classification-and-taxonomic-analyses" title="Permalink to this headline">¶</a></h2>
+<p>For many experiments, investigators aim to identify the organisms that are present in a sample. E.g., what genera or species are present in my samples? Are there any human pathogens in this patient’s sample? <a class="reference external" href="https://doi.org/10.1073/pnas.1317377110">What’s swimming in my wine</a>? 🍷🤑</p>
+<p>We can do this by comparing our query sequences (i.e., our features, be they ASVs or OTUs) to a reference database of sequences with known taxonomic composition. Simply finding the closest alignment is not really good enough — because other sequences that are equally close matches or nearly as close may have different taxonomic annotations. So we use <em>taxonomy classifiers</em> to determine the closest taxonomic affiliation with some degree of confidence or consensus (which may not be a species name if one cannot be predicted with certainty!), based on alignment, k-mer frequencies, etc. Those <a class="reference external" href="https://doi.org/10.1186/s40168-018-0470-z">interested in learning more about taxonomy classification</a> in QIIME 2 can read until the cows come home. 🐄🐄🐄</p>
+<p>Let’s see what a taxonomy classification workflow might look like:</p>
+<img alt="../../_images/taxonomy.png" id="taxonomy-flowchart" src="../../_images/taxonomy.png" />
+<p><code class="docutils literal notranslate"><span class="pre">q2-feature-classifier</span></code> contains three different classification methods. <code class="docutils literal notranslate"><span class="pre">classify-consensus-blast</span></code> and <code class="docutils literal notranslate"><span class="pre">classify-consensus-vsearch</span></code> are both alignment-based methods that find a consensus assignment across N top hits. These methods take reference database <code class="docutils literal notranslate"><span class="pre">FeatureData[Taxonomy]</span></code> and <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> files directly, and do not need to be pre-trained.</p>
+<p>Machine-learning-based classification methods are available through <code class="docutils literal notranslate"><span class="pre">classify-sklearn</span></code>, and theoretically can apply any of the classification methods available in <a class="reference external" href="http://scikit-learn.org">scikit-learn</a>. These classifiers must be <em>trained</em>, e.g., to learn which features best distinguish each taxonomic group, adding an additional step to the classification process. <a class="reference internal" href="../feature-classifier/"><span class="doc">Classifier training</span></a> is <strong>reference database- and marker-gene-specific</strong> and only needs to happen once per marker-gene/reference database combination; that classifier may then be re-used as many times as you like without needing to re-train!</p>
+<p>Most users do not even need to follow that tutorial and perform that training step, because the lovely QIIME 2 developers provide several <a class="reference internal" href="../../data-resources/"><span class="doc">pre-trained classifiers</span></a> for public use. 🎅🎁🎅🎁🎅🎁</p>
+<p><strong>Which method is best?</strong> <a class="reference external" href="https://doi.org/10.1186/s40168-018-0470-z">They are all pretty good</a>, otherwise we wouldn’t bother exposing them here. 😎 But in general <code class="docutils literal notranslate"><span class="pre">classify-sklearn</span></code> with a Naive Bayes classifier can slightly outperform other methods we’ve tested based on several criteria for classification of 16S rRNA gene and fungal ITS sequences. It can be more difficult and frustrating for some users, however, since it requires that additional training step. That training step can be memory intensive, becoming a barrier for some users who are unable to use the <a class="reference internal" href="../../data-resources/"><span class="doc">pre-trained classifiers</span></a>. Some users also prefer the alignment-based methods because their mode of operation is much more transparent and their parameters easier to manipulate (see the link above for description of these parameters and recommended settings for different applications).</p>
+<p><strong>Feature classification can be slow</strong>. It all depends on the number of sequences you have, and the number of reference sequences. OTU clustered sequences will take longer to classify (because often there are more). Filter low-abundance features out of your sequences file before classifying, and use smaller reference databases if possible if you have concerns about runtime. In practice, in “normal size” sequencing experiments (whatever that means 😜) we see variations between a few minutes (a few hundred features) to many hours (hundreds of thousands of features) for classification to complete. If you want to hang some numbers on there, <a class="reference external" href="https://doi.org/10.1186/s40168-018-0470-z">check out our benchmarks</a> for classifier runtime performance. 🏃⏱️</p>
+<p><strong>Feature classification can be memory intensive</strong>. We usually see minimum 4 GB RAM, maximum 32+ GB required. It all depends on the size of the reference sequences, their length, and number of query sequences…</p>
+<p>Examples of using <code class="docutils literal notranslate"><span class="pre">classify-sklearn</span></code> are shown in the <a class="reference internal" href="../feature-classifier/"><span class="doc">feature classifier tutorial</span></a> and in the <a class="reference internal" href="../moving-pictures/#moving-pics-taxonomy"><span class="std std-ref">moving pictures tutorial</span></a>. The <a class="reference internal" href="#taxonomy-flowchart"><span class="std std-ref">taxonomy flowchart</span></a> should make the other classifier methods reasonably clear.</p>
+<p>All classifiers produce a <code class="docutils literal notranslate"><span class="pre">FeatureData[Taxonomy]</span></code> artifact containing a list of taxonomy classifications for each query sequence.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Want to see which sequences and taxonomic assignments are associated with each feature ID? Use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">metadata</span> <span class="pre">tabulate</span></code> with your <code class="docutils literal notranslate"><span class="pre">FeatureData[Taxonomy]</span></code> and <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> artifacts as input.</p>
+</div>
+<div class="section" id="now-that-we-have-classified-our-sequences">
+<span id="taxonomy-driven-analysis"></span><h3>Now that we have classified our sequences<a class="headerlink" href="#now-that-we-have-classified-our-sequences" title="Permalink to this headline">¶</a></h3>
+<p>Taxonomic classification opens us up to a whole new world of possibilities. 🌎</p>
+<p>Here are the main actions that are enabled by having a <code class="docutils literal notranslate"><span class="pre">FeatureData[Taxonomy]</span></code> artifact:</p>
+<ol class="arabic simple">
+<li><p><strong>Collapse your feature table</strong> with <code class="docutils literal notranslate"><span class="pre">taxa</span> <span class="pre">collapse</span></code>! This merges all features that share the same taxonomic assignment into a single feature. That taxonomic assignment becomes the feature ID in the new feature table. This feature table <a class="reference internal" href="#fun"><span class="std std-ref">can be used in all the same ways as the original</span></a>. Some users may be specifically interested in performing, e.g., taxonomy-informed <a class="reference internal" href="#diversity"><span class="std std-ref">diversity analyses</span></a>, but at the very least anyone assigning taxonomy is probably interested in testing <a class="reference internal" href="#fun"><span class="std std-ref">differential abundance</span></a> of those taxa. Comparing differential abundance analyses using taxa as features vs. using ASVs or OTUs as features can be diagnostic and informative for various analyses. 🌂</p></li>
+<li><p><strong>Plot your taxonomic composition</strong> to see the abundance of various taxa in each of your samples. Check out <code class="docutils literal notranslate"><span class="pre">taxa</span> <span class="pre">barplot</span></code> and <code class="docutils literal notranslate"><span class="pre">feature-table</span> <span class="pre">heatmap</span></code> for more details. 📊</p></li>
+<li><p><strong>Filter your feature table and representative sequences</strong> (<code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> artifact) to remove certain taxonomic groups. This is useful for removing known contaminants or non-target groups, e.g., host DNA including mitochondrial or chloroplast sequences. It can also be useful for focusing on specific groups for deeper analysis. See the <a class="reference internal" href="../filtering/"><span class="doc">filtering tutorial</span></a> for more details and examples. 🌿🐀</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="sequence-alignment-and-phylogeny-building">
+<span id="alignment"></span><h2>Sequence alignment and phylogeny building<a class="headerlink" href="#sequence-alignment-and-phylogeny-building" title="Permalink to this headline">¶</a></h2>
+<p>Many diversity analyses rely on the phylogenetic similarity between individual features. If you are sequencing phylogenetic markers (e.g., 16S rRNA genes), you can align these sequences to assess the phylogenetic relationship between each of your features. This phylogeny can then be used by other downstream analyses, such as <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1317376/">UniFrac distance</a> analyses.</p>
+<p>The different options for aligning sequences and producing a phylogeny are shown in the flowchart below. For detailed description of alignment/phylogeny building, see the <a class="reference external" href="https://forum.qiime2.org/t/q2-phylogeny-community-tutorial/4455">q2-phylogeny tutorial</a> and the <a class="reference external" href="https://library.qiime2.org/plugins/q2-fragment-insertion/16/">q2-fragment-insertion tutorial</a>. 🌳</p>
+<img alt="../../_images/alignment-phylogeny.png" src="../../_images/alignment-phylogeny.png" />
+<p>Now that we have our <code class="docutils literal notranslate"><span class="pre">Phylogeny[Rooted]</span></code> artifact, pay attention to where it is used below. 👀</p>
+</div>
+<div class="section" id="diversity-analysis">
+<span id="diversity"></span><h2>Diversity analysis<a class="headerlink" href="#diversity-analysis" title="Permalink to this headline">¶</a></h2>
+<p>In microbiome experiments, investigators frequently wonder about things like:</p>
+<ul class="simple">
+<li><p>How many different species/OTUs/ASVs are present in my samples?</p></li>
+<li><p>How much phylogenetic diversity is present in each sample?</p></li>
+<li><p>How similar/different are individual samples and groups of samples?</p></li>
+<li><p>What factors (e.g., pH, elevation, blood pressure, body site, or host species just to name a few examples) are associated with differences in microbial composition and biodiversity?</p></li>
+</ul>
+<p>And more. These questions can be answered by alpha- and beta-diversity analyses. Alpha diversity measures the level of diversity within individual samples. Beta diversity measures the level of diversity or dissimilarity between samples. We can then use this information to statistically test whether alpha diversity is different between groups of samples (indicating, e.g., that those groups have more/less species richness) and whether beta diversity is greater between groups (indicating, e.g., that samples within a group are more similar to each other than those in another group, suggesting that membership within these groups is shaping the microbial composition of those samples).</p>
+<p>Different types of diversity analyses in QIIME 2 are exemplified in the the <a class="reference internal" href="../moving-pictures/#moving-pics-diversity"><span class="std std-ref">moving pictures tutorial</span></a> and <a class="reference internal" href="../fmt/#fmt-diversity"><span class="std std-ref">fecal microbiome transplant tutorial</span></a>, and the full suite of analyses used to generate diversity artifacts are shown here (and that’s not all: note that other plugins can operate on these artifacts, as described further in this guide):</p>
+<img alt="../../_images/diversity.png" src="../../_images/diversity.png" />
+<p>The <code class="docutils literal notranslate"><span class="pre">q2-diversity</span></code> plugin contains <a class="reference external" href="https://docs.qiime2.org/2020.2/plugins/available/diversity/">many different useful actions</a>! Check them out to learn more. As you can see in the flowchart, the <code class="docutils literal notranslate"><span class="pre">diversity</span> <span class="pre">core-metrics*</span></code> pipelines (<code class="docutils literal notranslate"><span class="pre">core-metrics</span></code> and <code class="docutils literal notranslate"><span class="pre">core-metrics-phylogenetic</span></code>) encompass many different core diversity commands, and in the process produce the main diversity-related artifacts that can be used in downstream analyses. These are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SampleData[AlphaDiversity]</span></code> artifacts, which contain alpha diversity estimates for each sample in your feature table. This is the chief artifact for alpha diversity analyses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DistanceMatrix</span></code> artifacts, containing the pairwise distance/dissimilarity between each pair of samples in your feature table. This is the chief artifact for beta diversity analyses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PCoAResults</span></code> artifacts, containing principal coordinates ordination results for each distance/dissimilarity metric. <a class="reference external" href="https://mb3is.megx.net/gustame/dissimilarity-based-methods/principal-coordinates-analysis">Principal coordinates analysis</a> is a dimension reduction technique, facilitating visual comparisons of sample (dis)simmilarities in 2D or 3D space.</p></li>
+</ul>
+<p>These are the main diversity-related artifacts. Keep them safe! We can re-use these data in <a class="reference internal" href="#fun"><span class="std std-ref">all sorts of downstream analyses</span></a>, or in the various actions of <code class="docutils literal notranslate"><span class="pre">q2-diversity</span></code> shown in the flowchart. Most of these actions are demonstrated in the <a class="reference internal" href="../moving-pictures/#moving-pics-diversity"><span class="std std-ref">moving pictures tutorial</span></a> so head on over there to learn more! ☔</p>
+<p>Note that there are many, many different alpha- and beta-<a class="reference external" href="https://forum.qiime2.org/t/alpha-and-beta-diversity-explanations-and-commands/2282">diversity metrics</a> that are available in QIIME 2. To learn more (and figure out whose paper you should be citing!), check out that neat resource, which was contributed by a friendly QIIME 2 user to enlighten all of us. Thanks Stephanie! 😁🙏😁🙏😁🙏</p>
+</div>
+<div class="section" id="fun-with-feature-tables">
+<span id="fun"></span><h2>Fun with feature tables<a class="headerlink" href="#fun-with-feature-tables" title="Permalink to this headline">¶</a></h2>
+<p>At this point you have a feature table, taxonomy classification results, alpha diversity, and beta diversity results. Oh my! 🤓</p>
+<p>Taxonomic and diversity analyses, as described above, are the basic types of analyses that most QIIME 2 users are probably going to need to perform at some point. However, this is only the beginning, and there are so many more advanced analyses at our fingertips. 🖐️⌨️</p>
+<img alt="../../_images/fun-with-features.png" src="../../_images/fun-with-features.png" />
+<p>We are only going to give a brief overview, since each of these analyses has its own in-depth tutorial to guide us:</p>
+<ul class="simple">
+<li><p><strong>Analyze longitudinal data:</strong> <a class="reference internal" href="../longitudinal/"><span class="doc">q2-longitudinal</span></a> is a plugin for performing statistical analyses of <a class="reference external" href="https://en.wikipedia.org/wiki/Longitudinal_study">longitudinal experiments</a>, i.e., where samples are collected from individual patients/subjects/sites repeatedly over time. This includes longitudinal studies of alpha and beta diversity, and some really awesome, interactive plots. 📈🍝</p></li>
+<li><dl class="simple">
+<dt><strong>Predict the future (or the past) 🔮:</strong> <a class="reference internal" href="../sample-classifier/"><span class="doc">q2-sample-classifier</span></a> is a plugin for machine-learning 🤖 analyses of feature data. Both classification and regression models are supported. This allows you to do things like:</dt><dd><ul>
+<li><p>predict sample metadata as a function of feature data (e.g., can we use a fecal sample to <a class="reference external" href="https://dx.doi.org/10.1128%2FmSphere.00001-15">predict cancer susceptibility</a>? Or <a class="reference external" href="http://mbio.asm.org/content/7/3/e00631-16.short">predict wine quality</a> based on the microbial composition of grapes before fermentation?). 🍇</p></li>
+<li><p>identify features that are predictive of different sample characteristics. 🚀</p></li>
+<li><p>quantify rates of microbial maturation (e.g., to track normal microbiome development in the infant gut and the impacts of <a class="reference external" href="https://dx.doi.org/10.1038%2Fnature13421">persistent malnutrition</a> or <a class="reference external" href="https://dx.doi.org/10.1126%2Fscitranslmed.aad7121">antibiotics, diet, and delivery mode</a>). 👶</p></li>
+<li><p>predict outliers and <a class="reference external" href="https://dx.doi.org/10.1038%2Fismej.2010.148">mislabeled samples</a>. 👹</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Differential abundance</strong> is used to determine which features are significantly more/less abundant in different groups of samples. QIIME 2 currently supports a few different approaches to differential abundance testing, including <a class="reference internal" href="../moving-pictures/#ancom"><span class="std std-ref">ANCOM</span></a> (an action in <code class="docutils literal notranslate"><span class="pre">q2-composition</span></code>) and <a class="reference internal" href="../gneiss/"><span class="doc">q2-gneiss</span></a>. 👾👾👾</p></li>
+<li><dl class="simple">
+<dt><strong>Evaluate and control data quality:</strong> <a class="reference internal" href="../quality-control/"><span class="doc">q2-quality-control</span></a> is a plugin for evaluating and controlling sequence data quality. This includes actions that:</dt><dd><ul>
+<li><p>test the accuracy of different bioinformatic or molecular methods, or of run-to-run quality variation. These actions are typically used if users have samples with known compositions, e.g., <a class="reference external" href="http://mockrobiota.caporasolab.us/">mock communities</a>, since accuracy is calculated as the similarity between the observed and expected compositions, sequences, etc. But more creative uses may be possible… 🐢</p></li>
+<li><p>filter sequences based on alignment to a reference database, or that contain specific short sections of DNA (e.g., primer sequences). This is useful for removing sequences that match a specific group of organisms, non-target DNA, or other nonsense. 🙃</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>And that’s just a brief overview! QIIME 2 continues to grow, so stay tuned for more plugins in future releases 📻, and keep your eyes peeled for third-party plugins that will continue to expand the functionality availability in QIIME 2. 👀</p>
+<p>Now go forth an have fun! 💃</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

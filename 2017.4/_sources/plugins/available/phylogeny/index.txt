@@ -1,0 +1,63 @@
+phylogeny
+=========
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+         	
+         	No description available. See plugin website: <a href="https://github.com/qiime2/q2-phylogeny">https://github.com/qiime2/q2-phylogeny</a><br/>
+         	
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.4.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-phylogeny">https://github.com/qiime2/q2-phylogeny</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           No user support information available. See plugin website: <a href="https://github.com/qiime2/q2-phylogeny">https://github.com/qiime2/q2-phylogeny</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           FastTree 2 – Approximately Maximum-Likelihood Trees for Large Alignments. Price MN, Dehal PS, Arkin AP (2010) PLOS ONE 5(3): e9490. doi: 10.1371/journal.pone.0009490<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   fasttree
+   
+   filter_table
+   
+   midpoint_root
+   
+
+
+Visualizers
+-----------
+
+
+This plugin does not have any visualizers.

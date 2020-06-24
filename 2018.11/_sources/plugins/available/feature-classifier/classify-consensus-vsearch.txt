@@ -1,0 +1,132 @@
+classify-consensus-vsearch: VSEARCH consensus taxonomy classifier
+=================================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: feature-classifier:classify-consensus-vsearch.bib
+   :all:
+   :keyprefix: feature-classifier:classify-consensus-vsearch:
+   :labelprefix: feature-classifier:classify-consensus-vsearch:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-classifier classify-consensus-vsearch 
+              [OPTIONS]
+
+     Assign taxonomy to query sequences using VSEARCH. Performs VSEARCH global
+     alignment between query and reference_reads, then assigns consensus
+     taxonomy to each query sequence from among maxaccepts top hits,
+     min_consensus of which share that taxonomic assignment. Unlike classify-
+     consensus-blast, this method searches the entire reference database before
+     choosing the top N hits, not the first N hits.
+
+   Options:
+     --i-query ARTIFACT PATH FeatureData[Sequence]
+                                     Sequences to classify taxonomically.
+                                     [required]
+     --i-reference-reads ARTIFACT PATH FeatureData[Sequence]
+                                     reference sequences.  [required]
+     --i-reference-taxonomy ARTIFACT PATH FeatureData[Taxonomy]
+                                     reference taxonomy labels.  [required]
+     --p-maxaccepts INTEGER RANGE    Maximum number of hits to keep for each
+                                     query. Set to 0 to keep all hits >
+                                     perc_identity similarity. Must be in range
+                                     [0, infinity].  [default: 10]
+     --p-perc-identity FLOAT         Reject match if percent identity to query is
+                                     lower. Must be in range [0.0, 1.0].
+                                     [default: 0.8]
+     --p-strand [both|plus]          Align against reference sequences in forward
+                                     ("plus") or both directions ("both").
+                                     [default: both]
+     --p-min-consensus FLOAT         Minimum fraction of assignments must match
+                                     top hit to be accepted as consensus
+                                     assignment. Must be in range (0.5, 1.0].
+                                     [default: 0.51]
+     --p-unassignable-label TEXT     [default: Unassigned]
+     --p-threads INTEGER             [default: 1]
+     --o-classification ARTIFACT PATH FeatureData[Taxonomy]
+                                     The resulting taxonomy classifications.
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config FILE               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_classifier.methods import classify_consensus_vsearch
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>VSEARCH consensus taxonomy classifier
+
+   Assign taxonomy to query sequences using VSEARCH. Performs VSEARCH global
+   alignment between query and reference_reads, then assigns consensus
+   taxonomy to each query sequence from among maxaccepts top hits,
+   min_consensus of which share that taxonomic assignment. Unlike classify-
+   consensus-blast, this method searches the entire reference database before
+   choosing the top N hits, not the first N hits.
+
+   Parameters
+   ----------
+   query : FeatureData[Sequence]
+       Sequences to classify taxonomically.
+   reference_reads : FeatureData[Sequence]
+       reference sequences.
+   reference_taxonomy : FeatureData[Taxonomy]
+       reference taxonomy labels.
+   maxaccepts : Int % Range(0, None), optional
+       Maximum number of hits to keep for each query. Set to 0 to keep all
+       hits > perc_identity similarity. Must be in range [0, infinity].
+   perc_identity : Float % Range(0.0, 1.0, inclusive_end=True), optional
+       Reject match if percent identity to query is lower. Must be in range
+       [0.0, 1.0].
+   strand : Str % Choices({'both', 'plus'}), optional
+       Align against reference sequences in forward ("plus") or both
+       directions ("both").
+   min_consensus : Float % Range(0.5, 1.0, inclusive_start=False, inclusive_end=True), optional
+       Minimum fraction of assignments must match top hit to be accepted as
+       consensus assignment. Must be in range (0.5, 1.0].
+   unassignable_label : Str, optional
+   threads : Int, optional
+
+   Returns
+   -------
+   classification : FeatureData[Taxonomy]
+       The resulting taxonomy classifications.</pre>
+       </div>
+     </div>
+   </div>

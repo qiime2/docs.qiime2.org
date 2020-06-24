@@ -1,0 +1,90 @@
+beta-phylogenetic: Beta diversity (phylogenetic)
+================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime diversity beta-phylogenetic [OPTIONS]
+
+     Computes a user-specified phylogenetic beta diversity metric for all pairs
+     of samples in a feature table.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     The feature table containing the samples
+                                     over which beta diversity should be
+                                     computed.  [required]
+     --i-phylogeny ARTIFACT PATH Phylogeny[Rooted]
+                                     Phylogenetic tree containing tip identifiers
+                                     that correspond to the feature identifiers
+                                     in the table. This tree can contain tip ids
+                                     that are not present in the table, but all
+                                     feature ids in the table must be present in
+                                     this tree.  [required]
+     --p-metric [weighted_unifrac|unweighted_unifrac]
+                                     The beta diversity metric to be computed.
+                                     [required]
+     --p-n-jobs INTEGER RANGE        [Excluding weighted_unifrac] - The number of
+                                     jobs to use for the computation. This works
+                                     by breaking down the pairwise matrix into
+                                     n_jobs even slices and computing them in
+                                     parallel. If -1 all CPUs are used. If 1 is
+                                     given, no parallel computing code is used at
+                                     all, which is useful for debugging. For
+                                     n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                                     used. Thus for n_jobs = -2, all CPUs but one
+                                     are used. (Description from
+                                     sklearn.metrics.pairwise_distances)
+                                     [default: 1]
+     --o-distance-matrix ARTIFACT PATH DistanceMatrix % Properties(['phylogenetic'])
+                                     The resulting distance matrix.  [required if
+                                     not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Beta diversity (phylogenetic)
+
+   Computes a user-specified phylogenetic beta diversity metric for all pairs
+   of samples in a feature table.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table containing the samples over which beta diversity
+       should be computed.
+   phylogeny : Phylogeny[Rooted]
+       Phylogenetic tree containing tip identifiers that correspond to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree.
+   metric : Str % Choices({'unweighted_unifrac', 'weighted_unifrac'})
+       The beta diversity metric to be computed.
+   n_jobs : Int % Range(1, None), optional
+       [Excluding weighted_unifrac] - The number of jobs to use for the
+       computation. This works by breaking down the pairwise matrix into
+       n_jobs even slices and computing them in parallel. If -1 all CPUs are
+       used. If 1 is given, no parallel computing code is used at all, which
+       is useful for debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+       used. Thus for n_jobs = -2, all CPUs but one are used. (Description
+       from sklearn.metrics.pairwise_distances)
+
+   Returns
+   -------
+   distance_matrix : DistanceMatrix % Properties(['phylogenetic'])
+       The resulting distance matrix.</pre>
+       </div>
+     </div>
+   </div>

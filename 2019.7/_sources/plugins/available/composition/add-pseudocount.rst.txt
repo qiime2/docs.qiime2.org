@@ -1,0 +1,67 @@
+add-pseudocount: Add pseudocount to table
+=========================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime composition add-pseudocount [OPTIONS]
+
+     Increment all counts in table by pseudocount.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          The feature table to which pseudocounts should be
+                          added.                                       [required]
+   Parameters:
+     --p-pseudocount INTEGER
+                          The value to add to all counts in the feature table.
+                                                                     [default: 1]
+   Outputs:
+     --o-composition-table ARTIFACT FeatureTable[Composition]
+                          The resulting feature table.                 [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.composition.methods import add_pseudocount
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Add pseudocount to table
+
+   Increment all counts in table by pseudocount.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table to which pseudocounts should be added.
+   pseudocount : Int, optional
+       The value to add to all counts in the feature table.
+
+   Returns
+   -------
+   composition_table : FeatureTable[Composition]
+       The resulting feature table.</pre>
+       </div>
+     </div>
+   </div>

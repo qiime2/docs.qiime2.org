@@ -1,0 +1,73 @@
+ols-regression: Simplicial Ordinary Least Squares Regression
+============================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime gneiss ols-regression [OPTIONS]
+
+     Perform linear regression on balances.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Balance]
+                                     The feature table containing the samples in
+                                     which simplicial regression will be
+                                     performed.  [required]
+     --i-tree ARTIFACT PATH Hierarchy
+                                     A hierarchy of feature identifiers where
+                                     each tipcorresponds to the feature
+                                     identifiers in the table. This tree can
+                                     contain tip ids that are not present in the
+                                     table, but all feature ids in the table must
+                                     be present in this tree.  [required]
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. Metadata
+                                     information that contains the covariates of
+                                     interest.  [required]
+     --p-formula TEXT                Statistical formula specifying the
+                                     statistical model.  [required]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Simplicial Ordinary Least Squares Regression
+
+   Perform linear regression on balances.
+
+   Parameters
+   ----------
+   table : FeatureTable[Balance]
+       The feature table containing the samples in which simplicial regression
+       will be performed.
+   tree : Hierarchy
+       A hierarchy of feature identifiers where each tipcorresponds to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree.
+   metadata : Metadata
+       Metadata information that contains the covariates of interest.
+   formula : Str
+       Statistical formula specifying the statistical model.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

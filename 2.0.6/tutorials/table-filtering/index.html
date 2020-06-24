@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Filtering feature tables &#8212; QIIME 2 2.0.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="top" title="QIIME 2 2.0.6 documentation" href="../../" />
+    <link rel="up" title="Tutorials" href="../" />
+    <link rel="next" title="Interfaces" href="../../interfaces/" />
+    <link rel="prev" title="Importing sequence data" href="../import-sequence-data/" />
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/logo400.png" alt="QIIME 2"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="filtering-feature-tables">
+<h1>Filtering feature tables<a class="headerlink" href="#filtering-feature-tables" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a>.</p>
+</div>
+<div class="qiime1 admonition" id="qiime1users-0">
+<p class="first admonition-title">QIIME 1 Users</p>
+<p class="last">The methods described in this tutorial mirror the functionality in <code class="docutils literal"><span class="pre">filter_samples_from_otu_table.py</span></code> and <code class="docutils literal"><span class="pre">filter_otus_from_otu_table.py</span></code>.</p>
+</div>
+<p>This tutorial covers filtering (i.e., removing) samples and features from feature tables. Feature tables have two axes: the sample axis and the feature axis. The filtering operations described in this tutorial are all applicable to the sample axis and the feature axis using the <code class="docutils literal"><span class="pre">filter-samples</span></code> and <code class="docutils literal"><span class="pre">filter-features</span></code> methods, respectively. Both of these methods are implemented in the <code class="docutils literal"><span class="pre">q2-feature-table</span></code> plugin.</p>
+<p>In this document we&#8217;ll work with the feature table and sample metadata from the <a class="reference internal" href="../moving-pictures/"><span class="doc">Moving Pictures tutorial</span></a>. As a first step, download both of these files.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>curl -sL <span class="s2">&quot;https://docs.google.com/spreadsheets/d/1_3ZbqCtAYx-9BJYHoWlICkVJ4W_QGMfJRPLedt_0hws/export?gid=0&amp;format=tsv&quot;</span> &gt; sample-metadata.tsv
+curl -sLO https://data.qiime2.org/2.0.6/tutorials/filtering-feature-tables/table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Ftable.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/table.qza">download</a></li>
+</ul>
+</div>
+<div class="section" id="total-frequency-based-filtering">
+<h2>Total-frequency-based filtering<a class="headerlink" href="#total-frequency-based-filtering" title="Permalink to this headline">¶</a></h2>
+<p>Total-frequency-based filtering is used to filter samples or features based on how frequently they are represented in the feature table.</p>
+<p>When filtering samples this can be used, for example, to filter samples whose total frequency is an outlier in the distribution of sample frequencies. In many 16S surveys, only a few (perhaps tens) of sequences will be obtained for some samples, possibly due to low biomass of the sample resulting in low DNA extraction yield. In this case, the user may want to remove samples based on their minimum total frequency (i.e., total number of sequences obtained for the sample, in this example). This can be achieved as follows (in this example, samples with a total frequency less than 1500 will be filtered).</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-min-frequency <span class="m">1500</span> <span class="se">\</span>
+  --o-filtered-table sample-frequency-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">sample-frequency-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Fsample-frequency-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/sample-frequency-filtered-table.qza">download</a></li>
+</ul>
+</div>
+<p>This filter can be applied to the feature axis to remove low abundance features from a table. For example, you can remove all features with a total abundance (summed across all samples) of less than 10 as follows.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-min-frequency <span class="m">10</span> <span class="se">\</span>
+  --o-filtered-table feature-frequency-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">feature-frequency-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Ffeature-frequency-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/feature-frequency-filtered-table.qza">download</a></li>
+</ul>
+</div>
+<p>Both of these methods can also be applied to filter based on the maximum total frequency using the <code class="docutils literal"><span class="pre">--p-max-frequency</span></code>. The <code class="docutils literal"><span class="pre">--p-min-frequency</span></code> and <code class="docutils literal"><span class="pre">--p-max-frequency</span></code> can be combined to filter based on lower and upper limits of total frequency.</p>
+</div>
+<div class="section" id="contingency-based-filtering">
+<h2>Contingency-based filtering<a class="headerlink" href="#contingency-based-filtering" title="Permalink to this headline">¶</a></h2>
+<p>Contingency-based filtering is used to filter samples from a table contingent on the number of features they contain, or to filter features from a table contingent on the number of samples they&#8217;re observed in.</p>
+<p>This filtering is commonly used for filtering features that show up in only one or a few samples, based on the suspicion that these may not represent real biological diversity but rather experimental artifacts such as PCR chimeras. Features that are present in only a single sample could be filtered from a feature table as follows.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-min-samples <span class="m">2</span> <span class="se">\</span>
+  --o-filtered-table sample-contingency-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">sample-contingency-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Fsample-contingency-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/sample-contingency-filtered-table.qza">download</a></li>
+</ul>
+</div>
+<p>Similarly, samples that contain only a few features could be filtered from a feature table as follows.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-min-features <span class="m">10</span> <span class="se">\</span>
+  --o-filtered-table feature-contingency-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">feature-contingency-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Ffeature-contingency-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/feature-contingency-filtered-table.qza">download</a></li>
+</ul>
+</div>
+<p>Both of these methods can also be applied to filter contingent on the maximum number of features or samples, using the <code class="docutils literal"><span class="pre">--p-max-features</span></code> and <code class="docutils literal"><span class="pre">--p-max-samples</span></code> parameters, and these can optionally be used in combination with <code class="docutils literal"><span class="pre">--p-min-features</span></code> and <code class="docutils literal"><span class="pre">--p-min-samples</span></code>.</p>
+</div>
+<div class="section" id="index-based-filtering">
+<h2>Index-based filtering<a class="headerlink" href="#index-based-filtering" title="Permalink to this headline">¶</a></h2>
+<p>Index-based filtering is used to retain only a user-specified list of samples or features based on their indices (i.e., identifiers). In this case, the user will provide a tab-separated text file as input with the <code class="docutils literal"><span class="pre">--m-sample-metadata-file</span></code> or <code class="docutils literal"><span class="pre">--m-feature-metadata-file</span></code> parameter (for <code class="docutils literal"><span class="pre">filter-samples</span></code> or <code class="docutils literal"><span class="pre">filter-features</span></code>, respectively) where the first column in the file contains the indices that should be retained, and the first row contains headers or names for each column. Only the first column in this file will be used, so there are no requirements on subsequent columns (if any are present). As a result, sample or feature metadata files can be used with this parameter. Index-based filtering can be applied as follows to remove samples from a feature table.</p>
+<p>First, we&#8217;ll write a header line and two sample indices to a new file called <code class="docutils literal"><span class="pre">samples-to-keep.tsv</span></code>. (If you already have a tsv file containing a header line and the indices of the samples that you want to keep, you can skip this step. Otherwise, in practice, you&#8217;d probably create this file in a text editor, not on the command line as is being done here.)</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span><span class="nb">echo</span> Index &gt; samples-to-keep.tsv
+<span class="nb">echo</span> L1S8 &gt;&gt; samples-to-keep.tsv
+<span class="nb">echo</span> L1S105 &gt;&gt; samples-to-keep.tsv
+</pre></div>
+</div>
+<p>Then, we&#8217;ll call the <code class="docutils literal"><span class="pre">filter-samples</span></code> method with the parameter <code class="docutils literal"><span class="pre">--m-sample-metadata-file</span> <span class="pre">samples-to-keep.tsv</span></code>. The resulting table will contain only the two samples whose indices are listed in <code class="docutils literal"><span class="pre">samples-to-keep.tsv</span></code>.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+ --i-table table.qza <span class="se">\</span>
+ --m-sample-metadata-file samples-to-keep.tsv <span class="se">\</span>
+ --o-filtered-table index-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">index-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Findex-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/index-filtered-table.qza">download</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="metadata-based-filtering">
+<h2>Metadata-based filtering<a class="headerlink" href="#metadata-based-filtering" title="Permalink to this headline">¶</a></h2>
+<p>Metadata-based filtering is similar to index-based filtering, except that the list of indices to keep is determined based on metadata rather than being provided by the user directly. This is achieved using the <code class="docutils literal"><span class="pre">--p-where</span></code> parameter in combination with the <code class="docutils literal"><span class="pre">--m-sample-metadata-file</span></code> or <code class="docutils literal"><span class="pre">--m-feature-metadata-file</span></code> parameter. The user provides a description of the samples that should be retained based on their metadata using <code class="docutils literal"><span class="pre">--p-where</span></code>, where the syntax for this description is the SQLite <a class="reference external" href="https://en.wikipedia.org/wiki/Where_(SQL)">WHERE-clause</a> syntax.</p>
+<p>For example, filtering the table to contain only samples from subject 1 is performed as follows. Here, the <code class="docutils literal"><span class="pre">--p-where</span></code> parameter is specifying that we want to retain all of the samples whose <code class="docutils literal"><span class="pre">Subject</span></code> is <code class="docutils literal"><span class="pre">subject-1</span></code> in <code class="docutils literal"><span class="pre">sample-metadata.tsv</span></code>. Note that the value <code class="docutils literal"><span class="pre">subject-1</span></code> must be enclosed in single quotes.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-sample-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;Subject=&#39;subject-1&#39;&quot;</span> <span class="se">\</span>
+  --o-filtered-table subject-1-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">subject-1-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Fsubject-1-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/subject-1-filtered-table.qza">download</a></li>
+</ul>
+</div>
+<p><code class="docutils literal"><span class="pre">--p-where</span></code> expressions can be combined using the <code class="docutils literal"><span class="pre">AND</span></code> and <code class="docutils literal"><span class="pre">OR</span></code> keywords. Here, the <code class="docutils literal"><span class="pre">--p-where</span></code> parameter is specifying that we want to retain only the samples whose <code class="docutils literal"><span class="pre">Subject</span></code> is <code class="docutils literal"><span class="pre">subject-1</span></code> <em>and</em> whose <code class="docutils literal"><span class="pre">BodySite</span></code> is <code class="docutils literal"><span class="pre">gut</span></code> in <code class="docutils literal"><span class="pre">sample-metadata.tsv</span></code>. Again, the values <code class="docutils literal"><span class="pre">subject-1</span></code> and <code class="docutils literal"><span class="pre">gut</span></code> are enclosed in single quotes.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-sample-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;Subject=&#39;subject-1&#39; AND BodySite=&#39;gut&#39;&quot;</span> <span class="se">\</span>
+  --o-filtered-table subject-1-gut-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">subject-1-gut-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Fsubject-1-gut-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/subject-1-gut-filtered-table.qza">download</a></li>
+</ul>
+</div>
+<p>This syntax also supports negating individual clauses of the <code class="docutils literal"><span class="pre">--p-where</span></code> expression (or the whole expression). Here, the <code class="docutils literal"><span class="pre">--p-where</span></code> parameter is specifying that we want to retain only the samples whose <code class="docutils literal"><span class="pre">Subject</span></code> is <code class="docutils literal"><span class="pre">subject-1</span></code> and whose <code class="docutils literal"><span class="pre">BodySite</span></code> is <em>not</em> <code class="docutils literal"><span class="pre">gut</span></code> in <code class="docutils literal"><span class="pre">sample-metadata.tsv</span></code>.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-sample-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;Subject=&#39;subject-1&#39; AND NOT BodySite=&#39;gut&#39;&quot;</span> <span class="se">\</span>
+  --o-filtered-table subject-1-non-gut-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p class="first"><strong>Output artifacts:</strong></p>
+<ul class="last simple">
+<li><code class="file docutils literal"><span class="pre">subject-1-non-gut-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2.0.6%2Fdata%2Ftutorials%2Ftable-filtering%2Fsubject-1-non-gut-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2.0.6/data/tutorials/table-filtering/subject-1-non-gut-filtered-table.qza">download</a></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently, the most common metadata-based filtering of features is based on feature taxonomy, such as filtering all features that are annotated as being in a particular genus. This can currently be achieved using <code class="docutils literal"><span class="pre">filter-features</span></code> if taxonomy is provided in a feature metadata file. We are working on adding more direct support for this functionality, which will be made available in a new method of the <code class="docutils literal"><span class="pre">q2-taxa</span></code> plugin. You can track progress on this <a class="reference external" href="https://github.com/qiime2/q2-taxa/issues/40">here</a>.</p>
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu dropdown-menu-right"></ul>
+        </div>
+        
+<h3><a href="../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">&#8220;Moving Pictures&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../88soils/">&#8220;88 soils&#8221; tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../import/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../import-sequence-data/">Importing sequence data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Filtering feature tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, QIIME 2 Development Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

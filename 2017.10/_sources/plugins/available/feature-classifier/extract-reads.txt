@@ -1,0 +1,69 @@
+extract-reads: Extract reads from reference
+===========================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime feature-classifier extract-reads [OPTIONS]
+
+     Extract sequencing-like reads from a reference database.
+
+   Options:
+     --i-sequences PATH      Artifact: FeatureData[Sequence]  [required]
+     --p-f-primer TEXT       [required]
+                             forward primer sequence
+     --p-r-primer TEXT       [required]
+                             reverse primer sequence
+     --p-trunc-len INTEGER   [default: 0]
+                             read is cut to trunc_len if trunc_len
+                             is positive. Applied before trim_left.
+     --p-trim-left INTEGER   [default: 0]
+                             trim_left nucleotides are removed from
+                             the 5' end if trim_left is positive. Applied after
+                             trunc_len.
+     --p-identity FLOAT      [default: 0.8]
+                             minimum combined primer match
+                             identity threshold.
+     --o-reads PATH          Artifact: FeatureData[Sequence] [required if not
+                             passing --output-dir]
+     --output-dir DIRECTORY  Output unspecified results to a directory
+     --cmd-config PATH       Use config file for command options
+     --verbose               Display verbose output to stdout and/or stderr
+                             during execution of this action.  [default: False]
+     --quiet                 Silence output if execution is successful (silence
+                             is golden).  [default: False]
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Extract reads from reference
+
+   Extract sequencing-like reads from a reference database.
+
+   Parameters
+   ----------
+   sequences : FeatureData[Sequence]
+   f_primer : Str
+       forward primer sequence
+   r_primer : Str
+       reverse primer sequence
+   trunc_len : Int, optional
+       read is cut to trunc_len if trunc_len is positive. Applied before
+       trim_left.
+   trim_left : Int, optional
+       trim_left nucleotides are removed from the 5' end if trim_left is
+       positive. Applied after trunc_len.
+   identity : Float, optional
+       minimum combined primer match identity threshold.
+
+   Returns
+   -------
+   reads : FeatureData[Sequence]</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,258 @@
+maturity-index: Microbial maturity index prediction.
+====================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: longitudinal:maturity-index.bib
+   :list: bullet
+   :all:
+   :keyprefix: longitudinal:maturity-index:
+   :labelprefix: longitudinal:maturity-index:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime longitudinal maturity-index [OPTIONS]
+
+     Calculates a "microbial maturity" index from a regression model trained on
+     feature data to predict a given continuous metadata column, e.g., to
+     predict age as a function of microbiota composition. The model is trained
+     on a subset of control group samples, then predicts the column value for
+     all samples. This visualization computes maturity index z-scores to
+     compare relative "maturity" between each group, as described in
+     doi:10.1038/nature13421. This method can be used to predict between-group
+     differences in relative trajectory across any type of continuous metadata
+     gradient, e.g., intestinal microbiome development by age, microbial
+     succession during wine fermentation, or microbial community differences
+     along environmental gradients, as a function of two or more different
+     "treatment" groups.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                            Feature table containing all features that should be
+                            used for target prediction.                [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple            
+        arguments will be   
+        merged)                                                        [required]
+     --p-state-column TEXT  Numeric metadata column containing sampling time
+                            (state) data to use as prediction target.  [required]
+     --p-group-by TEXT      Categorical metadata column to use for plotting and
+                            significance testing between main treatment groups.
+                                                                       [required]
+     --p-control TEXT       Value of group-by to use as control group. The
+                            regression model will be trained using only control
+                            group data, and the maturity scores of other groups
+                            consequently will be assessed relative to this group.
+                                                                       [required]
+     --p-individual-id-column TEXT
+                            Optional metadata column containing IDs for
+                            individual subjects. Adds individual subject
+                            (spaghetti) vectors to volatility charts if a column
+                            name is provided.                          [optional]
+     --p-estimator TEXT Choices('RandomForestRegressor',
+       'ExtraTreesRegressor', 'GradientBoostingRegressor', 'AdaBoostRegressor',
+       'ElasticNet', 'Ridge', 'Lasso', 'KNeighborsRegressor', 'LinearSVR', 'SVR')
+                            Regression model to use for prediction.
+                                               [default: 'RandomForestRegressor']
+     --p-n-estimators INTEGER
+       Range(1, None)       Number of trees to grow for estimation. More trees
+                            will improve predictive accuracy up to a threshold
+                            level, but will also increase time and memory
+                            requirements. This parameter only affects ensemble
+                            estimators, such as Random Forest, AdaBoost,
+                            ExtraTrees, and GradientBoosting.      [default: 100]
+     --p-test-size PROPORTION Range(0.0, 1.0, inclusive_start=False)
+                            Fraction of input samples to exclude from training
+                            set and use for classifier testing.    [default: 0.5]
+     --p-step PROPORTION Range(0.0, 1.0, inclusive_start=False)
+                            If optimize-feature-selection is True, step is the
+                            percentage of features to remove at each iteration.
+                                                                  [default: 0.05]
+     --p-cv INTEGER         Number of k-fold cross-validations to perform.
+       Range(1, None)                                                [default: 5]
+     --p-random-state INTEGER
+                            Seed used by random number generator.      [optional]
+     --p-n-jobs INTEGER     Number of jobs to run in parallel.       [default: 1]
+     --p-parameter-tuning / --p-no-parameter-tuning
+                            Automatically tune hyperparameters using random grid
+                            search.                              [default: False]
+     --p-optimize-feature-selection / --p-no-optimize-feature-selection
+                            Automatically optimize input feature selection using
+                            recursive feature elimination.       [default: False]
+     --p-stratify / --p-no-stratify
+                            Evenly stratify training and test data among
+                            metadata categories. If True, all values in column
+                            must match at least two samples.     [default: False]
+     --p-missing-samples TEXT Choices('error', 'ignore')
+                            How to handle missing samples in metadata. "error"
+                            will fail if missing samples are detected. "ignore"
+                            will cause the feature table and metadata to be
+                            filtered, so that only samples found in both files
+                            are retained.                      [default: 'error']
+     --p-feature-count INTEGER
+       Range(0, None)       Filter feature table to include top N most important
+                            features. Set to zero to include all features.
+                                                                    [default: 50]
+   Outputs:
+     --o-sample-estimator ARTIFACT SampleEstimator[Regressor]
+                            Trained sample estimator.                  [required]
+     --o-feature-importance ARTIFACT FeatureData[Importance]
+                            Importance of each input feature to model accuracy.
+                                                                       [required]
+     --o-predictions ARTIFACT SampleData[RegressorPredictions]
+                            Predicted target values for each input sample.
+                                                                       [required]
+     --o-model-summary VISUALIZATION
+                            Summarized parameter and (if enabled) feature
+                            selection information for the trained estimator.
+                                                                       [required]
+     --o-accuracy-results VISUALIZATION
+                            Accuracy results visualization.            [required]
+     --o-maz-scores ARTIFACT SampleData[RegressorPredictions]
+                            Microbiota-for-age z-score predictions.    [required]
+     --o-clustermap VISUALIZATION
+                            Heatmap of important feature abundance at each time
+                            point in each group.                       [required]
+     --o-volatility-plots VISUALIZATION
+                            Interactive volatility plots of MAZ and maturity
+                            scores, target (column) predictions, and the sample
+                            metadata.                                  [required]
+   Miscellaneous:
+     --output-dir PATH      Output unspecified results to a directory
+     --verbose / --quiet    Display verbose output to stdout and/or stderr
+                            during execution of this action. Or silence output if
+                            execution is successful (silence is golden).
+     --citations            Show citations and exit.
+     --help                 Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.longitudinal.pipelines import maturity_index
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Microbial maturity index prediction.
+
+   Calculates a "microbial maturity" index from a regression model trained on
+   feature data to predict a given continuous metadata column, e.g., to
+   predict age as a function of microbiota composition. The model is trained
+   on a subset of control group samples, then predicts the column value for
+   all samples. This visualization computes maturity index z-scores to compare
+   relative "maturity" between each group, as described in
+   doi:10.1038/nature13421. This method can be used to predict between-group
+   differences in relative trajectory across any type of continuous metadata
+   gradient, e.g., intestinal microbiome development by age, microbial
+   succession during wine fermentation, or microbial community differences
+   along environmental gradients, as a function of two or more different
+   "treatment" groups.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       Feature table containing all features that should be used for target
+       prediction.
+   metadata : Metadata
+   state_column : Str
+       Numeric metadata column containing sampling time (state) data to use as
+       prediction target.
+   group_by : Str
+       Categorical metadata column to use for plotting and significance
+       testing between main treatment groups.
+   control : Str
+       Value of group_by to use as control group. The regression model will be
+       trained using only control group data, and the maturity scores of other
+       groups consequently will be assessed relative to this group.
+   individual_id_column : Str, optional
+       Optional metadata column containing IDs for individual subjects. Adds
+       individual subject (spaghetti) vectors to volatility charts if a column
+       name is provided.
+   estimator : Str % Choices('RandomForestRegressor', 'ExtraTreesRegressor', 'GradientBoostingRegressor', 'AdaBoostRegressor', 'ElasticNet', 'Ridge', 'Lasso', 'KNeighborsRegressor', 'LinearSVR', 'SVR'), optional
+       Regression model to use for prediction.
+   n_estimators : Int % Range(1, None), optional
+       Number of trees to grow for estimation. More trees will improve
+       predictive accuracy up to a threshold level, but will also increase
+       time and memory requirements. This parameter only affects ensemble
+       estimators, such as Random Forest, AdaBoost, ExtraTrees, and
+       GradientBoosting.
+   test_size : Float % Range(0.0, 1.0, inclusive_start=False), optional
+       Fraction of input samples to exclude from training set and use for
+       classifier testing.
+   step : Float % Range(0.0, 1.0, inclusive_start=False), optional
+       If optimize_feature_selection is True, step is the percentage of
+       features to remove at each iteration.
+   cv : Int % Range(1, None), optional
+       Number of k-fold cross-validations to perform.
+   random_state : Int, optional
+       Seed used by random number generator.
+   n_jobs : Int, optional
+       Number of jobs to run in parallel.
+   parameter_tuning : Bool, optional
+       Automatically tune hyperparameters using random grid search.
+   optimize_feature_selection : Bool, optional
+       Automatically optimize input feature selection using recursive feature
+       elimination.
+   stratify : Bool, optional
+       Evenly stratify training and test data among metadata categories. If
+       True, all values in column must match at least two samples.
+   missing_samples : Str % Choices('error', 'ignore'), optional
+       How to handle missing samples in metadata. "error" will fail if missing
+       samples are detected. "ignore" will cause the feature table and
+       metadata to be filtered, so that only samples found in both files are
+       retained.
+   feature_count : Int % Range(0, None), optional
+       Filter feature table to include top N most important features. Set to
+       zero to include all features.
+
+   Returns
+   -------
+   sample_estimator : SampleEstimator[Regressor]
+       Trained sample estimator.
+   feature_importance : FeatureData[Importance]
+       Importance of each input feature to model accuracy.
+   predictions : SampleData[RegressorPredictions]
+       Predicted target values for each input sample.
+   model_summary : Visualization
+       Summarized parameter and (if enabled) feature selection information for
+       the trained estimator.
+   accuracy_results : Visualization
+       Accuracy results visualization.
+   maz_scores : SampleData[RegressorPredictions]
+       Microbiota-for-age z-score predictions.
+   clustermap : Visualization
+       Heatmap of important feature abundance at each time point in each
+       group.
+   volatility_plots : Visualization
+       Interactive volatility plots of MAZ and maturity scores, target
+       (column) predictions, and the sample metadata.</pre>
+       </div>
+     </div>
+   </div>

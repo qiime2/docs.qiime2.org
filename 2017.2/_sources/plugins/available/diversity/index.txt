@@ -1,0 +1,74 @@
+diversity
+=========
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.2.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-diversity">https://github.com/qiime2/q2-diversity</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           No user support information available. See plugin website: <a href="https://github.com/qiime2/q2-diversity">https://github.com/qiime2/q2-diversity</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           No citation available. Cite plugin website: <a href="https://github.com/qiime2/q2-diversity">https://github.com/qiime2/q2-diversity</a><br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   alpha
+   
+   alpha_phylogenetic
+   
+   beta
+   
+   beta_phylogenetic
+   
+   core_metrics
+   
+   filter_distance_matrix
+   
+   pcoa
+   
+
+
+Visualizers
+-----------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   alpha_correlation
+   
+   alpha_group_significance
+   
+   beta_group_significance
+   
+   bioenv
+   

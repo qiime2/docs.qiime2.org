@@ -1,0 +1,146 @@
+core-metrics: Core diversity metrics (non-phylogenetic)
+=======================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity core-metrics [OPTIONS]
+
+     Applies a collection of diversity metrics (non-phylogenetic) to a feature
+     table.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          The feature table containing the samples over which
+                          diversity metrics should be computed.        [required]
+   Parameters:
+     --p-sampling-depth INTEGER
+       Range(1, None)     The total frequency that each sample should be
+                          rarefied to prior to computing diversity metrics.
+                                                                       [required]
+     --m-metadata-file METADATA...
+       (multiple          The sample metadata to use in the emperor plots.
+        arguments will    
+        be merged)                                                     [required]
+     --p-with-replacement / --p-no-with-replacement
+                          Rarefy with replacement by sampling from the
+                          multinomial distribution instead of rarefying without
+                          replacement.                           [default: False]
+     --p-n-jobs INTEGER   [beta methods only] - The number of jobs to use for
+       Range(0, None)     the computation. This works by breaking down the
+                          pairwise matrix into n-jobs even slices and computing
+                          them in parallel. If -1 all CPUs are used. If 1 is
+                          given, no parallel computing code is used at all, which
+                          is useful for debugging. For n-jobs below -1, (n_cpus +
+                          1 + n-jobs) are used. Thus for n-jobs = -2, all CPUs
+                          but one are used. (Description from
+                          sklearn.metrics.pairwise_distances)        [default: 1]
+   Outputs:
+     --o-rarefied-table ARTIFACT FeatureTable[Frequency]
+                          The resulting rarefied feature table.        [required]
+     --o-observed-otus-vector ARTIFACT SampleData[AlphaDiversity]
+                          Vector of Observed OTUs values by sample.    [required]
+     --o-shannon-vector ARTIFACT SampleData[AlphaDiversity]
+                          Vector of Shannon diversity values by sample.
+                                                                       [required]
+     --o-evenness-vector ARTIFACT SampleData[AlphaDiversity]
+                          Vector of Pielou's evenness values by sample.
+                                                                       [required]
+     --o-jaccard-distance-matrix ARTIFACT
+       DistanceMatrix     Matrix of Jaccard distances between pairs of samples.
+                                                                       [required]
+     --o-bray-curtis-distance-matrix ARTIFACT
+       DistanceMatrix     Matrix of Bray-Curtis distances between pairs of
+                          samples.                                     [required]
+     --o-jaccard-pcoa-results ARTIFACT
+       PCoAResults        PCoA matrix computed from Jaccard distances between
+                          samples.                                     [required]
+     --o-bray-curtis-pcoa-results ARTIFACT
+       PCoAResults        PCoA matrix computed from Bray-Curtis distances
+                          between samples.                             [required]
+     --o-jaccard-emperor VISUALIZATION
+                          Emperor plot of the PCoA matrix computed from Jaccard.
+                                                                       [required]
+     --o-bray-curtis-emperor VISUALIZATION
+                          Emperor plot of the PCoA matrix computed from
+                          Bray-Curtis.                                 [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.pipelines import core_metrics
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Core diversity metrics (non-phylogenetic)
+
+   Applies a collection of diversity metrics (non-phylogenetic) to a feature
+   table.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table containing the samples over which diversity metrics
+       should be computed.
+   sampling_depth : Int % Range(1, None)
+       The total frequency that each sample should be rarefied to prior to
+       computing diversity metrics.
+   metadata : Metadata
+       The sample metadata to use in the emperor plots.
+   with_replacement : Bool, optional
+       Rarefy with replacement by sampling from the multinomial distribution
+       instead of rarefying without replacement.
+   n_jobs : Int % Range(0, None), optional
+       [beta methods only] - The number of jobs to use for the computation.
+       This works by breaking down the pairwise matrix into n_jobs even slices
+       and computing them in parallel. If -1 all CPUs are used. If 1 is given,
+       no parallel computing code is used at all, which is useful for
+       debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are used. Thus
+       for n_jobs = -2, all CPUs but one are used. (Description from
+       sklearn.metrics.pairwise_distances)
+
+   Returns
+   -------
+   rarefied_table : FeatureTable[Frequency]
+       The resulting rarefied feature table.
+   observed_otus_vector : SampleData[AlphaDiversity]
+       Vector of Observed OTUs values by sample.
+   shannon_vector : SampleData[AlphaDiversity]
+       Vector of Shannon diversity values by sample.
+   evenness_vector : SampleData[AlphaDiversity]
+       Vector of Pielou's evenness values by sample.
+   jaccard_distance_matrix : DistanceMatrix
+       Matrix of Jaccard distances between pairs of samples.
+   bray_curtis_distance_matrix : DistanceMatrix
+       Matrix of Bray-Curtis distances between pairs of samples.
+   jaccard_pcoa_results : PCoAResults
+       PCoA matrix computed from Jaccard distances between samples.
+   bray_curtis_pcoa_results : PCoAResults
+       PCoA matrix computed from Bray-Curtis distances between samples.
+   jaccard_emperor : Visualization
+       Emperor plot of the PCoA matrix computed from Jaccard.
+   bray_curtis_emperor : Visualization
+       Emperor plot of the PCoA matrix computed from Bray-Curtis.</pre>
+       </div>
+     </div>
+   </div>

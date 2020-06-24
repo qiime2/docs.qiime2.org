@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Glossary &#8212; QIIME 2 2019.4.0 documentation</title>
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/external-links.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../about/" />
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Citing QIIME 2" href="../citation/" />
+    <link rel="prev" title="Supplementary resources" href="../supplementary-resources/" />
+  <script src="../_static/bootstrap.min.js"></script>
+  <script src="../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="glossary">
+<h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<p>This document is currently a work-in-progress QIIME 2 terminology glossary.</p>
+<dl class="glossary simple">
+<dt id="term-action">Action</dt><dd><p>A general term for a <em>method</em> or <em>visualizer</em>.</p>
+</dd>
+<dt id="term-artifact">Artifact</dt><dd><p>Data that can be used as input to a QIIME <em>method</em> or <em>visualizer</em>, or that can be generated as output from a QIIME <em>method</em>. Artifacts typically have the extension <code class="docutils literal notranslate"><span class="pre">.qza</span></code> when written to file.</p>
+</dd>
+<dt id="term-method">Method</dt><dd><p>An <em>action</em> that takes some combination of <em>artifacts</em> and <em>parameters</em> as input, and produces one or more <em>artifacts</em> as output. These output <em>artifacts</em> could subsequently be used as input to other QIIME 2 <em>methods</em> or <em>visualizers</em>. <em>Methods</em> can produce intermediate or terminal outputs in a QIIME analysis.</p>
+</dd>
+<dt id="term-parameter">Parameter</dt><dd><p>A primitive (i.e., non-<em>artifact</em>) input to an <em>action</em>. For example, strings, integers, and booleans are primitives. Primitives are never output from an <em>action</em>.</p>
+</dd>
+<dt id="term-pipeline">Pipeline</dt><dd><p>A combination of <em>actions</em>.</p>
+</dd>
+<dt id="term-plugin">Plugin</dt><dd><p>A plugin provides microbiome (i.e. domain-specific) analysis functionality that is accessible to users through a variety of interfaces built around the QIIME 2 framework. Plugins can be developed and distributed by anyone. In more technical terms, a plugin is a Python 3 package that instantiates a <code class="docutils literal notranslate"><span class="pre">qiime2.plugin.Plugin</span></code> object, and registers <em>actions</em>, <em>data formats</em>, and/or <em>semantic types</em> that become discoverable in the QIIME 2 framework.</p>
+</dd>
+<dt id="term-result">Result</dt><dd><p>A general term for an <em>artifact</em> or <em>visualization</em>. A <em>result</em> is produced by a <em>method</em>, <em>visualizer</em>, or <em>pipeline</em>.</p>
+</dd>
+<dt id="term-visualization">Visualization</dt><dd><p>Data that can be generated as output from a QIIME <em>visualizer</em>. Visualizations typically have the extension <code class="docutils literal notranslate"><span class="pre">.qzv</span></code> when written to file.</p>
+</dd>
+<dt id="term-visualizer">Visualizer</dt><dd><p>An <em>action</em> that takes some combination of <em>artifacts</em> and <em>parameters</em> as input, and produces exactly one <em>visualization</em> as output. Output <em>visualizations</em>, by definition, cannot be used as input to other QIIME 2 <em>methods</em> or <em>visualizers</em>. <em>Visualizers</em> can only produce terminal output in a QIIME analysis.</p>
+</dd>
+</dl>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2019, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </div>
+  <script src="../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

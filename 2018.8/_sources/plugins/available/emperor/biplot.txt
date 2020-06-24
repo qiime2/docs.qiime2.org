@@ -1,0 +1,85 @@
+biplot: Visualize and Interact with Principal Coordinates Analysis Biplot
+=========================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime emperor biplot [OPTIONS]
+
+     Generates an interactive ordination biplot where the user can visually
+     integrate sample and feature metadata.
+
+   Options:
+     --i-biplot ARTIFACT PATH PCoAResults % Properties(['biplot'])
+                                     The principal coordinates matrix to be
+                                     plotted.  [required]
+     --m-sample-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. The sample
+                                     metadata  [required]
+     --m-feature-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. The
+                                     feature metadata (useful to manipulate the
+                                     arrows in the plot).  [optional]
+     --p-number-of-features INTEGER RANGE
+                                     The number of most important features
+                                     (arrows) to display in the ordination.
+                                     [default: 5]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.emperor.visualizers import biplot
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Visualize and Interact with Principal Coordinates Analysis Biplot
+
+   Generates an interactive ordination biplot where the user can visually
+   integrate sample and feature metadata.
+
+   Parameters
+   ----------
+   biplot : PCoAResults % Properties(['biplot'])
+       The principal coordinates matrix to be plotted.
+   sample_metadata : Metadata
+       The sample metadata
+   feature_metadata : Metadata, optional
+       The feature metadata (useful to manipulate the arrows in the plot).
+   number_of_features : Int % Range(1, None), optional
+       The number of most important features (arrows) to display in the
+       ordination.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

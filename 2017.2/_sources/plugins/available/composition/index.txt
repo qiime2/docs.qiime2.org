@@ -1,0 +1,60 @@
+composition
+===========
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2017.2.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="https://github.com/qiime2/q2-composition">https://github.com/qiime2/q2-composition</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           No user support information available. See plugin website: <a href="https://github.com/qiime2/q2-composition">https://github.com/qiime2/q2-composition</a><br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Citation</th>
+         <td>
+           
+           Analysis of composition of microbiomes: a novel method for studying microbial composition.<br/>
+           
+           Mandal S, Van Treuren W, White RA, Eggesbø M, Knight R, Peddada SD.<br/>
+           
+           Microb Ecol Health Dis. 2015 May 29;26:27663. doi: 10.3402/mehd.v26.27663.<br/>
+           
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+Methods
+-------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   add_pseudocount
+   
+
+
+Visualizers
+-----------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   ancom
+   

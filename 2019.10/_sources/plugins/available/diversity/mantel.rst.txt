@@ -1,0 +1,139 @@
+mantel: Apply the Mantel test to two distance matrices
+======================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:mantel.bib
+   :list: bullet
+   :all:
+   :keyprefix: diversity:mantel:
+   :labelprefix: diversity:mantel:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity mantel [OPTIONS]
+
+     Apply a two-sided Mantel test to identify correlation between two distance
+     matrices.
+
+     Note: the directionality of the comparison has no bearing on the results.
+     Thus, comparing distance matrix X to distance matrix Y is equivalent to
+     comparing Y to X.
+
+     Note: the order of samples within the two distance matrices does not need
+     to be the same; the distance matrices will be reordered before applying
+     the Mantel test.
+
+     See the scikit-bio docs for more details about the Mantel test:
+
+     http://scikit-
+     bio.org/docs/latest/generated/generated/skbio.stats.distance.mantel.html
+
+   Inputs:
+     --i-dm1 ARTIFACT     Matrix of distances between pairs of samples.
+       DistanceMatrix                                                  [required]
+     --i-dm2 ARTIFACT     Matrix of distances between pairs of samples.
+       DistanceMatrix                                                  [required]
+   Parameters:
+     --p-method TEXT Choices('spearman', 'pearson')
+                          The correlation test to be applied in the Mantel test.
+                                                            [default: 'spearman']
+     --p-permutations INTEGER
+       Range(0, None)     The number of permutations to be run when computing
+                          p-values. Supplying a value of zero will disable
+                          permutation testing and p-values will not be calculated
+                          (this results in *much* quicker execution time if
+                          p-values are not desired).               [default: 999]
+     --p-intersect-ids / --p-no-intersect-ids
+                          If supplied, IDs that are not found in both distance
+                          matrices will be discarded before applying the Mantel
+                          test. Default behavior is to error on any mismatched
+                          IDs.                                   [default: False]
+     --p-label1 TEXT      Label for `dm1` in the output visualization.
+                                                   [default: 'Distance Matrix 1']
+     --p-label2 TEXT      Label for `dm2` in the output visualization.
+                                                   [default: 'Distance Matrix 2']
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import mantel
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Apply the Mantel test to two distance matrices
+
+   Apply a two-sided Mantel test to identify correlation between two distance
+   matrices.  Note: the directionality of the comparison has no bearing on the
+   results. Thus, comparing distance matrix X to distance matrix Y is
+   equivalent to comparing Y to X.  Note: the order of samples within the two
+   distance matrices does not need to be the same; the distance matrices will
+   be reordered before applying the Mantel test.  See the scikit-bio docs for
+   more details about the Mantel test:  http://scikit-
+   bio.org/docs/latest/generated/generated/skbio.stats.distance.mantel.html
+
+   Parameters
+   ----------
+   dm1 : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   dm2 : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   method : Str % Choices('spearman', 'pearson'), optional
+       The correlation test to be applied in the Mantel test.
+   permutations : Int % Range(0, None), optional
+       The number of permutations to be run when computing p-values. Supplying
+       a value of zero will disable permutation testing and p-values will not
+       be calculated (this results in *much* quicker execution time if
+       p-values are not desired).
+   intersect_ids : Bool, optional
+       If supplied, IDs that are not found in both distance matrices will be
+       discarded before applying the Mantel test. Default behavior is to error
+       on any mismatched IDs.
+   label1 : Str, optional
+       Label for `dm1` in the output visualization.
+   label2 : Str, optional
+       Label for `dm2` in the output visualization.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

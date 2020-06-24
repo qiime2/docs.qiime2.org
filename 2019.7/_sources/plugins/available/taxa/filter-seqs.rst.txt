@@ -1,0 +1,124 @@
+filter-seqs: Taxonomy-based feature sequence filter.
+====================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime taxa filter-seqs [OPTIONS]
+
+     This method filters sequences based on their taxonomic annotations.
+     Features can be retained in the result by specifying one or more include
+     search terms, and can be filtered out of the result by specifying one or
+     more exclude search terms. If both include and exclude are provided, the
+     inclusion critera will be applied before the exclusion critera. Either
+     include or exclude terms (or both) must be provided.
+
+   Inputs:
+     --i-sequences ARTIFACT FeatureData[Sequence]
+                             Feature sequences to be filtered.         [required]
+     --i-taxonomy ARTIFACT FeatureData[Taxonomy]
+                             Taxonomic annotations for features in the provided
+                             feature sequences. All features in the feature
+                             sequences must have a corresponding taxonomic
+                             annotation. Taxonomic annotations for features that
+                             are not present in the feature sequences will be
+                             ignored.                                  [required]
+   Parameters:
+     --p-include TEXT        One or more search terms that indicate which taxa
+                             should be included in the resulting sequences. If
+                             providing more than one term, terms should be
+                             delimited by the query-delimiter character. By
+                             default, all taxa will be included.       [optional]
+     --p-exclude TEXT        One or more search terms that indicate which taxa
+                             should be excluded from the resulting sequences. If
+                             providing more than one term, terms should be
+                             delimited by the query-delimiter character. By
+                             default, no taxa will be excluded.        [optional]
+     --p-query-delimiter TEXT
+                             The string used to delimit multiple search terms
+                             provided to include or exclude. This parameter
+                             should only need to be modified if the default
+                             delimiter (a comma) is used in the provided
+                             taxonomic annotations.                [default: ',']
+     --p-mode TEXT Choices('exact', 'contains')
+                             Mode for determining if a search term matches a
+                             taxonomic annotation. "contains" requires that the
+                             annotation has the term as a substring; "exact"
+                             requires that the annotation is a perfect match to a
+                             search term.                   [default: 'contains']
+   Outputs:
+     --o-filtered-sequences ARTIFACT FeatureData[Sequence]
+                             The taxonomy-filtered feature sequences.  [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.taxa.methods import filter_seqs
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Taxonomy-based feature sequence filter.
+
+   This method filters sequences based on their taxonomic annotations.
+   Features can be retained in the result by specifying one or more include
+   search terms, and can be filtered out of the result by specifying one or
+   more exclude search terms. If both include and exclude are provided, the
+   inclusion critera will be applied before the exclusion critera. Either
+   include or exclude terms (or both) must be provided.
+
+   Parameters
+   ----------
+   sequences : FeatureData[Sequence]
+       Feature sequences to be filtered.
+   taxonomy : FeatureData[Taxonomy]
+       Taxonomic annotations for features in the provided feature sequences.
+       All features in the feature sequences must have a corresponding
+       taxonomic annotation. Taxonomic annotations for features that are not
+       present in the feature sequences will be ignored.
+   include : Str, optional
+       One or more search terms that indicate which taxa should be included in
+       the resulting sequences. If providing more than one term, terms should
+       be delimited by the query-delimiter character. By default, all taxa
+       will be included.
+   exclude : Str, optional
+       One or more search terms that indicate which taxa should be excluded
+       from the resulting sequences. If providing more than one term, terms
+       should be delimited by the query-delimiter character. By default, no
+       taxa will be excluded.
+   query_delimiter : Str, optional
+       The string used to delimit multiple search terms provided to include or
+       exclude. This parameter should only need to be modified if the default
+       delimiter (a comma) is used in the provided taxonomic annotations.
+   mode : Str % Choices('exact', 'contains'), optional
+       Mode for determining if a search term matches a taxonomic annotation.
+       "contains" requires that the annotation has the term as a substring;
+       "exact" requires that the annotation is a perfect match to a search
+       term.
+
+   Returns
+   -------
+   filtered_sequences : FeatureData[Sequence]
+       The taxonomy-filtered feature sequences.</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,168 @@
+cluster-features-open-reference: Open-reference clustering of features.
+=======================================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: vsearch:cluster-features-open-reference.bib
+   :list: bullet
+   :all:
+   :keyprefix: vsearch:cluster-features-open-reference:
+   :labelprefix: vsearch:cluster-features-open-reference:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime vsearch cluster-features-open-reference [OPTIONS]
+
+     Given a feature table and the associated feature sequences, cluster the
+     features against a reference database based on user-specified percent
+     identity threshold of their sequences. Any sequences that don't match are
+     then clustered de novo. This is not a general-purpose clustering method,
+     but rather is intended to be used for clustering the results of quality-
+     filtering/dereplication methods, such as DADA2, or for re-clustering a
+     FeatureTable at a lower percent identity than it was originally clustered
+     at. When a group of features in the input table are clustered into a
+     single feature, the frequency of that single feature in a given sample is
+     the sum of the frequencies of the features that were clustered in that
+     sample. Feature identifiers will be inherited from the centroid feature of
+     each cluster. For features that match a reference sequence, the centroid
+     feature is that reference sequence, so its identifier will become the
+     feature identifier. The clustered_sequences result will contain feature
+     representative sequences that are derived from the sequences input for all
+     features in clustered_table. This will always be the most abundant
+     sequence in the cluster. The new_reference_sequences result will contain
+     the entire reference database, plus feature representative sequences for
+     any de novo features. This is intended to be used as a reference database
+     in subsequent iterations of cluster_features_open_reference, if
+     applicable. See the vsearch documentation for details on how sequence
+     clustering is performed.
+
+   Inputs:
+     --i-sequences ARTIFACT FeatureData[Sequence]
+                             The sequences corresponding to the features in
+                             table.                                    [required]
+     --i-table ARTIFACT FeatureTable[Frequency]
+                             The feature table to be clustered.        [required]
+     --i-reference-sequences ARTIFACT FeatureData[Sequence]
+                             The sequences to use as cluster centroids.
+                                                                       [required]
+   Parameters:
+     --p-perc-identity PROPORTION Range(0, 1, inclusive_start=False,
+       inclusive_end=True)   The percent identity at which clustering should be
+                             performed. This parameter maps to vsearch's --id
+                             parameter.                                [required]
+     --p-strand TEXT Choices('plus', 'both')
+                             Search plus (i.e., forward) or both (i.e., forward
+                             and reverse complement) strands.   [default: 'plus']
+     --p-threads INTEGER Range(0, 256, inclusive_end=True)
+                             The number of threads to use for computation.
+                             Passing 0 will launch one thread per CPU core.
+                                                                     [default: 1]
+   Outputs:
+     --o-clustered-table ARTIFACT FeatureTable[Frequency]
+                             The table following clustering of features.
+                                                                       [required]
+     --o-clustered-sequences ARTIFACT FeatureData[Sequence]
+                             Sequences representing clustered features.
+                                                                       [required]
+     --o-new-reference-sequences ARTIFACT FeatureData[Sequence]
+                             The new reference sequences. This can be used for
+                             subsequent runs of open-reference clustering for
+                             consistent definitions of features across
+                             open-reference feature tables.            [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.vsearch.pipelines import cluster_features_open_reference
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Open-reference clustering of features.
+
+   Given a feature table and the associated feature sequences, cluster the
+   features against a reference database based on user-specified percent
+   identity threshold of their sequences. Any sequences that don't match are
+   then clustered de novo. This is not a general-purpose clustering method,
+   but rather is intended to be used for clustering the results of quality-
+   filtering/dereplication methods, such as DADA2, or for re-clustering a
+   FeatureTable at a lower percent identity than it was originally clustered
+   at. When a group of features in the input table are clustered into a single
+   feature, the frequency of that single feature in a given sample is the sum
+   of the frequencies of the features that were clustered in that sample.
+   Feature identifiers will be inherited from the centroid feature of each
+   cluster. For features that match a reference sequence, the centroid feature
+   is that reference sequence, so its identifier will become the feature
+   identifier. The clustered_sequences result will contain feature
+   representative sequences that are derived from the sequences input for all
+   features in clustered_table. This will always be the most abundant sequence
+   in the cluster. The new_reference_sequences result will contain the entire
+   reference database, plus feature representative sequences for any de novo
+   features. This is intended to be used as a reference database in subsequent
+   iterations of cluster_features_open_reference, if applicable. See the
+   vsearch documentation for details on how sequence clustering is performed.
+
+   Parameters
+   ----------
+   sequences : FeatureData[Sequence]
+       The sequences corresponding to the features in table.
+   table : FeatureTable[Frequency]
+       The feature table to be clustered.
+   reference_sequences : FeatureData[Sequence]
+       The sequences to use as cluster centroids.
+   perc_identity : Float % Range(0, 1, inclusive_start=False, inclusive_end=True)
+       The percent identity at which clustering should be performed. This
+       parameter maps to vsearch's --id parameter.
+   strand : Str % Choices('plus', 'both'), optional
+       Search plus (i.e., forward) or both (i.e., forward and reverse
+       complement) strands.
+   threads : Int % Range(0, 256, inclusive_end=True), optional
+       The number of threads to use for computation. Passing 0 will launch one
+       thread per CPU core.
+
+   Returns
+   -------
+   clustered_table : FeatureTable[Frequency]
+       The table following clustering of features.
+   clustered_sequences : FeatureData[Sequence]
+       Sequences representing clustered features.
+   new_reference_sequences : FeatureData[Sequence]
+       The new reference sequences. This can be used for subsequent runs of
+       open-reference clustering for consistent definitions of features across
+       open-reference feature tables.</pre>
+       </div>
+     </div>
+   </div>

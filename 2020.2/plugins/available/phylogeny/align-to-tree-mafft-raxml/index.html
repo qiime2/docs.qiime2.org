@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>align-to-tree-mafft-raxml: Build a phylogenetic tree using raxml and mafft alignment. &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+    <link rel="next" title="fasttree: Construct a phylogenetic tree with FastTree." href="../fasttree/" />
+    <link rel="prev" title="align-to-tree-mafft-iqtree: Build a phylogenetic tree using iqtree and mafft alignment." href="../align-to-tree-mafft-iqtree/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <script src="../../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="align-to-tree-mafft-raxml-build-a-phylogenetic-tree-using-raxml-and-mafft-alignment">
+<h1>align-to-tree-mafft-raxml: Build a phylogenetic tree using raxml and mafft alignment.<a class="headerlink" href="#align-to-tree-mafft-raxml-build-a-phylogenetic-tree-using-raxml-and-mafft-alignment" title="Permalink to this headline">¶</a></h1>
+<div class="tabbed">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+    <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="cli" class="tab-pane fade in active">
+      <h4>Docstring:</h4>
+      <pre>Usage: qiime phylogeny align-to-tree-mafft-raxml [OPTIONS]
+
+  This pipeline will start by creating a sequence alignment using MAFFT,
+  after which any alignment columns that are phylogenetically uninformative
+  or ambiguously aligned will be removed (masked). The resulting masked
+  alignment will be used to infer a phylogenetic tree using RAxML, under the
+  specified substitution model, and then subsequently rooted at its
+  midpoint. Output files from each step of the pipeline will be saved. This
+  includes both the unmasked and masked MAFFT alignment from q2-alignment
+  methods, and both the rooted and unrooted phylogenies from q2-phylogeny
+  methods.
+
+Inputs:
+  --i-sequences ARTIFACT FeatureData[Sequence]
+                          The sequences to be used for creating a iqtree
+                          based rooted phylogenetic tree.           [required]
+Parameters:
+  --p-n-threads VALUE Int % Range(1, None) | Str % Choices('auto')
+                          The number of threads. (Use `all` to automatically
+                          use all available cores. This value is used when
+                          aligning the sequences and creating the tree with
+                          iqtree.                                 [default: 1]
+  --p-mask-max-gap-frequency PROPORTION Range(0, 1, inclusive_end=True)
+                          The maximum relative frequency of gap characters in
+                          a column for the column to be retained. This
+                          relative frequency must be a number between 0.0 and
+                          1.0 (inclusive), where 0.0 retains only those
+                          columns without gap characters, and 1.0 retains all
+                          columns  regardless of gap character frequency. This
+                          value is used when masking the aligned sequences.
+                                                                [default: 1.0]
+  --p-mask-min-conservation PROPORTION Range(0, 1, inclusive_end=True)
+                          The minimum relative frequency of at least one
+                          non-gap character in a column for that column to be
+                          retained. This relative frequency must be a number
+                          between 0.0 and 1.0 (inclusive). For example, if a
+                          value of  0.4 is provided, a column will only be
+                          retained  if it contains at least one character that
+                          is present in at least 40% of the sequences. This
+                          value is used when masking the aligned sequences.
+                                                                [default: 0.4]
+  --p-parttree / --p-no-parttree
+                          This flag is required if the number of sequences
+                          being aligned are larger than 1000000. Disabled by
+                          default. NOTE: if using this option, it is
+                          recomended that only the CAT-based substitution
+                          models of RAxML be considered for this pipeline.
+                                                              [default: False]
+  --p-substitution-model TEXT Choices('GTRGAMMA', 'GTRGAMMAI', 'GTRCAT',
+    'GTRCATI')            Model of Nucleotide Substitution.
+                                                         [default: 'GTRGAMMA']
+  --p-seed INTEGER        Random number seed for the parsimony starting tree.
+                          This allows you to reproduce tree results. If not
+                          supplied then one will be randomly chosen.
+                                                                    [optional]
+  --p-raxml-version TEXT Choices('Standard', 'SSE3', 'AVX2')
+                          Select a specific CPU optimization of RAxML to use.
+                          The SSE3 versions will run approximately 40% faster
+                          than the standard version. The AVX2 version will run
+                          10-30% faster than the SSE3 version.
+                                                         [default: 'Standard']
+Outputs:
+  --o-alignment ARTIFACT FeatureData[AlignedSequence]
+                          The aligned sequences.                    [required]
+  --o-masked-alignment ARTIFACT FeatureData[AlignedSequence]
+                          The masked alignment.                     [required]
+  --o-tree ARTIFACT       The unrooted phylogenetic tree.
+    Phylogeny[Unrooted]                                             [required]
+  --o-rooted-tree ARTIFACT
+    Phylogeny[Rooted]     The rooted phylogenetic tree.             [required]
+Miscellaneous:
+  --output-dir PATH       Output unspecified results to a directory
+  --verbose / --quiet     Display verbose output to stdout and/or stderr
+                          during execution of this action. Or silence output
+                          if execution is successful (silence is golden).
+  --citations             Show citations and exit.
+  --help                  Show this message and exit.</pre>
+    </div>
+    <div id="api" class="tab-pane fade">
+    <h4>Import:</h4><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>from qiime2.plugins.phylogeny.pipelines import align_to_tree_mafft_raxml
+</pre></div>
+</div>
+    <h4>Docstring:</h4>
+      <pre>Build a phylogenetic tree using raxml and mafft alignment.
+
+This pipeline will start by creating a sequence alignment using MAFFT,
+after which any alignment columns that are phylogenetically uninformative
+or ambiguously aligned will be removed (masked). The resulting masked
+alignment will be used to infer a phylogenetic tree using RAxML, under the
+specified substitution model, and then subsequently rooted at its midpoint.
+Output files from each step of the pipeline will be saved. This includes
+both the unmasked and masked MAFFT alignment from q2-alignment methods, and
+both the rooted and unrooted phylogenies from q2-phylogeny methods.
+
+Parameters
+----------
+sequences : FeatureData[Sequence]
+    The sequences to be used for creating a iqtree based rooted
+    phylogenetic tree.
+n_threads : Int % Range(1, None) | Str % Choices('auto'), optional
+    The number of threads. (Use `all` to automatically use all available
+    cores. This value is used when aligning the sequences and creating the
+    tree with iqtree.
+mask_max_gap_frequency : Float % Range(0, 1, inclusive_end=True), optional
+    The maximum relative frequency of gap characters in a column for the
+    column to be retained. This relative frequency must be a number between
+    0.0 and 1.0 (inclusive), where 0.0 retains only those columns without
+    gap characters, and 1.0 retains all columns  regardless of gap
+    character frequency. This value is used when masking the aligned
+    sequences.
+mask_min_conservation : Float % Range(0, 1, inclusive_end=True), optional
+    The minimum relative frequency of at least one non-gap character in a
+    column for that column to be retained. This relative frequency must be
+    a number between 0.0 and 1.0 (inclusive). For example, if a value of
+    0.4 is provided, a column will only be retained  if it contains at
+    least one character that is present in at least 40% of the sequences.
+    This value is used when masking the aligned sequences.
+parttree : Bool, optional
+    This flag is required if the number of sequences being aligned are
+    larger than 1000000. Disabled by default. NOTE: if using this option,
+    it is recomended that only the CAT-based substitution models of RAxML
+    be considered for this pipeline.
+substitution_model : Str % Choices('GTRGAMMA', 'GTRGAMMAI', 'GTRCAT', 'GTRCATI'), optional
+    Model of Nucleotide Substitution.
+seed : Int, optional
+    Random number seed for the parsimony starting tree. This allows you to
+    reproduce tree results. If not supplied then one will be randomly
+    chosen.
+raxml_version : Str % Choices('Standard', 'SSE3', 'AVX2'), optional
+    Select a specific CPU optimization of RAxML to use. The SSE3 versions
+    will run approximately 40% faster than the standard version. The AVX2
+    version will run 10-30% faster than the SSE3 version.
+
+Returns
+-------
+alignment : FeatureData[AlignedSequence]
+    The aligned sequences.
+masked_alignment : FeatureData[AlignedSequence]
+    The masked alignment.
+tree : Phylogeny[Unrooted]
+    The unrooted phylogenetic tree.
+rooted_tree : Phylogeny[Rooted]
+    The rooted phylogenetic tree.</pre>
+    </div>
+  </div>
+</div></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

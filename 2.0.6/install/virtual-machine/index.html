@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installing QIIME 2 using Virtual Machines &#8212; QIIME 2 2.0.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.0.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="top" title="QIIME 2 2.0.6 documentation" href="../../" />
+    <link rel="up" title="Installing QIIME 2" href="../" />
+    <link rel="next" title="Tutorials" href="../../tutorials/" />
+    <link rel="prev" title="Natively installing QIIME 2" href="../native/" />
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/logo400.png" alt="QIIME 2"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="installing-qiime-2-using-virtual-machines">
+<h1>Installing QIIME 2 using Virtual Machines<a class="headerlink" href="#installing-qiime-2-using-virtual-machines" title="Permalink to this headline">¶</a></h1>
+<p>QIIME 2 &#8220;core distribution&#8221; builds are available as VirtualBox VMDK Images, Amazon Web Services (AWS) EC2 AMI Images, and Docker Images. These options can get you a working QIIME 2 installation very quickly.</p>
+<p>The core distribution builds contain the following plugins:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">alignment</span></code></li>
+<li><code class="docutils literal"><span class="pre">composition</span></code></li>
+<li><code class="docutils literal"><span class="pre">dada2</span></code></li>
+<li><code class="docutils literal"><span class="pre">demux</span></code></li>
+<li><code class="docutils literal"><span class="pre">diversity</span></code></li>
+<li><code class="docutils literal"><span class="pre">emperor</span></code></li>
+<li><code class="docutils literal"><span class="pre">feature-classifier</span></code></li>
+<li><code class="docutils literal"><span class="pre">feature-table</span></code></li>
+<li><code class="docutils literal"><span class="pre">phylogeny</span></code></li>
+<li><code class="docutils literal"><span class="pre">taxa</span></code></li>
+<li><code class="docutils literal"><span class="pre">types</span></code></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">At this stage we&#8217;re unsure of what types of virtual machine builds we&#8217;ll continue to release in the future. We expect that for at least the next few QIIME 2 releases we&#8217;ll provide the three builds included here, but we may ultimately phase out the AWS and VirtualBox builds. This is because our release of these builds restricts users to a specific operating system/cloud platform/etc, so we feel that we may better serve our user community by providing cross-platform builds (e.g., Docker containers) and detailed instructions for how to work with these.</p>
+</div>
+<div class="section" id="virtualbox">
+<h2>VirtualBox<a class="headerlink" href="#virtualbox" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Set up VirtualBox on your computer (see <a class="reference external" href="https://VirtualBox.org">https://VirtualBox.org</a> for details).</li>
+<li>Download the QIIME 2 Core VirtualBox Image here: <a class="reference external" href="https://data.qiime2.org/distro/core/qiime206.zip">https://data.qiime2.org/distro/core/qiime206.zip</a>.</li>
+<li>Unzip the <code class="docutils literal"><span class="pre">qiime206.zip</span></code> file.</li>
+<li>Launch VirtualBox, and create a new machine (click &#8220;New&#8221;).</li>
+<li>A new window will show up. Click &#8220;Next&#8221;.</li>
+<li>In this screen type <em>QIIME 2 Core 2.0.6</em> as the name for the virtual machine then select Linux as the Operating System, and Ubuntu (64 bit) as the version. Click &#8220;Next&#8221;.</li>
+<li>Select the amount of RAM (memory). You will need at least 2048 MB, but the best option is based on your machine. After selecting the amount of RAM. Click &#8220;Next&#8221;.</li>
+<li>Select &#8220;Use existing hard drive&#8221;, and click the folder icon next to the selector (it has a green up arrow). In the new window click &#8220;Add&#8221;, and locate the virtual hard drive that was unzipped in step 3. Click &#8220;Select&#8221; and then click &#8220;Next&#8221;.</li>
+<li>In the new window, click &#8220;Finish&#8221;.</li>
+<li>Launch the virtual machine. When prompted, select the user <code class="docutils literal"><span class="pre">qiime2</span></code>, and enter the password <code class="docutils literal"><span class="pre">qiime2</span></code>.</li>
+</ol>
+</div>
+<div class="section" id="amazon-web-services">
+<h2>Amazon Web Services<a class="headerlink" href="#amazon-web-services" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Set up an AWS account at <a class="reference external" href="https://aws.amazon.com">https://aws.amazon.com</a>, and log in.</li>
+<li>Set your region to &#8220;US West (Oregon)&#8221;.</li>
+<li>When launching an instance, select &#8220;Community AMIs&#8221;, and search for &#8220;QIIME 2 Core&#8221; (the AMI ID is <cite>ami-c401aca4</cite>).</li>
+<li>When prompted to set up a security group, make sure that port 22 is open.</li>
+<li>When prompted to set up an SSH keypair, choose &#8220;Proceed without a keypair&#8221;.</li>
+<li>Once the machine has finished booting, you can SSH into it by running <code class="docutils literal"><span class="pre">ssh</span> <span class="pre">qiime2&#64;&lt;PUBLIC_AWS_IP_ADDRESS&gt;</span></code>, replacing <code class="docutils literal"><span class="pre">&lt;PUBLIC_AWS_IP_ADDRESS&gt;</span></code> with the public IP address for the machine (this will be provided by AWS). When prompted, provide the password <code class="docutils literal"><span class="pre">qiime2</span></code>.</li>
+</ol>
+</div>
+<div class="section" id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Set up Docker on your computer (see <a class="reference external" href="https://docker.com">https://docker.com</a> for details).</li>
+<li>In a terminal with Docker activated, run <code class="docutils literal"><span class="pre">docker</span> <span class="pre">pull</span> <span class="pre">qiime2/core:latest</span></code>.</li>
+<li>Run <code class="docutils literal"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-t</span> <span class="pre">-i</span> <span class="pre">-v</span> <span class="pre">$(pwd):/data</span> <span class="pre">qiime2/core</span> <span class="pre">qiime</span></code> to confirm that the image was successfully fetched.</li>
+</ol>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu dropdown-menu-right"></ul>
+        </div>
+        
+<h3><a href="../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Installing QIIME 2</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../native/">Natively installing QIIME 2</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installing QIIME 2 using Virtual Machines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, QIIME 2 Development Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

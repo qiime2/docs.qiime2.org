@@ -1,0 +1,119 @@
+uchime-ref: Reference-based chimera filtering with vsearch.
+===========================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime vsearch uchime-ref [OPTIONS]
+
+     Apply the vsearch uchime_ref method to identify chimeric feature
+     sequences. The results of this method can be used to filter chimeric
+     features from the corresponding feature table. For additional details,
+     please refer to the vsearch documentation.
+
+   Inputs:
+     --i-sequences ARTIFACT FeatureData[Sequence]
+                             The feature sequences to be chimera-checked.
+                                                                       [required]
+     --i-table ARTIFACT FeatureTable[Frequency]
+                             Feature table (used for computing total feature
+                             abundances).                              [required]
+     --i-reference-sequences ARTIFACT FeatureData[Sequence]
+                             The non-chimeric reference sequences.     [required]
+   Parameters:
+     --p-dn NUMBER           No vote pseudo-count, corresponding to the
+       Range(0.0, None)      parameter n in the chimera scoring function.
+                                                                   [default: 1.4]
+     --p-mindiffs INTEGER    Minimum number of differences per segment.
+       Range(1, None)                                                [default: 3]
+     --p-mindiv NUMBER       Minimum divergence from closest parent.
+       Range(0.0, None)                                            [default: 0.8]
+     --p-minh PROPORTION Range(0.0, 1.0, inclusive_end=True)
+                             Minimum score (h). Increasing this value tends to
+                             reduce the number of false positives and to decrease
+                             sensitivity.                         [default: 0.28]
+     --p-xn NUMBER Range(1.0, None, inclusive_start=False)
+                             No vote weight, corresponding to the parameter beta
+                             in the scoring function.              [default: 8.0]
+     --p-threads INTEGER Range(0, 256, inclusive_end=True)
+                             The number of threads to use for computation.
+                             Passing 0 will launch one thread per CPU core.
+                                                                     [default: 1]
+   Outputs:
+     --o-chimeras ARTIFACT FeatureData[Sequence]
+                             The chimeric sequences.                   [required]
+     --o-nonchimeras ARTIFACT FeatureData[Sequence]
+                             The non-chimeric sequences.               [required]
+     --o-stats ARTIFACT      Summary statistics from chimera checking.
+       UchimeStats                                                     [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.vsearch.methods import uchime_ref
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Reference-based chimera filtering with vsearch.
+
+   Apply the vsearch uchime_ref method to identify chimeric feature sequences.
+   The results of this method can be used to filter chimeric features from the
+   corresponding feature table. For additional details, please refer to the
+   vsearch documentation.
+
+   Parameters
+   ----------
+   sequences : FeatureData[Sequence]
+       The feature sequences to be chimera-checked.
+   table : FeatureTable[Frequency]
+       Feature table (used for computing total feature abundances).
+   reference_sequences : FeatureData[Sequence]
+       The non-chimeric reference sequences.
+   dn : Float % Range(0.0, None), optional
+       No vote pseudo-count, corresponding to the parameter n in the chimera
+       scoring function.
+   mindiffs : Int % Range(1, None), optional
+       Minimum number of differences per segment.
+   mindiv : Float % Range(0.0, None), optional
+       Minimum divergence from closest parent.
+   minh : Float % Range(0.0, 1.0, inclusive_end=True), optional
+       Minimum score (h). Increasing this value tends to reduce the number of
+       false positives and to decrease sensitivity.
+   xn : Float % Range(1.0, None, inclusive_start=False), optional
+       No vote weight, corresponding to the parameter beta in the scoring
+       function.
+   threads : Int % Range(0, 256, inclusive_end=True), optional
+       The number of threads to use for computation. Passing 0 will launch one
+       thread per CPU core.
+
+   Returns
+   -------
+   chimeras : FeatureData[Sequence]
+       The chimeric sequences.
+   nonchimeras : FeatureData[Sequence]
+       The non-chimeric sequences.
+   stats : UchimeStats
+       Summary statistics from chimera checking.</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,54 @@
+mafft: De novo multiple sequence alignment with MAFFT
+=====================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime alignment mafft [OPTIONS]
+
+     Perform de novo multiple sequence alignment using MAFFT.
+
+   Options:
+     --i-sequences PATH      Artifact: FeatureData[Sequence]  [required]
+                             The
+                             sequences to be aligned.
+     --p-n-threads INTEGER   [default: 1]
+                             The number of threads. (Use -1 to
+                             automatically use all available cores)
+     --o-alignment PATH      Artifact: FeatureData[AlignedSequence] [required if
+                             not passing --output-dir]
+                             The aligned sequences.
+     --output-dir DIRECTORY  Output unspecified results to a directory
+     --cmd-config PATH       Use config file for command options
+     --verbose               Display verbose output to stdout and/or stderr
+                             during execution of this action.  [default: False]
+     --quiet                 Silence output if execution is successful (silence
+                             is golden).  [default: False]
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>De novo multiple sequence alignment with MAFFT
+
+   Perform de novo multiple sequence alignment using MAFFT.
+
+   Parameters
+   ----------
+   sequences : FeatureData[Sequence]
+       The sequences to be aligned.
+   n_threads : Int, optional
+       The number of threads. (Use -1 to automatically use all available
+       cores)
+
+   Returns
+   -------
+   alignment : FeatureData[AlignedSequence]
+       The aligned sequences.</pre>
+       </div>
+     </div>
+   </div>

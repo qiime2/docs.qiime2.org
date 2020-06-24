@@ -1,0 +1,63 @@
+summarize: Summarize parameter and feature extraction information for a trained estimator.
+==========================================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime sample-classifier summarize [OPTIONS]
+
+     Summarize parameter and feature extraction information for a trained
+     estimator.
+
+   Inputs:
+     --i-sample-estimator ARTIFACT SampleEstimator[Classifier | Regressor]
+                          Sample estimator trained with fit_classifier or
+                          fit_regressor.                               [required]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.sample_classifier.visualizers import summarize
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Summarize parameter and feature extraction information for a trained
+   estimator.
+
+   Summarize parameter and feature extraction information for a trained
+   estimator.
+
+   Parameters
+   ----------
+   sample_estimator : SampleEstimator[Classifier | Regressor]
+       Sample estimator trained with fit_classifier or fit_regressor.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

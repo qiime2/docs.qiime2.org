@@ -1,0 +1,77 @@
+correlation-clustering: Hierarchical clustering using feature correlation.
+==========================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime gneiss correlation-clustering [OPTIONS]
+
+     Build a bifurcating tree that represents a hierarchical clustering of
+     features.  The hiearchical clustering uses Ward hierarchical clustering
+     based on the degree of proportionality between features.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                             The feature table containing the samples in which
+                             the columns will be clustered.            [required]
+   Parameters:
+     --p-pseudocount NUMBER  The value to add to zero counts in the feature
+                             table.                                [default: 0.5]
+   Outputs:
+     --o-clustering ARTIFACT A hierarchy of feature identifiers where each tip
+       Hierarchy             corresponds to the feature identifiers in the table.
+                             This tree can contain tip ids that are not present
+                             in the table, but all feature ids in the table must
+                             be present in this tree.                  [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.gneiss.methods import correlation_clustering
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Hierarchical clustering using feature correlation.
+
+   Build a bifurcating tree that represents a hierarchical clustering of
+   features.  The hiearchical clustering uses Ward hierarchical clustering
+   based on the degree of proportionality between features.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table containing the samples in which the columns will be
+       clustered.
+   pseudocount : Float, optional
+       The value to add to zero counts in the feature table.
+
+   Returns
+   -------
+   clustering : Hierarchy
+       A hierarchy of feature identifiers where each tip corresponds to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree.</pre>
+       </div>
+     </div>
+   </div>

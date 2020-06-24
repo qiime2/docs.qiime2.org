@@ -1,0 +1,110 @@
+nmit: Nonparametric microbial interdependence test
+==================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: longitudinal:nmit.bib
+   :list: bullet
+   :all:
+   :keyprefix: longitudinal:nmit:
+   :labelprefix: longitudinal:nmit:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime longitudinal nmit [OPTIONS]
+
+     Perform nonparametric microbial interdependence test to determine
+     longitudinal sample similarity as a function of temporal microbial
+     composition. For more details and citation, please see
+     doi.org/10.1002/gepi.22065
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[RelativeFrequency]
+                           Feature table to use for microbial interdependence
+                           test.                                       [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple           Sample metadata file containing individual-id-column.
+        arguments will be  
+        merged)                                                        [required]
+     --p-individual-id-column TEXT
+                           Metadata column containing IDs for individual
+                           subjects.                                   [required]
+     --p-corr-method TEXT Choices('kendall', 'pearson', 'spearman')
+                           The temporal correlation test to be applied.
+                                                             [default: 'kendall']
+     --p-dist-method TEXT Choices('fro', 'nuc')
+                           Temporal distance method, see numpy.linalg.norm for
+                           details.                              [default: 'fro']
+   Outputs:
+     --o-distance-matrix ARTIFACT
+       DistanceMatrix      The resulting distance matrix.              [required]
+   Miscellaneous:
+     --output-dir PATH     Output unspecified results to a directory
+     --verbose / --quiet   Display verbose output to stdout and/or stderr during
+                           execution of this action. Or silence output if
+                           execution is successful (silence is golden).
+     --citations           Show citations and exit.
+     --help                Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.longitudinal.methods import nmit
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Nonparametric microbial interdependence test
+
+   Perform nonparametric microbial interdependence test to determine
+   longitudinal sample similarity as a function of temporal microbial
+   composition. For more details and citation, please see
+   doi.org/10.1002/gepi.22065
+
+   Parameters
+   ----------
+   table : FeatureTable[RelativeFrequency]
+       Feature table to use for microbial interdependence test.
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   individual_id_column : Str
+       Metadata column containing IDs for individual subjects.
+   corr_method : Str % Choices('kendall', 'pearson', 'spearman'), optional
+       The temporal correlation test to be applied.
+   dist_method : Str % Choices('fro', 'nuc'), optional
+       Temporal distance method, see numpy.linalg.norm for details.
+
+   Returns
+   -------
+   distance_matrix : DistanceMatrix
+       The resulting distance matrix.</pre>
+       </div>
+     </div>
+   </div>

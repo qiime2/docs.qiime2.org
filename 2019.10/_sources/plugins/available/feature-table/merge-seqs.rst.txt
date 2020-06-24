@@ -1,0 +1,68 @@
+merge-seqs: Combine collections of feature sequences
+====================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table merge-seqs [OPTIONS]
+
+     Combines feature data objects which may or may not contain data for the
+     same features. If different feature data is present for the same feature
+     id in the inputs, the data from the first will be propagated to the
+     result.
+
+   Inputs:
+     --i-data ARTIFACTS... List[FeatureData[Sequence]]
+                            The collection of feature sequences to be merged.
+                                                                       [required]
+   Outputs:
+     --o-merged-data ARTIFACT FeatureData[Sequence]
+                            The resulting collection of feature sequences
+                            containing all feature sequences provided. [required]
+   Miscellaneous:
+     --output-dir PATH      Output unspecified results to a directory
+     --verbose / --quiet    Display verbose output to stdout and/or stderr
+                            during execution of this action. Or silence output if
+                            execution is successful (silence is golden).
+     --citations            Show citations and exit.
+     --help                 Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.methods import merge_seqs
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Combine collections of feature sequences
+
+   Combines feature data objects which may or may not contain data for the
+   same features. If different feature data is present for the same feature id
+   in the inputs, the data from the first will be propagated to the result.
+
+   Parameters
+   ----------
+   data : List[FeatureData[Sequence]]
+       The collection of feature sequences to be merged.
+
+   Returns
+   -------
+   merged_data : FeatureData[Sequence]
+       The resulting collection of feature sequences containing all feature
+       sequences provided.</pre>
+       </div>
+     </div>
+   </div>

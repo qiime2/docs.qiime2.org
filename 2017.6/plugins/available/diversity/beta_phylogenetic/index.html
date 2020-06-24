@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>beta_phylogenetic: Beta diversity (phylogenetic) &#8212; QIIME 2 2017.6.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2017.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="top" title="QIIME 2 2017.6.0 documentation" href="../../../../" />
+    <link rel="up" title="diversity" href="../" />
+    <link rel="next" title="core_metrics: Core diversity metrics" href="../core_metrics/" />
+    <link rel="prev" title="beta: Beta diversity" href="../beta/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="beta-phylogenetic-beta-diversity-phylogenetic">
+<h1>beta_phylogenetic: Beta diversity (phylogenetic)<a class="headerlink" href="#beta-phylogenetic-beta-diversity-phylogenetic" title="Permalink to this headline">¶</a></h1>
+<p>Computes a user-specified phylogenetic beta diversity metric for all pairs of samples in a feature table.</p>
+<table class="table action-signature">
+
+  <thead>
+    <tr>
+      <th colspan="4">Inputs</th>
+    </tr>
+
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">table</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">FeatureTable[Frequency] % Properties(['uniform-sampling'])</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Required</span>
+        </code>
+      </td>
+
+      <td>
+
+        The feature table containing the samples over which beta diversity should be computed.<br/>
+
+      </td>
+    </tr>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">phylogeny</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Phylogeny[Rooted]</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Required</span>
+        </code>
+      </td>
+
+      <td>
+
+        Phylogenetic tree containing tip identifiers that correspond to the feature identifiers in the table. This tree can contain tip ids that are not present in the table, but all feature ids in the table must be present in this tree.<br/>
+
+      </td>
+    </tr>
+
+  </tbody>
+
+  <thead>
+    <tr>
+      <th colspan="4">Parameters</th>
+    </tr>
+
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">metric</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Str % Choices({'unweighted_unifrac', 'weighted_unifrac'})</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">Required</span>
+        </code>
+      </td>
+
+      <td>
+
+        The beta diversity metric to be computed.<br/>
+
+      </td>
+    </tr>
+
+  </tbody>
+
+  <thead>
+    <tr>
+      <th colspan="4">Outputs</th>
+    </tr>
+
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+
+  </thead>
+  <tbody>
+
+    <tr>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">distance_matrix</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">DistanceMatrix % Properties(['phylogenetic'])</span>
+        </code>
+      </td>
+
+      <td>
+        <code class="docutils literal">
+          <span class="pre">N/A</span>
+        </code>
+      </td>
+
+      <td>
+
+        The resulting distance matrix.<br/>
+
+      </td>
+    </tr>
+
+  </tbody>
+
+</table></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../upgrade/">Upgrading QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2017, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

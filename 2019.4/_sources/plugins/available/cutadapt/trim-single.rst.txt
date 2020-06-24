@@ -1,0 +1,155 @@
+trim-single: Find and remove adapters in demultiplexed single-end sequences.
+============================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime cutadapt trim-single [OPTIONS]
+
+     Search demultiplexed single-end sequences for adapters and remove them.
+     The parameter descriptions in this method are adapted from the official
+     cutadapt docs - please see those docs at https://cutadapt.readthedocs.io
+     for complete details.
+
+   Inputs:
+     --i-demultiplexed-sequences ARTIFACT SampleData[SequencesWithQuality]
+                           The single-end sequences to be trimmed.     [required]
+   Parameters:
+     --p-cores INTEGER     Number of CPU cores to use.
+       Range(1, None)                                                [default: 1]
+     --p-adapter TEXT...   Sequence of an adapter ligated to the 3' end. The
+       List[Str]           adapter and any subsequent bases are trimmed. If a `$`
+                           is appended, the adapter is only found if it is at the
+                           end of the read. If your sequence of interest is
+                           "framed" by a 5' and a 3' adapter, use this parameter
+                           to define a "linked" primer - see
+                           https://cutadapt.readthedocs.io for complete details.
+                                                                       [optional]
+     --p-front TEXT...     Sequence of an adapter ligated to the 5' end. The
+       List[Str]           adapter and any preceding bases are trimmed. Partial
+                           matches at the 5' end are allowed. If a `^` character
+                           is prepended, the adapter is only found if it is at
+                           the beginning of the read.                  [optional]
+     --p-anywhere TEXT...  Sequence of an adapter that may be ligated to the 5'
+       List[Str]           or 3' end. Both types of matches as described under
+                           `adapter` and `front` are allowed. If the first base
+                           of the read is part of the match, the behavior is as
+                           with `front`, otherwise as with `adapter`. This option
+                           is mostly for rescuing failed library preparations -
+                           do not use if you know which end your adapter was
+                           ligated to.                                 [optional]
+     --p-error-rate PROPORTION Range(0, 1, inclusive_end=True)
+                           Maximum allowed error rate.             [default: 0.1]
+     --p-indels / --p-no-indels
+                           Allow insertions or deletions of bases when matching
+                           adapters.                              [default: True]
+     --p-times INTEGER     Remove multiple occurrences of an adapter if it is
+       Range(1, None)      repeated, up to `times` times.            [default: 1]
+     --p-overlap INTEGER   Require at least `overlap` bases of overlap between
+       Range(1, None)      read and adapter for an adapter to be found.
+                                                                     [default: 3]
+     --p-match-read-wildcards / --p-no-match-read-wildcards
+                           Interpret IUPAC wildcards (e.g., N) in reads.
+                                                                 [default: False]
+     --p-match-adapter-wildcards / --p-no-match-adapter-wildcards
+                           Interpret IUPAC wildcards (e.g., N) in adapters.
+                                                                  [default: True]
+     --p-minimum-length INTEGER
+       Range(1, None)      Discard reads shorter than specified value. Note, the
+                           cutadapt default of 0 has been overridden, because
+                           that value produces empty sequence records.
+                                                                     [default: 1]
+     --p-discard-untrimmed / --p-no-discard-untrimmed
+                           Discard reads in which no adapter was found.
+                                                                 [default: False]
+   Outputs:
+     --o-trimmed-sequences ARTIFACT SampleData[SequencesWithQuality]
+                           The resulting trimmed sequences.            [required]
+   Miscellaneous:
+     --output-dir PATH     Output unspecified results to a directory
+     --verbose / --quiet   Display verbose output to stdout and/or stderr during
+                           execution of this action. Or silence output if
+                           execution is successful (silence is golden).
+     --citations           Show citations and exit.
+     --help                Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.cutadapt.methods import trim_single
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Find and remove adapters in demultiplexed single-end sequences.
+
+   Search demultiplexed single-end sequences for adapters and remove them. The
+   parameter descriptions in this method are adapted from the official
+   cutadapt docs - please see those docs at https://cutadapt.readthedocs.io
+   for complete details.
+
+   Parameters
+   ----------
+   demultiplexed_sequences : SampleData[SequencesWithQuality]
+       The single-end sequences to be trimmed.
+   cores : Int % Range(1, None), optional
+       Number of CPU cores to use.
+   adapter : List[Str], optional
+       Sequence of an adapter ligated to the 3' end. The adapter and any
+       subsequent bases are trimmed. If a `$` is appended, the adapter is only
+       found if it is at the end of the read. If your sequence of interest is
+       "framed" by a 5' and a 3' adapter, use this parameter to define a
+       "linked" primer - see https://cutadapt.readthedocs.io for complete
+       details.
+   front : List[Str], optional
+       Sequence of an adapter ligated to the 5' end. The adapter and any
+       preceding bases are trimmed. Partial matches at the 5' end are allowed.
+       If a `^` character is prepended, the adapter is only found if it is at
+       the beginning of the read.
+   anywhere : List[Str], optional
+       Sequence of an adapter that may be ligated to the 5' or 3' end. Both
+       types of matches as described under `adapter` and `front` are allowed.
+       If the first base of the read is part of the match, the behavior is as
+       with `front`, otherwise as with `adapter`. This option is mostly for
+       rescuing failed library preparations - do not use if you know which end
+       your adapter was ligated to.
+   error_rate : Float % Range(0, 1, inclusive_end=True), optional
+       Maximum allowed error rate.
+   indels : Bool, optional
+       Allow insertions or deletions of bases when matching adapters.
+   times : Int % Range(1, None), optional
+       Remove multiple occurrences of an adapter if it is repeated, up to
+       `times` times.
+   overlap : Int % Range(1, None), optional
+       Require at least `overlap` bases of overlap between read and adapter
+       for an adapter to be found.
+   match_read_wildcards : Bool, optional
+       Interpret IUPAC wildcards (e.g., N) in reads.
+   match_adapter_wildcards : Bool, optional
+       Interpret IUPAC wildcards (e.g., N) in adapters.
+   minimum_length : Int % Range(1, None), optional
+       Discard reads shorter than specified value. Note, the cutadapt default
+       of 0 has been overridden, because that value produces empty sequence
+       records.
+   discard_untrimmed : Bool, optional
+       Discard reads in which no adapter was found.
+
+   Returns
+   -------
+   trimmed_sequences : SampleData[SequencesWithQuality]
+       The resulting trimmed sequences.</pre>
+       </div>
+     </div>
+   </div>

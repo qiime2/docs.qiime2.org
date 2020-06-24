@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>beta-rarefaction: Beta diversity rarefaction &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+    <link rel="next" title="bioenv: bioenv" href="../bioenv/" />
+    <link rel="prev" title="beta-group-significance: Beta diversity group significance" href="../beta-group-significance/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <script src="../../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="beta-rarefaction-beta-diversity-rarefaction">
+<h1>beta-rarefaction: Beta diversity rarefaction<a class="headerlink" href="#beta-rarefaction-beta-diversity-rarefaction" title="Permalink to this headline">¶</a></h1>
+<table class="table action-info">
+  <tbody>
+    <tr>
+      <th scope="row"><p></p>Citations</th>
+      <td><ul class="simple" id="bibtex-bibliography-plugins/available/diversity/beta-rarefaction-0">
+<li><p>Nathan Mantel. The detection of disease clustering and a generalized regression approach. <em>Cancer research</em>, 27(2 Part 1):209–220, 1967.</p></li>
+<li><p>Karl Pearson. Note on regression and inheritance in the case of two parents. <em>Proceedings of the Royal Society of London</em>, 58:240–242, 1895.</p></li>
+<li><p>Charles Spearman. The proof and measurement of association between two things. <em>The American journal of psychology</em>, 15(1):72–101, 1904.</p></li>
+</ul>
+      </td>
+    </tr>
+  </tbody>
+</table><div class="tabbed">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+    <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="cli" class="tab-pane fade in active">
+      <h4>Docstring:</h4>
+      <pre>Usage: qiime diversity beta-rarefaction [OPTIONS]
+
+  Repeatedly rarefy a feature table to compare beta diversity results within
+  a given rarefaction depth.
+
+  For a given beta diversity metric, this visualizer will provide: an
+  Emperor jackknifed PCoA plot, samples clustered by UPGMA or neighbor
+  joining with support calculation, and a heatmap showing the correlation
+  between rarefaction trials of that beta diversity metric.
+
+Inputs:
+  --i-table ARTIFACT FeatureTable[Frequency]
+                          Feature table upon which to perform beta diversity
+                          rarefaction analyses.                     [required]
+  --i-phylogeny ARTIFACT  Phylogenetic tree containing tip identifiers that
+    Phylogeny[Rooted]     correspond to the feature identifiers in the table.
+                          This tree can contain tip ids that are not present
+                          in the table, but all feature ids in the table must
+                          be present in this tree. [required for phylogenetic
+                          metrics]                                  [optional]
+Parameters:
+  --p-metric TEXT Choices('euclidean', 'wminkowski', 'mahalanobis',
+    'canberra', 'correlation', 'kulsinski', 'weighted_normalized_unifrac',
+    'seuclidean', 'yule', 'chebyshev', 'braycurtis', 'rogerstanimoto',
+    'unweighted_unifrac', 'dice', 'sokalmichener', 'hamming', 'sqeuclidean',
+    'cityblock', 'generalized_unifrac', 'cosine', 'aitchison', 'russellrao',
+    'canberra_adkins', 'sokalsneath', 'matching', 'weighted_unifrac',
+    'jaccard')            The beta diversity metric to be computed. [required]
+  --p-clustering-method TEXT Choices('nj', 'upgma')
+                          Samples can be clustered with neighbor joining or
+                          UPGMA. An arbitrary rarefaction trial will be used
+                          for the tree, and the remaining trials are used to
+                          calculate the support of the internal nodes of that
+                          tree.                                     [required]
+  --m-metadata-file METADATA...
+    (multiple arguments   The sample metadata used for the Emperor jackknifed
+     will be merged)      PCoA plot.                                [required]
+  --p-sampling-depth INTEGER
+    Range(1, None)        The total frequency that each sample should be
+                          rarefied to prior to computing the diversity metric.
+                                                                    [required]
+  --p-iterations INTEGER  Number of times to rarefy the feature table at a
+    Range(2, None)        given sampling depth.                  [default: 10]
+  --p-correlation-method TEXT Choices('spearman', 'pearson')
+                          The Mantel correlation test to be applied when
+                          computing correlation between beta diversity
+                          distance matrices.             [default: 'spearman']
+  --p-color-scheme TEXT Choices('BrBG', 'BrBG_r', 'PRGn', 'PRGn_r', 'PiYG',
+    'PiYG_r', 'PuOr', 'PuOr_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdYlBu',
+    'RdYlBu_r', 'RdYlGn', 'RdYlGn_r')
+                          The matplotlib color scheme to generate the heatmap
+                          with.                              [default: 'BrBG']
+Outputs:
+  --o-visualization VISUALIZATION
+                                                                    [required]
+Miscellaneous:
+  --output-dir PATH       Output unspecified results to a directory
+  --verbose / --quiet     Display verbose output to stdout and/or stderr
+                          during execution of this action. Or silence output
+                          if execution is successful (silence is golden).
+  --citations             Show citations and exit.
+  --help                  Show this message and exit.</pre>
+    </div>
+    <div id="api" class="tab-pane fade">
+    <h4>Import:</h4><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>from qiime2.plugins.diversity.visualizers import beta_rarefaction
+</pre></div>
+</div>
+    <h4>Docstring:</h4>
+      <pre>Beta diversity rarefaction
+
+Repeatedly rarefy a feature table to compare beta diversity results within
+a given rarefaction depth.  For a given beta diversity metric, this
+visualizer will provide: an Emperor jackknifed PCoA plot, samples clustered
+by UPGMA or neighbor joining with support calculation, and a heatmap
+showing the correlation between rarefaction trials of that beta diversity
+metric.
+
+Parameters
+----------
+table : FeatureTable[Frequency]
+    Feature table upon which to perform beta diversity rarefaction
+    analyses.
+metric : Str % Choices('weighted_normalized_unifrac', 'dice', 'euclidean', 'generalized_unifrac', 'unweighted_unifrac', 'cosine', 'russellrao', 'mahalanobis', 'matching', 'sokalsneath', 'jaccard', 'weighted_unifrac', 'correlation', 'sqeuclidean', 'seuclidean', 'yule', 'aitchison', 'canberra', 'canberra_adkins', 'rogerstanimoto', 'wminkowski', 'chebyshev', 'braycurtis', 'hamming', 'cityblock', 'sokalmichener', 'kulsinski')
+    The beta diversity metric to be computed.
+clustering_method : Str % Choices('nj', 'upgma')
+    Samples can be clustered with neighbor joining or UPGMA. An arbitrary
+    rarefaction trial will be used for the tree, and the remaining trials
+    are used to calculate the support of the internal nodes of that tree.
+metadata : Metadata
+    The sample metadata used for the Emperor jackknifed PCoA plot.
+sampling_depth : Int % Range(1, None)
+    The total frequency that each sample should be rarefied to prior to
+    computing the diversity metric.
+iterations : Int % Range(2, None), optional
+    Number of times to rarefy the feature table at a given sampling depth.
+phylogeny : Phylogeny[Rooted], optional
+    Phylogenetic tree containing tip identifiers that correspond to the
+    feature identifiers in the table. This tree can contain tip ids that
+    are not present in the table, but all feature ids in the table must be
+    present in this tree. [required for phylogenetic metrics]
+correlation_method : Str % Choices('pearson', 'spearman'), optional
+    The Mantel correlation test to be applied when computing correlation
+    between beta diversity distance matrices.
+color_scheme : Str % Choices('BrBG', 'BrBG_r', 'PRGn', 'PRGn_r', 'PiYG', 'PiYG_r', 'PuOr', 'PuOr_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r'), optional
+    The matplotlib color scheme to generate the heatmap with.
+
+Returns
+-------
+visualization : Visualization</pre>
+    </div>
+  </div>
+</div></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

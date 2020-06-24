@@ -1,0 +1,59 @@
+visualize-stats: Visualize Deblur stats per sample.
+===================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime deblur visualize-stats [OPTIONS]
+
+     Display Deblur statistics per sample
+
+   Inputs:
+     --i-deblur-stats ARTIFACT
+       DeblurStats        Summary statistics of the Deblur process.    [required]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.deblur.visualizers import visualize_stats
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Visualize Deblur stats per sample.
+
+   Display Deblur statistics per sample
+
+   Parameters
+   ----------
+   deblur_stats : DeblurStats
+       Summary statistics of the Deblur process.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

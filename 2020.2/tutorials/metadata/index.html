@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Metadata in QIIME 2 &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Filtering data" href="../filtering/" />
+    <link rel="prev" title="Exporting data" href="../exporting/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="metadata-in-qiime-2">
+<h1>Metadata in QIIME 2<a class="headerlink" href="#metadata-in-qiime-2" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a> and completed the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial</span></a>.</p>
+</div>
+<p>Metadata provides the key to gaining biological insight from your data. In QIIME 2, <em>sample metadata</em> may include technical details, such as the DNA barcodes that were used for each sample in a multiplexed sequencing run, or descriptions of the samples, such as which subject, time point, and body site each sample came from in a human microbiome time series. <em>Feature metadata</em> is often a feature annotation, such as the taxonomy assigned to a sequence variant or OTU. Sample and feature metadata are used by many plugins in QIIME 2, and examples are provided in this tutorial (and other QIIME 2 tutorials) illustrating how to use metadata in your own microbiome analyses.</p>
+<p>Metadata is usually specific to a given microbiome study, and collecting sample metadata is typically one of the first steps you’ll take before beginning a QIIME 2 analysis. It is up to the investigator to decide what information is collected and tracked as metadata. QIIME 2 does not place restrictions on what types of metadata are expected to be present; there are no enforced “metadata standards”. This is your opportunity to track whatever information you think may be important to your analyses, and unfortunately QIIME 2 is not able to gather that information for you. When in doubt, collect as much metadata as possible, as you may not be able to retroactively collect certain types of information.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>While QIIME 2 does not enforce standards for what types of metadata to collect, the <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3367316/">MIMARKS</a> standard provides recommendations for microbiome studies and may be helpful in determining what information to collect in your study. If you plan to deposit your data in a data archive (e.g. <a class="reference external" href="https://www.ebi.ac.uk/ena">ENA</a> or <a class="reference external" href="https://qiita.ucsd.edu/">Qiita</a>), it is also important to determine the types of metadata expected by the archive, as each archive may have its own requirements.</p>
+</div>
+<div class="section" id="metadata-formatting-requirements">
+<h2>Metadata Formatting Requirements<a class="headerlink" href="#metadata-formatting-requirements" title="Permalink to this headline">¶</a></h2>
+<p>QIIME 2 metadata is most commonly stored in a <a class="reference external" href="https://en.wikipedia.org/wiki/Tab-separated_values">TSV</a> (i.e. tab-separated values) file. These files typically have a <code class="docutils literal notranslate"><span class="pre">.tsv</span></code> or <code class="docutils literal notranslate"><span class="pre">.txt</span></code> file extension, though it doesn’t matter to QIIME 2 what file extension is used. TSV files are simple text files used to store tabular data, and the format is supported by many types of software, such as editing, importing, and exporting from spreadsheet programs and databases. Thus, it’s usually straightforward to manipulate QIIME 2 metadata using the software of your choosing. If in doubt, we recommend using a spreadsheet program such as Microsoft Excel or Google Sheets to edit and export your metadata files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In addition to TSV files, QIIME 2 Artifacts (i.e. <code class="docutils literal notranslate"><span class="pre">.qza</span></code> files) can also be used as metadata. See the section <a class="reference internal" href="#artifacts-as-metadata"><span class="std std-ref">Using QIIME 2 Artifacts as Metadata</span></a> below for details. QIIME 2 may also support additional file formats in the future.</p>
+</div>
+<div class="qiime1 admonition" id="qiime1users-0">
+<p class="admonition-title">QIIME 1 Users</p>
+<p>In QIIME 1, TSV metadata files were referred to as <a class="reference external" href="http://qiime.org/documentation/file_formats.html#metadata-mapping-files">mapping files</a>. In QIIME 2, we refer to these files as <em>metadata files</em>, but they are conceptually the same thing. QIIME 2 metadata files are backwards-compatible with QIIME 1 mapping files, meaning that you can use existing QIIME 1 mapping files in QIIME 2 without needing to make modifications to the file.</p>
+</div>
+<p>The following sections describe formatting requirements for QIIME 2 metadata files, and how to validate your metadata files. Since there is no universal standard for TSV files, it is important to adhere to these requirements and understand how QIIME 2 will interpret the file’s contents to get the most out of your (meta)data!</p>
+<div class="section" id="metadata-validation">
+<h3>Metadata Validation<a class="headerlink" href="#metadata-validation" title="Permalink to this headline">¶</a></h3>
+<p>Sample and feature metadata files stored in Google Sheets can be validated using <a class="reference external" href="https://keemei.qiime2.org/">Keemei</a>. Select <em>Add-ons &gt; Keemei &gt; Validate QIIME 2 metadata file</em> to validate metadata stored in Google Sheets.</p>
+<p>QIIME 2 will also automatically validate a metadata file anytime it is used by the software. However, using <a class="reference external" href="https://keemei.qiime2.org/">Keemei</a> to validate your metadata is recommended because a report of all validation errors and warnings will be presented each time Keemei is run. Loading your metadata in QIIME 2 will typically present only a single error at a time, which can make identifying and resolving validation issues cumbersome, especially if there are many issues with the metadata.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the future, there will be a <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">metadata</span> <span class="pre">validate</span></code> command to perform Keemei-style validation within QIIME 2 (e.g. if using Google Sheets is not an option for you).</p>
+</div>
+</div>
+<div class="section" id="leading-and-trailing-whitespace-characters">
+<h3>Leading and trailing whitespace characters<a class="headerlink" href="#leading-and-trailing-whitespace-characters" title="Permalink to this headline">¶</a></h3>
+<p>If <strong>any</strong> cell in the metadata contains leading or trailing whitespace characters (e.g. spaces, tabs), those characters will be ignored when the file is loaded. Thus, leading and trailing whitespace characters are not significant, so cells containing the values <code class="docutils literal notranslate"><span class="pre">'gut'</span></code> and <code class="docutils literal notranslate"><span class="pre">'</span>&#160; <span class="pre">gut</span>&#160; <span class="pre">'</span></code> are equivalent. This rule is applied before any other rules described below.</p>
+</div>
+<div class="section" id="comments-and-empty-rows">
+<h3>Comments and Empty Rows<a class="headerlink" href="#comments-and-empty-rows" title="Permalink to this headline">¶</a></h3>
+<p>Rows whose first cell begins with the pound sign (<code class="docutils literal notranslate"><span class="pre">#</span></code>) are interpreted as comments and may appear anywhere in the file. Comment rows are ignored by QIIME 2 and are for informational purposes only. Inline comments are not supported.</p>
+<p>Empty rows (e.g. blank lines or rows consisting solely of empty cells) may appear anywhere in the file and are ignored.</p>
+</div>
+<div class="section" id="identifier-column">
+<span id="id1"></span><h3>Identifier Column<a class="headerlink" href="#identifier-column" title="Permalink to this headline">¶</a></h3>
+<p>The first column in the metadata file is the identifier (ID) column. This column defines the sample or feature IDs associated with your study. It is not recommended to mix sample and feature IDs in a single metadata file; keep sample and feature metadata stored in separate files.</p>
+<p>The ID column name (i.e. <em>ID header</em>) must be one of the following values. The values listed below may not be used to name other IDs or columns in the file.</p>
+<p>Case-insensitive:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sampleid</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample</span> <span class="pre">id</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample-id</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">featureid</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature</span> <span class="pre">id</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature-id</span></code></p></li>
+</ul>
+<p>Case-sensitive (these are mostly for backwards-compatibility with QIIME 1, biom-format, and Qiita files):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">#SampleID</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#Sample</span> <span class="pre">ID</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#OTUID</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#OTU</span> <span class="pre">ID</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample_name</span></code></p></li>
+</ul>
+<p>The following rules apply to IDs:</p>
+<ul class="simple">
+<li><p>IDs may consist of any Unicode characters, with the exception that IDs must not start with the pound sign (<code class="docutils literal notranslate"><span class="pre">#</span></code>), as those rows would be interpreted as comments and ignored. See the section <a class="reference internal" href="#identifier-recommendations"><span class="std std-ref">Recommendations for Identifiers</span></a> for recommendations on choosing identifiers in your study.</p></li>
+<li><p>IDs cannot be empty (i.e. they must consist of at least one character).</p></li>
+<li><p>IDs must be unique (exact string matching is performed to detect duplicates).</p></li>
+<li><p>At least one ID must be present in the file.</p></li>
+<li><p>IDs cannot use any of the reserved ID column names listed above.</p></li>
+</ul>
+</div>
+<div class="section" id="recommendations-for-identifiers">
+<span id="identifier-recommendations"></span><h3>Recommendations for Identifiers<a class="headerlink" href="#recommendations-for-identifiers" title="Permalink to this headline">¶</a></h3>
+<p>Our goal with QIIME 2 is to support arbitrary Unicode characters in all cells of metadata files. However, given that QIIME 2 plugins and interfaces can be developed by anyone, we can’t make a guarantee that arbitrary Unicode characters will work with all plugins and interfaces. We can therefore make recommendations to users about characters that should be safe to use in identifiers, and we are preparing resources for plugin and interface developers to help them make their software as robust as possible. As developer resources become available, we will announce them in the <a class="reference external" href="https://forum.qiime2.org/c/dev-discussion">Developer Discussion category</a> on the QIIME 2 Forum.</p>
+<p>Sample and feature identifiers with problematic characters tend to cause the most issues for our users. Based on our experiences with QIIME 1, QIIME 2, and other bioinformatics and command line tools, we can recommend the following attributes for identifiers:</p>
+<ul class="simple">
+<li><p>Identifiers should be 36 characters long or less.</p></li>
+<li><p>Identifiers should contain only ASCII alphanumeric characters (i.e. in the range of <code class="docutils literal notranslate"><span class="pre">[a-z]</span></code>, <code class="docutils literal notranslate"><span class="pre">[A-Z]</span></code>, or <code class="docutils literal notranslate"><span class="pre">[0-9]</span></code>), the period (<code class="docutils literal notranslate"><span class="pre">.</span></code>) character, or the dash (<code class="docutils literal notranslate"><span class="pre">-</span></code>) character.</p></li>
+</ul>
+<p>An important point to remember is that sometimes values in your sample metadata can become identifiers. For example, taxonomy annotations can become feature identifiers following <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">taxa</span> <span class="pre">collapse</span></code>, and sample or feature metadata values can become identifiers after applying <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">feature-table</span> <span class="pre">group</span></code>. If you plan to apply these or similar methods where metadata values can become identifiers, you will be less likely to encounter problems if the values adhere to these identifier recommendations as well.</p>
+<p>To help users become aware of these recommendations, the <a class="reference external" href="https://keemei.qiime2.org/">Keemei</a> metadata validator will warn users about identifiers that don’t meet the above recommendations.</p>
+<p>Users may be interested in the <a class="reference external" href="http://msystems.asm.org/content/1/1/e00010-15">cual-id</a> software for assistance with creating sample identifiers. The <a class="reference external" href="http://msystems.asm.org/content/1/1/e00010-15">cual-id</a> paper also provides some discussion on how to design identifiers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some bioinformatics tools may have more restrictive requirements on identifiers than the recommendations that are outlined here. For example, Illumina sample sheet identifiers cannot have <cite>.</cite> characters, while we do include those in our set of recommended characters. Similarly, <a class="reference external" href="http://evolution.genetics.washington.edu/phylip.html">Phylip</a> requires that identifiers are a maximum of 10 characters, while we recommend length 36 or less. If you plan to export your data for use with other tools that may have more restrictive requirements on identifiers, we recommend that you adhere to those requirements in your QIIME 2 analyses as well, to simplify subsequent processing steps.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The length recommended here (36 characters or less) is designed to be as short as possible while still supporting version 4 UUIDs formatted with dashes.</p>
+</div>
+</div>
+<div class="section" id="metadata-columns">
+<h3>Metadata Columns<a class="headerlink" href="#metadata-columns" title="Permalink to this headline">¶</a></h3>
+<p>The ID column is the first column in the metadata file, and can optionally be followed by additional columns defining metadata associated with each sample or feature ID. Metadata files are not required to have additional metadata columns, so a file containing only an ID column is a valid QIIME 2 metadata file.</p>
+<p>The following rules apply to column names:</p>
+<ul class="simple">
+<li><p>May consist of any Unicode characters.</p></li>
+<li><p>Cannot be empty (i.e. column names must consist of at least one character).</p></li>
+<li><p>Must be unique (exact string matching is performed to detect duplicates).</p></li>
+<li><p>Column names cannot use any of the reserved ID column names described in the section <a class="reference internal" href="#identifier-column"><span class="std std-ref">Identifier Column</span></a>.</p></li>
+</ul>
+<p>The following rules apply to column values:</p>
+<ul class="simple">
+<li><p>May consist of any Unicode characters.</p></li>
+<li><p>Empty cells represent <em>missing data</em>. Other values such as <code class="docutils literal notranslate"><span class="pre">NA</span></code> are not interpreted as missing data; only the empty cell is recognized as “missing”. Note that cells consisting solely of whitespace characters are also interpreted as <em>missing data</em> because leading and trailing whitespace characters are always ignored, effectively making the cell empty.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The empty cell simply indicates that data is missing, but doesn’t indicate what type of missing data it might be. You can use other values of your choosing to denote different types of missing data (e.g. “not applicable” vs. “not collected”). These custom values won’t be interpreted as missing data in QIIME 2, but you can still record and use these “missing” metadata values to perform filtering on your data prior to further analyses (e.g. using <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">feature-table</span> <span class="pre">filter-samples</span></code> to filter samples based on custom “missing” values).</p>
+</div>
+</div>
+<div class="section" id="column-types">
+<h3>Column Types<a class="headerlink" href="#column-types" title="Permalink to this headline">¶</a></h3>
+<p>QIIME 2 currently supports <em>categorical</em> and <em>numeric</em> metadata columns. By default, QIIME 2 will attempt to infer the type of each metadata column: if the column consists only of numbers or missing data, the column is inferred to be <em>numeric</em>. Otherwise, if the column contains any non-numeric values, the column is inferred to be <em>categorical</em>. Missing data (i.e. empty cells) are supported in categorical columns as well as numeric columns.</p>
+<p>QIIME 2 supports an <strong>optional</strong> <em>comment directive</em> to allow users to explicitly state a column’s type, avoiding the column type inference described above. This can be useful if there is a column that appears to be numeric, but should actually be treated as categorical metadata (e.g. a <code class="docutils literal notranslate"><span class="pre">Subject</span></code> column where subjects are labeled <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">3</span></code>). Explicitly declaring a column’s type also makes your metadata file more descriptive because the intended column type is included with the metadata, instead of relying on software to infer the type (which isn’t always transparent).</p>
+<p>You can use an optional <em>comment directive</em> to declare column types in your metadata file. The comment directive must appear <strong>directly</strong> below the header. The row’s first cell must be <code class="docutils literal notranslate"><span class="pre">#q2:types</span></code> to indicate the row is a <em>comment directive</em>. Subsequent cells may contain the values <code class="docutils literal notranslate"><span class="pre">categorical</span></code> or <code class="docutils literal notranslate"><span class="pre">numeric</span></code> (both case-insensitive). The empty cell is also supported if you do not wish to assign a type to a column (the type will be inferred in that case). Thus, it is easy to include this comment directive without having to declare types for every column in your metadata.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">metadata</span> <span class="pre">tabulate</span></code> to see the column types of your QIIME 2 Metadata. This works whether you’re using the comment directive, type inference, or a combination of the two approaches.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In previous versions of QIIME 2 and QIIME 1, <em>metadata columns</em> were often referred to as <em>metadata categories</em>. Now that we support metadata column typing, which allows you to say whether a column contains <em>numeric</em> or <em>categorical</em> data, we would end up using terms like <em>categorical metadata category</em> or <em>numeric metadata category</em>, which can be confusing. We now avoid using the term <em>category</em> unless it is used in the context of <em>categorical</em> metadata. We’ve done our best to update our software and documentation to use the term <em>metadata column</em> instead of <em>metadata category</em>, but there may still be lingering usage of the previous terms out there.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">#q2:types</span></code> comment directive is the only supported comment directive; others may be added in the future (e.g. <code class="docutils literal notranslate"><span class="pre">#q2:units</span></code>). For this reason, rows starting with <code class="docutils literal notranslate"><span class="pre">#q2:</span></code> are disallowed, as we reserve that namespace for future comment directives.</p>
+</div>
+</div>
+<div class="section" id="number-formatting">
+<h3>Number Formatting<a class="headerlink" href="#number-formatting" title="Permalink to this headline">¶</a></h3>
+<p>If a column is to be interpreted as a <em>numeric</em> metadata column (either through column type inference or by using the <code class="docutils literal notranslate"><span class="pre">#q2:types</span></code> comment directive), numbers in the column must be formatted following these rules:</p>
+<ul class="simple">
+<li><p>Use the decimal number system: ASCII characters <code class="docutils literal notranslate"><span class="pre">[0-9]</span></code>, <code class="docutils literal notranslate"><span class="pre">.</span></code> for an optional decimal point, and <code class="docutils literal notranslate"><span class="pre">+</span></code> and <code class="docutils literal notranslate"><span class="pre">-</span></code> for positive and negative signs, respectively.</p>
+<ul>
+<li><p>Examples: <code class="docutils literal notranslate"><span class="pre">123</span></code>, <code class="docutils literal notranslate"><span class="pre">123.45</span></code>, <code class="docutils literal notranslate"><span class="pre">0123.40</span></code>, <code class="docutils literal notranslate"><span class="pre">-0.000123</span></code>, <code class="docutils literal notranslate"><span class="pre">+1.23</span></code></p></li>
+</ul>
+</li>
+<li><p>Scientific notation may be used with <em>E-notation</em>; both <code class="docutils literal notranslate"><span class="pre">e</span></code> and <code class="docutils literal notranslate"><span class="pre">E</span></code> are supported.</p>
+<ul>
+<li><p>Examples: <code class="docutils literal notranslate"><span class="pre">1e9</span></code>, <code class="docutils literal notranslate"><span class="pre">1.23E-4</span></code>, <code class="docutils literal notranslate"><span class="pre">-1.2e-08</span></code>, <code class="docutils literal notranslate"><span class="pre">+4.5E+6</span></code></p></li>
+</ul>
+</li>
+<li><p>Only up to 15 digits <strong>total</strong> (including before and after the decimal point) are supported to stay within the 64-bit floating point specification. Numbers exceeding 15 total digits are unsupported and will result in undefined behavior.</p></li>
+<li><p>Common representations of <em>not a number</em> (e.g. <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, <code class="docutils literal notranslate"><span class="pre">nan</span></code>) or infinity (e.g. <code class="docutils literal notranslate"><span class="pre">inf</span></code>, <code class="docutils literal notranslate"><span class="pre">-Infinity</span></code>) are <strong>not supported</strong>. Use an empty cell for missing data (e.g. instead of <code class="docutils literal notranslate"><span class="pre">NaN</span></code>). Infinity is not supported at this time in QIIME 2 metadata files.</p></li>
+</ul>
+</div>
+<div class="section" id="advanced-file-format-details">
+<h3>Advanced File Format Details<a class="headerlink" href="#advanced-file-format-details" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The details in this section generally aren’t necessary if you’re creating and exporting QIIME 2 metadata files using a spreadsheet program (e.g. Microsoft Excel, Google Sheets). If you’re creating TSV files by hand (e.g. in a text editor) or writing your own software to consume or produce QIIME 2 metadata files, the details in this section may be important, so read on!</p>
+</div>
+<div class="section" id="tsv-dialect-and-parser">
+<h4>TSV Dialect and Parser<a class="headerlink" href="#tsv-dialect-and-parser" title="Permalink to this headline">¶</a></h4>
+<p>QIIME 2 attempts to interoperate with TSV files exported from Microsoft Excel, as this is the most common TSV “dialect” we have seen in use. The QIIME 2 metadata parser (i.e. reader) uses the <a class="reference external" href="https://docs.python.org/3/library/csv.html">Python csv module</a> <code class="docutils literal notranslate"><span class="pre">excel-tab</span></code> dialect for parsing TSV metadata files. This dialect supports wrapping fields in double quote characters (<code class="docutils literal notranslate"><span class="pre">&quot;</span></code>) to allow for tab, newline, and carriage return characters within a field. To include a literal double quote character in a field, the double quote character must be immediately preceded by another double quote character. See the <a class="reference external" href="https://docs.python.org/3/library/csv.html">Python csv module</a> for complete documentation on the <code class="docutils literal notranslate"><span class="pre">excel-tab</span></code> dialect.</p>
+</div>
+<div class="section" id="encoding-and-line-endings">
+<h4>Encoding and Line Endings<a class="headerlink" href="#encoding-and-line-endings" title="Permalink to this headline">¶</a></h4>
+<p>Metadata files must be encoded as UTF-8, which is backwards-compatible with ASCII encoding.</p>
+<p>Unix line endings (<code class="docutils literal notranslate"><span class="pre">\n</span></code>), Windows/DOS line endings (<code class="docutils literal notranslate"><span class="pre">\r\n</span></code>), and “classic Mac OS” line endings (<code class="docutils literal notranslate"><span class="pre">\r</span></code>) are all supported by the metadata parser for interoperability. When metadata files are written to disk in QIIME 2, the line endings will always be <code class="docutils literal notranslate"><span class="pre">\r\n</span></code> (Windows/DOS line endings).</p>
+</div>
+<div class="section" id="trailing-empty-cells-and-jagged-data">
+<h4>Trailing Empty Cells and Jagged Data<a class="headerlink" href="#trailing-empty-cells-and-jagged-data" title="Permalink to this headline">¶</a></h4>
+<p>The metadata parser ignores any trailing empty cells that occur past the fields declared by the header. This is mainly for interoperability with files exported from some spreadsheet programs. These trailing cells/columns may be jagged (or not); they will be ignored either way when the file is read.</p>
+<p>If a row doesn’t contain as many fields as declared by the header, empty cells will be padded to match the header length (again, this is mainly for interoperability with exported spreadsheets).</p>
+</div>
+</div>
+</div>
+<div class="section" id="using-metadata-files">
+<h2>Using Metadata Files<a class="headerlink" href="#using-metadata-files" title="Permalink to this headline">¶</a></h2>
+<p>To get started with understanding sample metadata files, download an example TSV file:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir qiime2-metadata-tutorial
+<span class="nb">cd</span> qiime2-metadata-tutorial
+</pre></div>
+</div>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv">
+            https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> sample-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "sample-metadata.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv" > \
+  "sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Since this is a TSV file, it can be opened and edited in a variety of applications, including text editors, Microsoft Excel, and Google Sheets (e.g. if you plan to validate your metadata with <a class="reference external" href="https://keemei.qiime2.org/">Keemei</a>).</p>
+<p>QIIME 2 also provides a visualizer for viewing metadata in an interactive table:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file sample-metadata.tsv <span class="se">\</span>
+  --o-visualization tabulated-sample-metadata.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">tabulated-sample-metadata.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Ftabulated-sample-metadata.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/tabulated-sample-metadata.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-0">
+<p class="admonition-title">Question</p>
+<p>Based on the table in <code class="docutils literal notranslate"><span class="pre">tabulated-sample-metadata.qzv</span></code>, how many samples are associated with <code class="docutils literal notranslate"><span class="pre">subject-1</span></code>? How many samples are associated with the <code class="docutils literal notranslate"><span class="pre">gut</span></code> body site? Hint: use the search box and/or the column sorting options to assist with this query.</p>
+</div>
+</div>
+<div class="section" id="using-qiime-2-artifacts-as-metadata">
+<span id="artifacts-as-metadata"></span><h2>Using QIIME 2 Artifacts as Metadata<a class="headerlink" href="#using-qiime-2-artifacts-as-metadata" title="Permalink to this headline">¶</a></h2>
+<p>In addition to TSV metadata files, QIIME 2 also supports viewing some kinds of artifacts as metadata. An example of this is artifacts of type <code class="docutils literal notranslate"><span class="pre">SampleData[AlphaDiversity]</span></code>.</p>
+<p>To get started with understanding artifacts as metadata, first download an example artifact:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/metadata/faith_pd_vector.qza">
+            https://data.qiime2.org/2020.2/tutorials/metadata/faith_pd_vector.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> faith_pd_vector.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "faith_pd_vector.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/metadata/faith_pd_vector.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/metadata/faith_pd_vector.qza" > \
+  "faith_pd_vector.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>To view this artifact as metadata, simply pass it in to any method or visualizer that expects to see metadata (e.g. <code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">tabulate</span></code> or <code class="docutils literal notranslate"><span class="pre">emperor</span> <span class="pre">plot</span></code>):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file faith_pd_vector.qza <span class="se">\</span>
+  --o-visualization tabulated-faith-pd-metadata.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">faith_pd_vector.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Ffaith_pd_vector.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/faith_pd_vector.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">tabulated-faith-pd-metadata.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Ftabulated-faith-pd-metadata.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/tabulated-faith-pd-metadata.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-1">
+<p class="admonition-title">Question</p>
+<p>What is the largest value of Faith’s PD? What is the smallest? Hint: use the column sorting functions to assist with this query.</p>
+</div>
+<p>When an artifact is viewed as metadata, the result includes that artifact’s provenance in addition to its own.</p>
+<div class="question admonition" id="question-2">
+<p class="admonition-title">Question</p>
+<p>Try inspecting <code class="docutils literal notranslate"><span class="pre">tabulated-faith-pd-metadata.qzv</span></code> at <a class="reference external" href="https://view.qiime2.org">https://view.qiime2.org</a> and locate this artifact in the interactive provenance graph.</p>
+</div>
+</div>
+<div class="section" id="merging-metadata">
+<h2>Merging metadata<a class="headerlink" href="#merging-metadata" title="Permalink to this headline">¶</a></h2>
+<p>Since metadata can come from many different sources, QIIME 2 supports metadata merging when running commands. Building upon the examples above, simply passing <code class="docutils literal notranslate"><span class="pre">--m-input-file</span></code> multiple times will combine the metadata columns in the specified files:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file sample-metadata.tsv <span class="se">\</span>
+  --m-input-file faith_pd_vector.qza <span class="se">\</span>
+  --o-visualization tabulated-combined-metadata.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">tabulated-combined-metadata.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Ftabulated-combined-metadata.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/tabulated-combined-metadata.qzv">download</a></p></li>
+</ul>
+</div>
+<p>The resulting metadata after the merge will contain the intersection of the identifiers across all of the specified files. In other words, the merged metadata will only contain identifiers that are shared across all provided metadata files. This is an <em>inner join</em> using database terminology.</p>
+<div class="question admonition" id="question-3">
+<p class="admonition-title">Question</p>
+<p>Modify the command above to merge the <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/moving-pictures/core-metrics-results/evenness_vector.qza">evenness vector</a> of <code class="docutils literal notranslate"><span class="pre">SampleData[AlphaDiversity]</span></code> after the Faith’s PD vector. What happens when merging the three artifacts? How many columns are present in the resulting metadata visualization? How many of those columns represent the sample IDs? How many of those columns represent <code class="docutils literal notranslate"><span class="pre">SampleData[AlphaDiversity]</span></code> metrics? What happens to the visualization if the order of the metadata files is reversed? Hint, take a closer look at the column ordering.</p>
+</div>
+<p>Metadata merging is supported anywhere that metadata is accepted in QIIME 2. For example, it might be interesting to color an Emperor plot based on the study metadata, or sample alpha diversity. This can be accomplished by providing both the sample metadata file <em>and</em> the <code class="docutils literal notranslate"><span class="pre">SampleData[AlphaDiversity]</span></code> artifact:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/metadata/unweighted_unifrac_pcoa_results.qza">
+            https://data.qiime2.org/2020.2/tutorials/metadata/unweighted_unifrac_pcoa_results.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> unweighted_unifrac_pcoa_results.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "unweighted_unifrac_pcoa_results.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/metadata/unweighted_unifrac_pcoa_results.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/metadata/unweighted_unifrac_pcoa_results.qza" > \
+  "unweighted_unifrac_pcoa_results.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime emperor plot <span class="se">\</span>
+  --i-pcoa unweighted_unifrac_pcoa_results.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-file faith_pd_vector.qza <span class="se">\</span>
+  --o-visualization unweighted-unifrac-emperor-with-alpha.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">unweighted_unifrac_pcoa_results.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Funweighted_unifrac_pcoa_results.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/unweighted_unifrac_pcoa_results.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">unweighted-unifrac-emperor-with-alpha.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Funweighted-unifrac-emperor-with-alpha.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/unweighted-unifrac-emperor-with-alpha.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="question admonition" id="question-4">
+<p class="admonition-title">Question</p>
+<p>What body sites are associated with the highest Faith’s phylogentic diversity value? Hint: first color by body site, and then color by Faith’s PD using a continuous color scheme.</p>
+</div>
+</div>
+<div class="section" id="exploring-feature-metadata">
+<span id="id2"></span><h2>Exploring feature metadata<a class="headerlink" href="#exploring-feature-metadata" title="Permalink to this headline">¶</a></h2>
+<p>Metadata in QIIME 2 can be applied to sample or features — so far we have only dealt with sample metadata. This section will focus on feature metadata, specifically how to view <code class="docutils literal notranslate"><span class="pre">FeatureData</span></code> as metadata.</p>
+<p>To get started with feature metadata, first download the example files:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/metadata/rep-seqs.qza">
+            https://data.qiime2.org/2020.2/tutorials/metadata/rep-seqs.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> rep-seqs.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "rep-seqs.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/metadata/rep-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/metadata/rep-seqs.qza" > \
+  "rep-seqs.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-4" aria-controls="browser-4" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-4" aria-controls="wget-4" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-4" aria-controls="messages-4" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-4">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/metadata/taxonomy.qza">
+            https://data.qiime2.org/2020.2/tutorials/metadata/taxonomy.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> taxonomy.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-4">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "taxonomy.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/metadata/taxonomy.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-4">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/metadata/taxonomy.qza" > \
+  "taxonomy.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>We have downloaded a <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> file (<code class="docutils literal notranslate"><span class="pre">rep-seqs.qza</span></code>) and a <code class="docutils literal notranslate"><span class="pre">FeatureData[Taxonomy]</span></code> file (<code class="docutils literal notranslate"><span class="pre">taxonomy.qza</span></code>). We can merge (and <code class="docutils literal notranslate"><span class="pre">tabulate</span></code>) these files to associate the representative sequences with their taxonomic annotations:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file rep-seqs.qza <span class="se">\</span>
+  --m-input-file taxonomy.qza <span class="se">\</span>
+  --o-visualization tabulated-feature-metadata.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">taxonomy.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Ftaxonomy.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/taxonomy.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">rep-seqs.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Frep-seqs.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/rep-seqs.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">tabulated-feature-metadata.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fmetadata%2Ftabulated-feature-metadata.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/metadata/tabulated-feature-metadata.qzv">download</a></p></li>
+</ul>
+</div>
+<p>The resulting table shows the joined metadata files with a column of the the feature IDs, a column of the representative sequences, a column of the taxonomic assignments, and lastly, a column of the assignment confidence.</p>
+<div class="question admonition" id="question-5">
+<p class="admonition-title">Question</p>
+<p>Are all artifacts (<code class="docutils literal notranslate"><span class="pre">.qza</span></code> files) viewable as metadata? Hint: try tabulating a <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/moving-pictures/table.qza">feature table artifact</a>. Are all metadata files stored as <code class="docutils literal notranslate"><span class="pre">.qza</span></code> files?</p>
+</div>
+<p>Finally, there are export options available in the visualizations produced from <code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">tabulate</span></code>. Using the results from <code class="docutils literal notranslate"><span class="pre">tabulated-feature-metadata.qzv</span></code>, export the data as a new TSV. Open that file in a TSV viewer or text editor and note that the contents are the same as the interactive metadata table in the visualization.</p>
+<div class="question admonition" id="question-6">
+<p class="admonition-title">Question</p>
+<p>Can the exported TSV from the above step be used as metadata? What are some benefits of being able to export metadata (hint: see the discussion above about metadata merging)? What about some potential drawbacks (hint: what happens to data <a class="reference internal" href="../../concepts/"><span class="doc">provenance</span></a> when data is exported from QIIME 2)?</p>
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+plot-feature-volatility: Plot longitudinal feature volatility and importances
+=============================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime longitudinal plot-feature-volatility [OPTIONS]
+
+     Plots an interactive control chart of feature abundances (y-axis) in each
+     sample across time (or state; x-axis). Feature importance scores and
+     descriptive statistics for each each feature are plotted in interactive
+     bar charts below the control chart, facilitating exploration of
+     longitudinal feature data. This visualization is intended for use with the
+     feature-volatility pipeline; use that pipeline to access this
+     visualization.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[RelativeFrequency]
+                                     Feature table containing features found in
+                                     importances.  [required]
+     --i-importances ARTIFACT PATH FeatureData[Importance]
+                                     Feature importance scores.  [required]
+     --m-metadata-file MULTIPLE FILE
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. Sample
+                                     metadata file containing
+                                     individual_id_column.  [required]
+     --p-state-column TEXT           Metadata column containing state (time)
+                                     variable information.  [required]
+     --p-individual-id-column TEXT   Metadata column containing IDs for
+                                     individual subjects.  [optional]
+     --p-default-group-column TEXT   The default metadata column on which to
+                                     separate groups for comparison (all
+                                     categorical metadata columns will be
+                                     available in the visualization).  [optional]
+     --p-yscale [linear|log|sqrt|pow]
+                                     y-axis scaling strategy to apply.  [default:
+                                     linear]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config FILE               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.longitudinal.visualizers import plot_feature_volatility
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Plot longitudinal feature volatility and importances
+
+   Plots an interactive control chart of feature abundances (y-axis) in each
+   sample across time (or state; x-axis). Feature importance scores and
+   descriptive statistics for each each feature are plotted in interactive bar
+   charts below the control chart, facilitating exploration of longitudinal
+   feature data. This visualization is intended for use with the feature-
+   volatility pipeline; use that pipeline to access this visualization.
+
+   Parameters
+   ----------
+   table : FeatureTable[RelativeFrequency]
+       Feature table containing features found in importances.
+   importances : FeatureData[Importance]
+       Feature importance scores.
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   state_column : Str
+       Metadata column containing state (time) variable information.
+   individual_id_column : Str, optional
+       Metadata column containing IDs for individual subjects.
+   default_group_column : Str, optional
+       The default metadata column on which to separate groups for comparison
+       (all categorical metadata columns will be available in the
+       visualization).
+   yscale : Str % Choices({'linear', 'log', 'pow', 'sqrt'}), optional
+       y-axis scaling strategy to apply.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

@@ -1,0 +1,85 @@
+dereplicate-sequences: Dereplicate sequences.
+=============================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime vsearch dereplicate-sequences [OPTIONS]
+
+     Dereplicate sequence data and create a feature table and feature
+     representative sequences. Feature identifiers in the resulting artifacts
+     will be the sha1 hash of the sequence defining each feature. If clustering
+     of features into OTUs is desired, the resulting artifacts can be passed to
+     the cluster_features_* methods in this plugin.
+
+   Inputs:
+     --i-sequences ARTIFACT SampleData[Sequences] |
+       SampleData[SequencesWithQuality] | SampleData[JoinedSequencesWithQuality]
+                             The sequences to be dereplicated.         [required]
+   Parameters:
+     --p-derep-prefix / --p-no-derep-prefix
+                             Merge sequences with identical prefixes. If a
+                             sequence is identical to the prefix of two or more
+                             longer sequences, it is clustered with the shortest
+                             of them. If they are equally long, it is clustered
+                             with the most abundant.             [default: False]
+   Outputs:
+     --o-dereplicated-table ARTIFACT FeatureTable[Frequency]
+                             The table of dereplicated sequences.      [required]
+     --o-dereplicated-sequences ARTIFACT FeatureData[Sequence]
+                             The dereplicated sequences.               [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.vsearch.methods import dereplicate_sequences
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Dereplicate sequences.
+
+   Dereplicate sequence data and create a feature table and feature
+   representative sequences. Feature identifiers in the resulting artifacts
+   will be the sha1 hash of the sequence defining each feature. If clustering
+   of features into OTUs is desired, the resulting artifacts can be passed to
+   the cluster_features_* methods in this plugin.
+
+   Parameters
+   ----------
+   sequences : SampleData[Sequences] | SampleData[SequencesWithQuality] | SampleData[JoinedSequencesWithQuality]
+       The sequences to be dereplicated.
+   derep_prefix : Bool, optional
+       Merge sequences with identical prefixes. If a sequence is identical to
+       the prefix of two or more longer sequences, it is clustered with the
+       shortest of them. If they are equally long, it is clustered with the
+       most abundant.
+
+   Returns
+   -------
+   dereplicated_table : FeatureTable[Frequency]
+       The table of dereplicated sequences.
+   dereplicated_sequences : FeatureData[Sequence]
+       The dereplicated sequences.</pre>
+       </div>
+     </div>
+   </div>

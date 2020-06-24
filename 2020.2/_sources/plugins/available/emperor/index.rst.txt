@@ -1,0 +1,97 @@
+emperor
+=======
+
+.. raw:: html
+
+   <table class="table plugin-info">
+     <tbody>
+       <tr>
+         <th scope="row">Description</th>
+         <td>
+           
+           This QIIME 2 plugin wraps Emperor and supports interactive visualization of ordination plots.<br/>
+           
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Version</th>
+         <td>2020.2.0</td>
+       </tr>
+       <tr>
+         <th scope="row">Website</th>
+         <td><a href="http://emperor.microbio.me" rel="noopener">http://emperor.microbio.me</a></td>
+       </tr>
+       <tr>
+         <th scope="row">Support</th>
+         <td>
+           
+           Please post to the QIIME 2 forum for help with this plugin: <a href="https://forum.qiime2.org" rel="noopener">https://forum.qiime2.org</a><br/>
+           
+       <tr>
+         <th scope="row">q2cli Invocation</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   qiime emperor
+
+.. raw:: html
+
+         </td>
+       </tr>
+       <tr>
+         <th scope="row">Artifact API Import</th>
+         <td>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins import emperor
+
+.. raw:: html
+
+         </td>
+       </tr>
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: citations.bib
+   :list: bullet
+   :all:
+   :keyprefix: emperor:
+   :labelprefix: emperor:
+
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+
+
+
+
+Visualizers
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   
+   biplot
+   
+   plot
+   
+   procrustes-plot
+   

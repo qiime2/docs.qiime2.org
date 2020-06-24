@@ -1,0 +1,89 @@
+classify-samples-from-dist: Run k-nearest-neighbors on a labeled distance matrix.
+=================================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime sample-classifier classify-samples-from-dist [OPTIONS]
+
+     Run k-nearest-neighbors on a labeled distance matrix. Return cross-
+     validated (leave one out) predictions and  accuracy. k = 1 by default
+
+   Options:
+     --i-distance-matrix ARTIFACT PATH DistanceMatrix
+                                     a distance matrix  [required]
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata.
+                                     [required]
+     --m-metadata-column MetadataColumn[Categorical]
+                                     Column from metadata file or artifact
+                                     viewable as metadata. Categorical metadata
+                                     column to use as prediction target.
+                                     [required]
+     --p-k INTEGER                   Number of nearest neighbors  [default: 1]
+     --p-palette [verve|deepblue|drifting|BluePurple|solano|greyscale|mysteriousstains|YellowOrangeRed|dandelions|enigma|plasma|PurpleRed|spectre|copper|daydream|viridis|navarro|eros|melancholy|OrangeRed|summer|RedPurple|inferno|ambition|sirocco|YellowOrangeBrown|GreenBlue|magma|PurpleBlue|YellowGreen]
+                                     The color palette to use for plotting.
+                                     [default: sirocco]
+     --o-predictions ARTIFACT PATH SampleData[ClassifierPredictions]
+                                     leave one out predictions for each sample
+                                     [required if not passing --output-dir]
+     --o-accuracy-results VISUALIZATION PATH
+                                     Accuracy results visualization.  [required
+                                     if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.sample_classifier.pipelines import classify_samples_from_dist
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Run k-nearest-neighbors on a labeled distance matrix.
+
+   Run k-nearest-neighbors on a labeled distance matrix. Return cross-
+   validated (leave one out) predictions and  accuracy. k = 1 by default
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       a distance matrix
+   metadata : MetadataColumn[Categorical]
+       Categorical metadata column to use as prediction target.
+   k : Int, optional
+       Number of nearest neighbors
+   palette : Str % Choices({'BluePurple', 'GreenBlue', 'OrangeRed', 'PurpleBlue', 'PurpleRed', 'RedPurple', 'YellowGreen', 'YellowOrangeBrown', 'YellowOrangeRed', 'ambition', 'copper', 'dandelions', 'daydream', 'deepblue', 'drifting', 'enigma', 'eros', 'greyscale', 'inferno', 'magma', 'melancholy', 'mysteriousstains', 'navarro', 'plasma', 'sirocco', 'solano', 'spectre', 'summer', 'verve', 'viridis'}), optional
+       The color palette to use for plotting.
+
+   Returns
+   -------
+   predictions : SampleData[ClassifierPredictions]
+       leave one out predictions for each sample
+   accuracy_results : Visualization
+       Accuracy results visualization.</pre>
+       </div>
+     </div>
+   </div>

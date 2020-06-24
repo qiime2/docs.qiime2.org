@@ -1,0 +1,64 @@
+relative-frequency: Convert to relative frequencies
+===================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table relative-frequency [OPTIONS]
+
+     Convert frequencies to relative frequencies by dividing each frequency in
+     a sample by the sum of frequencies in that sample.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          The feature table to be converted into relative
+                          frequencies.                                 [required]
+   Outputs:
+     --o-relative-frequency-table ARTIFACT FeatureTable[RelativeFrequency]
+                          The resulting relative frequency feature table.
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.methods import relative_frequency
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Convert to relative frequencies
+
+   Convert frequencies to relative frequencies by dividing each frequency in a
+   sample by the sum of frequencies in that sample.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table to be converted into relative frequencies.
+
+   Returns
+   -------
+   relative_frequency_table : FeatureTable[RelativeFrequency]
+       The resulting relative frequency feature table.</pre>
+       </div>
+     </div>
+   </div>

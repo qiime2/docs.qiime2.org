@@ -1,0 +1,125 @@
+dendrogram-heatmap: Dendrogram heatmap.
+=======================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime gneiss dendrogram-heatmap [OPTIONS]
+
+     Visualize the feature table as a heatmap, with samples sorted along a
+     specified categorical metadata column and features clustered together
+     specified by the tree.
+
+     WARNING:
+
+     This command is deprecated and will be removed in a future version of this
+     plugin.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                             The feature table that will be plotted as a
+                             heatmap. This table is assumed to have strictly
+                             positive values.                          [required]
+     --i-tree ARTIFACT       A hierarchy of feature identifiers where each
+       Hierarchy             tipcorresponds to the feature identifiers in the
+                             table. This tree can contain tip ids that are not
+                             present in the table, but all feature ids in the
+                             table must be present in this tree.       [required]
+   Parameters:
+     --m-metadata-file METADATA
+     --m-metadata-column COLUMN  MetadataColumn[Categorical]
+                             Categorical metadata column to group the samples.
+                                                                       [required]
+     --p-pseudocount NUMBER  The pseudocount to add to avoid division by zero.
+                                                                   [default: 0.5]
+     --p-ndim INTEGER        Number of dimensions to highlight.     [default: 10]
+     --p-method TEXT Choices('clr', 'log')
+                             Specifies how the data should be normalized for
+                             display.Options include 'log' or 'clr'
+                             (default='clr').                    [default: 'clr']
+     --p-color-map TEXT Choices('viridis', 'inferno', 'plasma', 'magma',
+       'Blues', 'BuGn', 'BuPu', 'GnBu', 'Greens', 'Greys', 'Oranges', 'OrRd',
+       'PuBu', 'PuBuGn', 'PuRd', 'Purples', 'RdPu', 'Reds', 'YlGn', 'YlGnBu',
+       'YlOrBr', 'YlOrRd', 'afmhot', 'autumn', 'bone', 'cool', 'copper',
+       'gist_heat', 'gray', 'hot', 'pink', 'spring', 'summer', 'winter', 'BrBG',
+       'bwr', 'coolwarm', 'PiYG', 'PRGn', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu',
+       'RdYlGn', 'Spectral', 'seismic', 'Accent', 'Dark2', 'Paired', 'Pastel1',
+       'Pastel2', 'Set1', 'Set2', 'Set3', 'Vega10', 'Vega20', 'Vega20b',
+       'Vega20c', 'gist_earth', 'terrain', 'ocean', 'gist_stern', 'brg',
+       'CMRmap', 'cubehelix', 'gnuplot', 'gnuplot2', 'gist_ncar',
+       'nipy_spectral', 'jet', 'rainbow', 'gist_rainbow', 'hsv', 'flag', 'prism')
+                             Specifies the color map for plotting the heatmap.
+                             See
+                             https://matplotlib.org/examples/color/colormaps_refe
+                             rence.html for more details.    [default: 'viridis']
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.gneiss.visualizers import dendrogram_heatmap
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Dendrogram heatmap.
+
+   .. deprecated::
+      This Visualizer is deprecated and will be removed in a future version of
+      this plugin.
+
+   Visualize the feature table as a heatmap, with samples sorted along a
+   specified categorical metadata column and features clustered together
+   specified by the tree.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table that will be plotted as a heatmap. This table is
+       assumed to have strictly positive values.
+   tree : Hierarchy
+       A hierarchy of feature identifiers where each tipcorresponds to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree.
+   metadata : MetadataColumn[Categorical]
+       Categorical metadata column to group the samples.
+   pseudocount : Float, optional
+       The pseudocount to add to avoid division by zero.
+   ndim : Int, optional
+       Number of dimensions to highlight.
+   method : Str % Choices('clr', 'log'), optional
+       Specifies how the data should be normalized for display.Options include
+       'log' or 'clr' (default='clr').
+   color_map : Str % Choices('viridis', 'inferno', 'plasma', 'magma', 'Blues', 'BuGn', 'BuPu', 'GnBu', 'Greens', 'Greys', 'Oranges', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 'Purples', 'RdPu', 'Reds', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd', 'afmhot', 'autumn', 'bone', 'cool', 'copper', 'gist_heat', 'gray', 'hot', 'pink', 'spring', 'summer', 'winter', 'BrBG', 'bwr', 'coolwarm', 'PiYG', 'PRGn', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral', 'seismic', 'Accent', 'Dark2', 'Paired', 'Pastel1', 'Pastel2', 'Set1', 'Set2', 'Set3', 'Vega10', 'Vega20', 'Vega20b', 'Vega20c', 'gist_earth', 'terrain', 'ocean', 'gist_stern', 'brg', 'CMRmap', 'cubehelix', 'gnuplot', 'gnuplot2', 'gist_ncar', 'nipy_spectral', 'jet', 'rainbow', 'gist_rainbow', 'hsv', 'flag', 'prism'), optional
+       Specifies the color map for plotting the heatmap. See
+       https://matplotlib.org/examples/color/colormaps_reference.html for more
+       details.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

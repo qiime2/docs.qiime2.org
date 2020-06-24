@@ -1,0 +1,97 @@
+ols-regression: Simplicial Ordinary Least Squares Regression
+============================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime gneiss ols-regression [OPTIONS]
+
+     Perform linear regression on balances. This will tell youhow much
+     variability is explained by metadata categories in your formula.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Balance]
+                                     The feature table containing the samples in
+                                     which simplicial regression will be
+                                     performed.  [required]
+     --i-tree ARTIFACT PATH Hierarchy
+                                     A hierarchy of feature identifiers where
+                                     each tipcorresponds to the feature
+                                     identifiers in the table. This tree can
+                                     contain tip ids that are not present in the
+                                     table, but all feature ids in the table must
+                                     be present in this tree.  [required]
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. Metadata
+                                     information that contains the covariates of
+                                     interest.  [required]
+     --p-formula TEXT                Formula specifying the statistical model. In
+                                     other words, a list of the metadata
+                                     categories that will be used in the
+                                     regression model, typically separated by
+                                     "+". For more information see
+                                     https://patsy.readthedocs.io/en/latest/API-
+                                     reference.html  [required]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.gneiss.visualizers import ols_regression
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Simplicial Ordinary Least Squares Regression
+
+   Perform linear regression on balances. This will tell youhow much
+   variability is explained by metadata categories in your formula.
+
+   Parameters
+   ----------
+   table : FeatureTable[Balance]
+       The feature table containing the samples in which simplicial regression
+       will be performed.
+   tree : Hierarchy
+       A hierarchy of feature identifiers where each tipcorresponds to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree.
+   metadata : Metadata
+       Metadata information that contains the covariates of interest.
+   formula : Str
+       Formula specifying the statistical model. In other words, a list of the
+       metadata categories that will be used in the regression model,
+       typically separated by "+". For more information see
+       https://patsy.readthedocs.io/en/latest/API-reference.html
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

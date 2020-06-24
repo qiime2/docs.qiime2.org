@@ -1,0 +1,94 @@
+gradient-clustering: Hierarchical clustering using gradient information.
+========================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime gneiss gradient-clustering [OPTIONS]
+
+     Build a bifurcating tree that represents a hierarchical clustering of
+     features.  The hiearchical clustering uses Ward hierarchical clustering
+     based on the mean difference of gradients that each feature is observed
+     in. This method is primarily used to sort the table to reveal the
+     underlying block-like structures.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency | RelativeFrequency |
+       Composition]       The feature table containing the samples in which the
+                          columns will be clustered.                   [required]
+   Parameters:
+     --m-gradient-file METADATA
+     --m-gradient-column COLUMN  MetadataColumn[Numeric]
+                          Contains gradient values to sort the features and
+                          samples.                                     [required]
+     --p-ignore-missing-samples / --p-no-ignore-missing-samples
+                                                                 [default: False]
+     --p-weighted / --p-no-weighted
+                          Specifies if abundance or presence/absence information
+                          should be used to perform the clustering.
+                                                                  [default: True]
+   Outputs:
+     --o-clustering ARTIFACT
+       Hierarchy          A hierarchy of feature identifiers where each tip
+                          corresponds to the feature identifiers in the table.
+                          This tree can contain tip ids that are not present in
+                          the table, but all feature ids in the table must be
+                          present in this tree.                        [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.gneiss.methods import gradient_clustering
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Hierarchical clustering using gradient information.
+
+   Build a bifurcating tree that represents a hierarchical clustering of
+   features.  The hiearchical clustering uses Ward hierarchical clustering
+   based on the mean difference of gradients that each feature is observed in.
+   This method is primarily used to sort the table to reveal the underlying
+   block-like structures.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency | RelativeFrequency | Composition]
+       The feature table containing the samples in which the columns will be
+       clustered.
+   gradient : MetadataColumn[Numeric]
+       Contains gradient values to sort the features and samples.
+   ignore_missing_samples : Bool, optional
+   weighted : Bool, optional
+       Specifies if abundance or presence/absence information should be used
+       to perform the clustering.
+
+   Returns
+   -------
+   clustering : Hierarchy
+       A hierarchy of feature identifiers where each tip corresponds to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree.</pre>
+       </div>
+     </div>
+   </div>

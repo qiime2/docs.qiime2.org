@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Predicting sample metadata values with q2-sample-classifier &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Performing longitudinal and paired sample comparisons with q2-longitudinal" href="../longitudinal/" />
+    <link rel="prev" title="Evaluating and controlling data quality with q2-quality-control" href="../quality-control/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="predicting-sample-metadata-values-with-q2-sample-classifier">
+<h1>Predicting sample metadata values with q2-sample-classifier<a class="headerlink" href="#predicting-sample-metadata-values-with-q2-sample-classifier" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Documentation for using all plugin actions through the Python API and command line interface is available in the q2-sample-classifier <a class="reference internal" href="../../plugins/available/sample-classifier/"><span class="doc">reference documentation</span></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a> and completed the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial</span></a>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Just as with any statistical method, the actions described in this plugin require adequate sample sizes to achieve meaningful results. As a rule of thumb, a minimum of <a class="reference external" href="http://scikit-learn.org/stable/tutorial/machine_learning_map/index.html">approximately 50 samples</a> should be provided. Categorical metadata columns that are used as classifier targets should have a minimum of 10 samples per unique value, and continuous metadata columns that are used as regressor targets should not contain many outliers or grossly uneven distributions. Smaller counts will result in inaccurate models, and may result in errors.</p>
+</div>
+<p>This tutorial will demonstrate how to use <code class="docutils literal notranslate"><span class="pre">q2-sample-classifier</span></code> to predict sample metadata values. Supervised learning methods predict sample data (e.g., metadata values) as a function of other sample data (e.g., microbiota composition). The predicted targets may be discrete sample classes (for classification problems) or continuous values (for regression problems). Any other data may be used as predictive features, but for the purposes of q2-sample-classifier this will most commonly be microbial sequence variant, operational taxonomic unit (OTU), or taxonomic composition data. However, any features contained in a feature table may be used — for non-microbial data, just <a class="reference external" href="http://biom-format.org/documentation/biom_conversion.html">convert your observation tables to biom format</a> and <a class="reference internal" href="../importing/"><span class="doc">import the feature table data into qiime2</span></a>.</p>
+<p>We will download and create several files, so first create a working directory.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir sample-classifier-tutorial
+<span class="nb">cd</span> sample-classifier-tutorial
+</pre></div>
+</div>
+<div class="section" id="predicting-categorical-sample-data">
+<h2>Predicting categorical sample data<a class="headerlink" href="#predicting-categorical-sample-data" title="Permalink to this headline">¶</a></h2>
+<p>Supervised learning classifiers predict the categorical metadata classes of unlabeled samples by learning the composition of labeled training samples. For example, we may use a classifier to diagnose or predict disease susceptibility based on stool microbiome composition, or predict sample type as a function of the sequence variants, microbial taxa, or metabolites detected in a sample. In this tutorial, we will use the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial data</span></a> to train a classifier that predicts the body site from which a sample was collected. Download the feature table and sample metadata with the following links:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv">
+            https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> moving-pictures-sample-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "moving-pictures-sample-metadata.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv" > \
+  "moving-pictures-sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/sample-classifier/moving-pictures-table.qza">
+            https://data.qiime2.org/2020.2/tutorials/sample-classifier/moving-pictures-table.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> moving-pictures-table.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "moving-pictures-table.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/sample-classifier/moving-pictures-table.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/sample-classifier/moving-pictures-table.qza" > \
+  "moving-pictures-table.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Next, we will train and test a classifier that predicts which body site a sample originated from based on its microbial composition. We will do so using the <code class="docutils literal notranslate"><span class="pre">classify-samples</span></code> pipeline, which performs a series of steps under the hood:</p>
+<ol class="arabic simple">
+<li><p>The input samples are randomly split into a <code class="docutils literal notranslate"><span class="pre">training</span></code> set and a <code class="docutils literal notranslate"><span class="pre">test</span></code> set. The test set is held out until the end of the pipeline, allowing us to test accuracy on a set of samples that was not used for model training. The fraction of input samples to include in the test set is adjusted with the <code class="docutils literal notranslate"><span class="pre">--p-test-size</span></code> parameter.</p></li>
+<li><p>We train the learning model using the training set samples. The model is trained to predict a specific <code class="docutils literal notranslate"><span class="pre">target</span></code> value for each sample (contained in a metadata column) based on the feature data associated with that sample. A range of different estimators can be selected using the <code class="docutils literal notranslate"><span class="pre">estimator</span></code> parameter; more details on individual estimators can be found in the <a class="reference external" href="http://scikit-learn.org/stable/supervised_learning.html">scikit-learn documentation</a> (not sure which to choose? See the <a class="reference external" href="http://scikit-learn.org/stable/tutorial/machine_learning_map/index.html">estimator selection flowchart</a>).</p></li>
+<li><p>K-fold <a class="reference external" href="https://en.wikipedia.org/wiki/Cross-validation_(statistics)">cross-validation</a> is performed during automatic feature selection and parameter optimization steps to tune the model. Five-fold cross-validation is performed by default, and this value can be adjusted using the <code class="docutils literal notranslate"><span class="pre">--p-cv</span></code> parameter.</p></li>
+<li><p>The trained model is used to predict the target values for each test sample, based on the feature data associated with that sample, and predict class probabilities for each sample. Class probabilities are the likelihood that a sample belongs to each class (i.e., group of samples with the same <code class="docutils literal notranslate"><span class="pre">target</span></code> value).</p></li>
+<li><p>Model accuracy is calculated by comparing each test sample’s predicted value to the true value for that sample.</p></li>
+</ol>
+<img alt="../../_images/sample-classifier.png" src="../../_images/sample-classifier.png" />
+<p><a class="reference internal" href="../overview/#key"><span class="std std-ref">Figure key</span></a></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier classify-samples <span class="se">\</span>
+  --i-table moving-pictures-table.qza <span class="se">\</span>
+  --m-metadata-file moving-pictures-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-column body-site <span class="se">\</span>
+  --p-optimize-feature-selection <span class="se">\</span>
+  --p-parameter-tuning <span class="se">\</span>
+  --p-estimator RandomForestClassifier <span class="se">\</span>
+  --p-n-estimators <span class="m">20</span> <span class="se">\</span>
+  --p-random-state <span class="m">123</span> <span class="se">\</span>
+  --output-dir moving-pictures-classifier
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/probabilities.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fprobabilities.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/probabilities.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/sample_estimator.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fsample_estimator.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/sample_estimator.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/feature_importance.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Ffeature_importance.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/feature_importance.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/predictions.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fpredictions.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/predictions.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/heatmap.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fheatmap.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/heatmap.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/accuracy_results.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Faccuracy_results.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/accuracy_results.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/model_summary.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fmodel_summary.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/model_summary.qzv">download</a></p></li>
+</ul>
+</div>
+<p>This pipeline produces several outputs. First let’s check out <code class="docutils literal notranslate"><span class="pre">accuracy_results.qzv</span></code>, which presents classification accuracy results in the form of a confusion matrix, as well as <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">Receiver Operating Characteristic (ROC) curves</a>. This matrix indicates how frequently a sample is classified with the correct class vs. all other classes. The confusion matrix is displayed at the top of the visualization in the form of a heatmap, and below that as a table containing overall accuracy (the fraction of times that test samples are assigned the correct class). ROC curves are another graphical representation of the classification accuracy of a machine-learning model. The ROC curve plots the relationship between the true positive rate (TPR, on the y-axis) and the false positive rate (FPR, on the x-axis) at various threshold settings. Thus, the top-left corner of the plot represents the “optimal” performance position, indicating a FPR of zero and a TPR of one. This “optimal” scenario is unlikely to occur in practice, but a greater area under the curve (AUC) indicates better performance.</p>
+<div class="question admonition" id="question-0">
+<p class="admonition-title">Question</p>
+<p>What other metadata can we predict with <code class="docutils literal notranslate"><span class="pre">classify-samples</span></code>? Take a look at the metadata columns in the <code class="docutils literal notranslate"><span class="pre">sample-metadata</span></code> and try some other categorical columns. Not all metadata can be easily learned by the classifier!</p>
+</div>
+<p>This pipeline also reports the actual predictions made for each test sample in the <code class="docutils literal notranslate"><span class="pre">predictions.qza</span></code> output. This is a <code class="docutils literal notranslate"><span class="pre">SampleData[ClassifierPredictions]</span></code> artifact, which is viewable as metadata. So we can take a peak with <code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">tabulate</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file moving-pictures-classifier/predictions.qza <span class="se">\</span>
+  --o-visualization moving-pictures-classifier/predictions.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/predictions.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fpredictions.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/predictions.qzv">download</a></p></li>
+</ul>
+</div>
+<p>In addition to the predicted class information, the model also reports the individual class probabilities in <code class="docutils literal notranslate"><span class="pre">probabilities.qza</span></code>. This is a <code class="docutils literal notranslate"><span class="pre">SampleData[Probabilities]</span></code> artifact, and is also viewable as metadata, so let’s take a peak with <code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">tabulate</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file moving-pictures-classifier/probabilities.qza <span class="se">\</span>
+  --o-visualization moving-pictures-classifier/probabilities.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/probabilities.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fprobabilities.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/probabilities.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Another really useful output of supervised learning methods is <em>feature selection</em>, i.e., they report which features (e.g., ASVs or taxa) are most predictive. A list of all features, and their relative importances (or feature weights or model coefficients, depending on the learning model used), will be reported in <code class="docutils literal notranslate"><span class="pre">feature_importance.qza</span></code>. Features with higher importance scores were more useful for distinguishing classes. Feature importance scores are assigned directly by the scikit-learn learning estimator that was used; more details on individual estimators and their importance scores should refer to the <a class="reference external" href="http://scikit-learn.org/stable/supervised_learning.html">scikit-learn documentation</a>. Note that some estimators — notably K-nearest neighbors models — do not report feature importance scores, so this output will be meaningless if you are using such an estimator. Feature importances are of the semantic type <code class="docutils literal notranslate"><span class="pre">FeatureData[Importance]</span></code>, and can be interpreted as (feature) metadata so we can take a look at these feature importances (and/or <a class="reference internal" href="../metadata/#exploring-feature-metadata"><span class="std std-ref">merge with other feature metadata</span></a>) using <code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">tabulate</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime metadata tabulate <span class="se">\</span>
+  --m-input-file moving-pictures-classifier/feature_importance.qza <span class="se">\</span>
+  --o-visualization moving-pictures-classifier/feature_importance.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/feature_importance.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Ffeature_importance.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/feature_importance.qzv">download</a></p></li>
+</ul>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">--p-optimize-feature-selection</span></code> is enabled, only the selected features (i.e., the most important features, which maximize model accuracy, as determined using <a class="reference external" href="http://scikit-learn.org/stable/modules/feature_selection.html#recursive-feature-elimination">recursive feature elimination</a>) will be reported in this artifact, and all other results (e.g., model accuracy and predictions) that are output use the final, optimized model that utilizes this reduced feature set. This allows us to not only see which features are most important (and hence used by the model), but also use that information to filter out uninformative features from our feature table for other downstream analyses outside of q2-sample-classifier:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table moving-pictures-table.qza <span class="se">\</span>
+  --m-metadata-file moving-pictures-classifier/feature_importance.qza <span class="se">\</span>
+  --o-filtered-table moving-pictures-classifier/important-feature-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/important-feature-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fimportant-feature-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/important-feature-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>We can also use the <code class="docutils literal notranslate"><span class="pre">heatmap</span></code> pipeline to generate an abundance heatmap of the most important features in each sample or group. Let’s make a heatmap of the top 30 most abundant features in each of our sample types:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier heatmap <span class="se">\</span>
+  --i-table moving-pictures-table.qza <span class="se">\</span>
+  --i-importance moving-pictures-classifier/feature_importance.qza <span class="se">\</span>
+  --m-sample-metadata-file moving-pictures-sample-metadata.tsv <span class="se">\</span>
+  --m-sample-metadata-column body-site <span class="se">\</span>
+  --p-group-samples <span class="se">\</span>
+  --p-feature-count <span class="m">30</span> <span class="se">\</span>
+  --o-filtered-table moving-pictures-classifier/important-feature-table-top-30.qza <span class="se">\</span>
+  --o-heatmap moving-pictures-classifier/important-feature-heatmap.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/important-feature-table-top-30.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fimportant-feature-table-top-30.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/important-feature-table-top-30.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/important-feature-heatmap.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fimportant-feature-heatmap.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/important-feature-heatmap.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the command above, we annotated the heatmap with <code class="docutils literal notranslate"><span class="pre">sample-metadata</span></code>. It is also possible to annotate these heatmaps with <code class="docutils literal notranslate"><span class="pre">feature-metadata</span></code>, e.g., to label the feature axis with species classifications.</p>
+</div>
+<p>This pipeline also produces a visualization containing a summary of the model parameters used by the supervised learning estimator in <code class="docutils literal notranslate"><span class="pre">model_summary.qzv</span></code>. If <code class="docutils literal notranslate"><span class="pre">--p-optimize-feature-selection</span></code> is enabled, the visualization will also display a <a class="reference external" href="http://scikit-learn.org/stable/modules/feature_selection.html#recursive-feature-elimination">recursive feature elimination</a> plot, which illustrates how model accuracy changes as a function of feature count. The combination of features that maximize accuracy are automatically selected for the final model, which is used for sample prediction results that are displayed in the other outputs.</p>
+<div class="question admonition" id="question-1">
+<p class="admonition-title">Question</p>
+<p>What happens when feature optimization is disabled with the option <code class="docutils literal notranslate"><span class="pre">--p-no-optimize-feature-selection</span></code>? How does this impact classification accuracy?</p>
+</div>
+<p>Finally, the trained classification model is saved for convenient re-use in the <code class="docutils literal notranslate"><span class="pre">sample_estimator.qza</span></code> artifact! This allows us to predict metadata values for additional samples. For example, imagine we just received a shipment of new samples and wanted to use our pre-trained Body Site classifier to figure out what type of samples these new samples are. For the sake of convenience in this example, we will just pretend we have new samples and predict the values of the same samples that we used to train the model but <strong>NEVER do this in practice</strong> because:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Testing a supervised learning model on the same samples used to train the model will give unrealistic estimates of performance! 🦄</p>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier predict-classification <span class="se">\</span>
+  --i-table moving-pictures-table.qza <span class="se">\</span>
+  --i-sample-estimator moving-pictures-classifier/sample_estimator.qza <span class="se">\</span>
+  --o-predictions moving-pictures-classifier/new_predictions.qza <span class="se">\</span>
+  --o-probabilities moving-pictures-classifier/new_probabilities.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/new_predictions.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fnew_predictions.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/new_predictions.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/new_probabilities.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fnew_probabilities.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/new_probabilities.qza">download</a></p></li>
+</ul>
+</div>
+<p>We can view these <code class="docutils literal notranslate"><span class="pre">new_predictions.qza</span></code> (and <code class="docutils literal notranslate"><span class="pre">new_probabilities.qza</span></code>) using <code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">tabulate</span></code>, as described above… or if these aren’t actually “unknown” samples we can re-test model accuracy using this new batch of samples:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier confusion-matrix <span class="se">\</span>
+  --i-predictions moving-pictures-classifier/new_predictions.qza <span class="se">\</span>
+  --i-probabilities moving-pictures-classifier/new_probabilities.qza <span class="se">\</span>
+  --m-truth-file moving-pictures-sample-metadata.tsv <span class="se">\</span>
+  --m-truth-column body-site <span class="se">\</span>
+  --o-visualization moving-pictures-classifier/new_confusion_matrix.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">moving-pictures-classifier/new_confusion_matrix.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fmoving-pictures-classifier%2Fnew_confusion_matrix.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/moving-pictures-classifier/new_confusion_matrix.qzv">download</a></p></li>
+</ul>
+</div>
+<p>Pretty cool! Accuracy should be inordinately high in these results because we ignored the warning above about testing on our training data, giving you a pretty good idea why you should follow the directions on the box! 😑</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The model we trained here is a toy example containing very few samples from a single study and will probably not be useful for predicting other unknown samples. But if you have samples from one of these body sites, it could be a fun exercise to give it a spin!</p>
+</div>
+<div class="question admonition" id="question-2">
+<p class="admonition-title">Question</p>
+<p>Try to figure out what the <code class="docutils literal notranslate"><span class="pre">--p-parameter-tuning</span></code> parameter does. What happens when it is disabled with the option <code class="docutils literal notranslate"><span class="pre">--p-no-parameter-tuning</span></code>? How does this impact classification accuracy?</p>
+</div>
+<div class="question admonition" id="question-3">
+<p class="admonition-title">Question</p>
+<p>Many different classifiers can be trained via the <code class="docutils literal notranslate"><span class="pre">--p-estimator</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">classify-samples</span></code>. Try some of the other classifiers. How do these methods compare?</p>
+</div>
+<div class="question admonition" id="question-4">
+<p class="admonition-title">Question</p>
+<p>Sequence variants are not the only feature data that can be used to train a classifier or regressor. Taxonomic composition is another feature type that can be easily created using the tutorial data provided in QIIME2. Try to figure out how this works (hint: you will need to assign taxonomy, as described in the <a class="reference internal" href="../moving-pictures/"><span class="doc">moving pictures tutorial</span></a>, and <a class="reference internal" href="../../plugins/available/taxa/collapse/"><span class="doc">collapse taxonomy</span></a> to create a new feature table). Try using feature tables collapsed to different taxonomic levels. How does taxonomic specificity (e.g., species-level is more specific than phylum-level) impact classifier performance?</p>
+</div>
+<div class="question admonition" id="question-5">
+<p class="admonition-title">Question</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">--p-n-estimators</span></code> parameter adjusts the number of trees grown by ensemble estimators, such as random forest classifiers (this parameter will have no effect on non-ensemble methods), which increases classifier accuracy up to a certain point, but at the cost of increased computation time. Try the same command above with different numbers of estimators, e.g., 10, 50, 100, 250, and 500 estimators. How does this impact the overall accuracy of predictions? Are more trees worth the time?</p>
+</div>
+</div>
+<div class="section" id="predicting-continuous-i-e-numerical-sample-data">
+<h2>Predicting continuous (i.e., numerical) sample data<a class="headerlink" href="#predicting-continuous-i-e-numerical-sample-data" title="Permalink to this headline">¶</a></h2>
+<p>Supervised learning regressors predict continuous metadata values of unlabeled samples by learning the composition of labeled training samples. For example, we may use a regressor to predict the abundance of a metabolite that will be produced by a microbial community, or a sample’s pH,  temperature, or altitude as a function of the sequence variants, microbial taxa, or metabolites detected in a sample. In this tutorial, we will use the <a class="reference external" href="https://doi.org/10.1126/scitranslmed.aad7121">ECAM study</a>, a longitudinal cohort study of microbiome development in U.S. infants. Download the feature table and sample metadata with the following links:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/longitudinal/sample_metadata.tsv">
+            https://data.qiime2.org/2020.2/tutorials/longitudinal/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ecam-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "ecam-metadata.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/sample_metadata.tsv" > \
+  "ecam-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_maturity.qza">
+            https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_maturity.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> ecam-table.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "ecam-table.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_maturity.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/longitudinal/ecam_table_maturity.qza" > \
+  "ecam-table.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><p>Next, we will train a regressor to predict an infant’s age based on its microbiota composition, using the <code class="docutils literal notranslate"><span class="pre">regress-samples</span></code> pipeline.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier regress-samples <span class="se">\</span>
+  --i-table ecam-table.qza <span class="se">\</span>
+  --m-metadata-file ecam-metadata.tsv <span class="se">\</span>
+  --m-metadata-column month <span class="se">\</span>
+  --p-estimator RandomForestRegressor <span class="se">\</span>
+  --p-n-estimators <span class="m">20</span> <span class="se">\</span>
+  --p-random-state <span class="m">123</span> <span class="se">\</span>
+  --output-dir ecam-regressor
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-regressor/sample_estimator.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-regressor%2Fsample_estimator.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-regressor/sample_estimator.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-regressor/feature_importance.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-regressor%2Ffeature_importance.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-regressor/feature_importance.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-regressor/predictions.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-regressor%2Fpredictions.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-regressor/predictions.qza">download</a></p></li>
+</ul>
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-regressor/accuracy_results.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-regressor%2Faccuracy_results.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-regressor/accuracy_results.qzv">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-regressor/model_summary.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-regressor%2Fmodel_summary.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-regressor/model_summary.qzv">download</a></p></li>
+</ul>
+</div>
+<p>The outputs produced by this command are the same as those produced by <code class="docutils literal notranslate"><span class="pre">classify-samples</span></code>, with one exception. Regression accuracy results in <code class="docutils literal notranslate"><span class="pre">accuracy_results.qzv</span></code> are represented in the form of a scatter plot showing predicted vs. true values for each test sample, accompanied by a linear regression line fitted to the data with 95% confidence intervals (grey shading). The true 1:1 ratio between predicted and true values is represented by a dotted line for comparison. Below this, model accuracy is quantified in a table displaying mean square error and the R value, P value, standard error of the estimated gradient, slope, and intercept of the linear regression fit.</p>
+<div class="question admonition" id="question-6">
+<p class="admonition-title">Question</p>
+<p>What other metadata can we predict with <code class="docutils literal notranslate"><span class="pre">regress-samples</span></code>? Take a look at the metadata columns in the <code class="docutils literal notranslate"><span class="pre">sample-metadata</span></code> and try some other values. Not all metadata can be easily learned by the regressor!</p>
+</div>
+<div class="question admonition" id="question-7">
+<p class="admonition-title">Question</p>
+<p>Many different regressors can be trained via the <code class="docutils literal notranslate"><span class="pre">--p-estimator</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">regress-samples</span></code>. Try some of the other regressors. How do these methods compare?</p>
+</div>
+</div>
+<div class="section" id="nested-cross-validation-provides-predictions-for-all-samples">
+<h2>Nested cross-validation provides predictions for all samples<a class="headerlink" href="#nested-cross-validation-provides-predictions-for-all-samples" title="Permalink to this headline">¶</a></h2>
+<p>In the examples above, we split the data sets into training and test sets for model training and testing. It is <em>essential</em> that we keep a test set that the model has never seen before for validating model performance. But what if we want to predict target values for each sample in a data set? For that, my friend, we use nested cross validation (NCV). This can be valuable in a number of different cases, e.g., for predicting <a class="reference external" href="https://doi.org/10.1038/ismej.2010.148">mislabeled samples</a> (those that are classified incorrectly during NCV) or for assessing estimator variance (since multiple models are trained during NCV, we can look at the variance in their accuracy).</p>
+<img alt="../../_images/nested-cv.png" src="../../_images/nested-cv.png" />
+<p><a class="reference internal" href="../overview/#key"><span class="std std-ref">Figure key</span></a></p>
+<p>Under the hood, NCV works a lot like the k-fold cross validation used in <code class="docutils literal notranslate"><span class="pre">classify-samples</span></code> and <code class="docutils literal notranslate"><span class="pre">regress-samples</span></code> for model optimization, but a second layer of cross validation (an “outer loop”) is incorporated to split the dataset into training and test sets K times such that each sample ends up in a test set exactly once. During each iteration of the “outer loop”, the training set is split again K times (in an “inner loop”) to optimize parameter settings for estimation of that fold. The end result: K different final models are trained, each sample receives a predicted value (and class probabilities if <code class="docutils literal notranslate"><span class="pre">classify-samples-ncv</span></code> is used for prediction of discrete classes), and feature importance scores are averaged across each iteration. Overall accuracy can be calculated by comparing these predicted values to their true values, as shown below, but for those interested in accuracy variance across each fold, mean accuracy ± SD is printed to the standard output.</p>
+<p>There are NCV methods in <code class="docutils literal notranslate"><span class="pre">q2-sample-classifier</span></code> for both classification and regression problems. Let’s give both a spin, followed by visualizers to calculate and view aggregated model accuracy results.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier classify-samples-ncv <span class="se">\</span>
+  --i-table moving-pictures-table.qza <span class="se">\</span>
+  --m-metadata-file moving-pictures-sample-metadata.tsv <span class="se">\</span>
+  --m-metadata-column body-site <span class="se">\</span>
+  --p-estimator RandomForestClassifier <span class="se">\</span>
+  --p-n-estimators <span class="m">20</span> <span class="se">\</span>
+  --p-random-state <span class="m">123</span> <span class="se">\</span>
+  --o-predictions body-site-predictions-ncv.qza <span class="se">\</span>
+  --o-probabilities body-site-probabilities-ncv.qza <span class="se">\</span>
+  --o-feature-importance body-site-importance-ncv.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">body-site-predictions-ncv.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fbody-site-predictions-ncv.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/body-site-predictions-ncv.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">body-site-probabilities-ncv.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fbody-site-probabilities-ncv.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/body-site-probabilities-ncv.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">body-site-importance-ncv.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fbody-site-importance-ncv.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/body-site-importance-ncv.qza">download</a></p></li>
+</ul>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier confusion-matrix <span class="se">\</span>
+  --i-predictions body-site-predictions-ncv.qza <span class="se">\</span>
+  --i-probabilities body-site-probabilities-ncv.qza <span class="se">\</span>
+  --m-truth-file moving-pictures-sample-metadata.tsv <span class="se">\</span>
+  --m-truth-column body-site <span class="se">\</span>
+  --o-visualization ncv_confusion_matrix.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ncv_confusion_matrix.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fncv_confusion_matrix.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ncv_confusion_matrix.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier regress-samples-ncv <span class="se">\</span>
+  --i-table ecam-table.qza <span class="se">\</span>
+  --m-metadata-file ecam-metadata.tsv <span class="se">\</span>
+  --m-metadata-column month <span class="se">\</span>
+  --p-estimator RandomForestRegressor <span class="se">\</span>
+  --p-n-estimators <span class="m">20</span> <span class="se">\</span>
+  --p-random-state <span class="m">123</span> <span class="se">\</span>
+  --o-predictions ecam-predictions-ncv.qza <span class="se">\</span>
+  --o-feature-importance ecam-importance-ncv.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-predictions-ncv.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-predictions-ncv.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-predictions-ncv.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-importance-ncv.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-importance-ncv.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-importance-ncv.qza">download</a></p></li>
+</ul>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime sample-classifier scatterplot <span class="se">\</span>
+  --i-predictions ecam-predictions-ncv.qza <span class="se">\</span>
+  --m-truth-file ecam-metadata.tsv <span class="se">\</span>
+  --m-truth-column month <span class="se">\</span>
+  --o-visualization ecam-scatter.qzv
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output visualizations:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">ecam-scatter.qzv</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fsample-classifier%2Fecam-scatter.qzv">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/sample-classifier/ecam-scatter.qzv">download</a></p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We use <code class="docutils literal notranslate"><span class="pre">confusion-matrix</span></code> to calculate classifier accuracy, and <code class="docutils literal notranslate"><span class="pre">scatterplot</span></code> for regressor accuracy. 👀</p>
+</div>
+<p>So the NCV methods output feature importance scores and sample predictions, but not trained estimators (as is done for the <code class="docutils literal notranslate"><span class="pre">classify-samples</span></code> and <code class="docutils literal notranslate"><span class="pre">regress-samples</span></code> pipelines above). This is because (1) <em>k</em> models are actually used for prediction, where <em>k</em> = the number of CV folds used in the outer loop, so returning and re-using the estimators would get very messy; and (2) users interested in NCV are <em>most likely</em> not interested in re-using the models for predicting new samples.</p>
+</div>
+<div class="section" id="best-practices-things-you-should-not-do-with-q2-sample-classifier">
+<h2>Best practices: things you should not do with q2-sample-classifier<a class="headerlink" href="#best-practices-things-you-should-not-do-with-q2-sample-classifier" title="Permalink to this headline">¶</a></h2>
+<p>As this tutorial has demonstrated, q2-sample-classifier can be extremely powerful for feature selection and metadata prediction. However, with power comes responsibility. Unsuspecting users are at risk of committing grave errors, particularly from overfitting and data leakage. Here follows a list (though inevitably incomplete) of ways that users can abuse <em>this plugin</em>, yielding misleading results. Do not do these things. More extensive guides exist for avoiding data leakage and overfitting <em>in general</em>, so this list focuses on bad practices that are particular to this plugin and to biological data analysis.</p>
+<ol class="arabic simple">
+<li><p><strong>Data leakage</strong> occurs whenever a learning model learns (often inadvertently) about test sample data, leading to unduly high performance estimates.</p>
+<ol class="loweralpha simple">
+<li><p>Model accuracy should always be assessed on test data that has never been seen by the learning model. The pipelines and nested cross-validation methods in q2-sample-classifier (including those described in this tutorial) do this by default. However, care must be taken when using the <code class="docutils literal notranslate"><span class="pre">fit-*</span></code> and <code class="docutils literal notranslate"><span class="pre">predict-*</span></code> methods independently.</p></li>
+<li><p>In some situations, technical replicates could be problematic and lead to pseudo-data leakage, depending on experimental design and technical precision. If in doubt, <a class="reference internal" href="../../plugins/available/feature-table/group/"><span class="doc">group</span></a> your feature table to average technical replicates, or filter technical replicates from your data prior to supervised learning analysis.</p></li>
+</ol>
+</li>
+<li><p><strong>Overfitting</strong> occurs whenever a learning model is trained to overperform on the training data but, in doing so, cannot generalize well to other data sets. This can be problematic, particularly on small data sets and whenever input data have been contorted in inappropriate ways.</p>
+<ol class="loweralpha simple">
+<li><p>If the learning model is intended to predict values from data that is produced in batches (e.g., to make a diagnosis on microbiome sequence data that will be produced in a future analysis), consider incorporating multiple batches in your training data to reduce the likelihood that learning models will overfit on batch effects and similar noise.</p></li>
+<li><p>Similarly, be aware that batch effects can strongly impact performance, particularly if these are covariates with the target values that you are attempting to predict. For example, if you wish to classify whether samples belong to one of two different groups and those groups were analyzed on separate sequencing runs (for microbiome amplicon sequence data), training a classifier on these data will likely lead to inaccurate results that will not generalize to other data sets.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

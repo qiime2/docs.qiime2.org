@@ -1,0 +1,118 @@
+linear-mixed-effects: Linear mixed effects modeling
+===================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime longitudinal linear-mixed-effects [OPTIONS]
+
+     Linear mixed effects models evaluate the contribution of exogenous
+     covariates "group_categories" and "random_effects" to a single dependent
+     variable, "metric". Perform LME and plot line plots of each group column.
+     A feature table artifact is required input, though whether "metric" is
+     derived from the feature table or metadata is optional.
+
+   Options:
+     --m-metadata-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata. Sample
+                                     metadata file containing
+                                     individual_id_column.  [required]
+     --p-metric TEXT                 Dependent variable column name. Must be a
+                                     column name located in the metadata or
+                                     feature table files.  [required]
+     --p-state-column TEXT           Metadata column containing state (e.g.,
+                                     Time) across which samples are paired.
+                                     [required]
+     --p-individual-id-column TEXT   Metadata column containing IDs for
+                                     individual subjects.  [required]
+     --p-group-categories TEXT       Comma-separated list (without spaces) of
+                                     metadata categories to use as independent
+                                     covariates used to determine mean structure
+                                     of "metric".  [optional]
+     --p-random-effects TEXT         Comma-separated list (without spaces) of
+                                     metadata categories to use as independent
+                                     covariates used to determine the variance
+                                     and covariance structure (random effects) of
+                                     "metric". To add a random slope, the same
+                                     value passed to "state_column" should be
+                                     passed here. A random intercept for each
+                                     individual is set by default and does not
+                                     need to be passed here.  [optional]
+     --i-table ARTIFACT PATH FeatureTable[RelativeFrequency]
+                                     Feature table to optionally use for paired
+                                     comparisons.  [optional]
+     --p-palette [Set3|tab10|Paired|tab20b|viridis|plasma|rainbow|magma|Pastel2|Set1|tab20|Pastel1|inferno|terrain|Dark2|Accent|Set2|tab20c]
+                                     Color palette to use for generating
+                                     boxplots.  [default: Set1]
+     --p-lowess / --p-no-lowess      Estimate locally weighted scatterplot
+                                     smoothing. Note that this will eliminate
+                                     confidence interval plotting.  [default:
+                                     False]
+     --p-ci FLOAT                    Size of the confidence interval for the
+                                     regression estimate.  [default: 95]
+     --o-visualization VISUALIZATION PATH
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Linear mixed effects modeling
+
+   Linear mixed effects models evaluate the contribution of exogenous
+   covariates "group_categories" and "random_effects" to a single dependent
+   variable, "metric". Perform LME and plot line plots of each group column. A
+   feature table artifact is required input, though whether "metric" is
+   derived from the feature table or metadata is optional.
+
+   Parameters
+   ----------
+   table : FeatureTable[RelativeFrequency], optional
+       Feature table to optionally use for paired comparisons.
+   metadata : Metadata
+       Sample metadata file containing individual_id_column.
+   metric : Str
+       Dependent variable column name. Must be a column name located in the
+       metadata or feature table files.
+   state_column : Str
+       Metadata column containing state (e.g., Time) across which samples are
+       paired.
+   individual_id_column : Str
+       Metadata column containing IDs for individual subjects.
+   group_categories : Str, optional
+       Comma-separated list (without spaces) of metadata categories to use as
+       independent covariates used to determine mean structure of "metric".
+   random_effects : Str, optional
+       Comma-separated list (without spaces) of metadata categories to use as
+       independent covariates used to determine the variance and covariance
+       structure (random effects) of "metric". To add a random slope, the same
+       value passed to "state_column" should be passed here. A random
+       intercept for each individual is set by default and does not need to be
+       passed here.
+   palette : Str % Choices({'Accent', 'Dark2', 'Paired', 'Pastel1', 'Pastel2', 'Set1', 'Set2', 'Set3', 'inferno', 'magma', 'plasma', 'rainbow', 'tab10', 'tab20', 'tab20b', 'tab20c', 'terrain', 'viridis'}), optional
+       Color palette to use for generating boxplots.
+   lowess : Bool, optional
+       Estimate locally weighted scatterplot smoothing. Note that this will
+       eliminate confidence interval plotting.
+   ci : Float % Range(0, 100), optional
+       Size of the confidence interval for the regression estimate.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

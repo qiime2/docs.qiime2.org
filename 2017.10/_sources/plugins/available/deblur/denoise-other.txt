@@ -1,0 +1,136 @@
+denoise-other: Deblur sequences using a user-specified positive filter.
+=======================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime deblur denoise-other [OPTIONS]
+
+     Perform sequence quality control for Illumina data using the Deblur
+     workflow, including positive alignment-based filtering. Only forward reads
+     are supported at this time. This mode of execution is particularly useful
+     when operating on non-16S data. For example, to apply Deblur to 18S data,
+     you would want to specify a reference composed of 18S sequences in order
+     to filter out sequences which do not appear to be 18S. The assessment is
+     performed by local alignment using SortMeRNA with a permissive e-value
+     threshold.
+
+   Options:
+     --i-demultiplexed-seqs PATH     Artifact:
+                                     SampleData[PairedEndSequencesWithQuality |
+                                     SequencesWithQuality]  [required]
+                                     The
+                                     demultiplexed sequences to be denoised.
+     --i-reference-seqs PATH         Artifact: FeatureData[Sequence]  [required]
+                                     Positive filtering database. Keep all
+                                     sequences aligning to these sequences.
+     --p-trim-length INTEGER         [required]
+                                     Sequence trim length, specify -1
+                                     to disable trimming.
+     --p-sample-stats / --p-no-sample-stats
+                                     [default: False]
+                                     If true, gather stats per
+                                     sample.
+     --p-mean-error FLOAT            [default: 0.005]
+                                     The mean per nucleotide
+                                     error, used for original sequence estimate.
+     --p-indel-prob FLOAT            [default: 0.01]
+                                     Insertion/deletion (indel)
+                                     probability (same for N indels).
+     --p-indel-max INTEGER           [default: 3]
+                                     Maximum number of
+                                     insertion/deletions.
+     --p-min-reads INTEGER           [default: 10]
+                                     Retain only features appearing
+                                     at least min_reads times across all samples
+                                     in the resulting feature table.
+     --p-min-size INTEGER            [default: 2]
+                                     In each sample, discard all
+                                     features with an abundance less than
+                                     min_size.
+     --p-jobs-to-start INTEGER       [default: 1]
+                                     Number of jobs to start (if to
+                                     run in parallel).
+     --p-hashed-feature-ids / --p-no-hashed-feature-ids
+                                     [default: True]
+                                     If true, hash the feature
+                                     IDs.
+     --o-table PATH                  Artifact: FeatureTable[Frequency] [required
+                                     if not passing --output-dir]
+                                     The resulting
+                                     denoised feature table.
+     --o-representative-sequences PATH
+                                     Artifact: FeatureData[Sequence] [required if
+                                     not passing --output-dir]
+                                     The resulting
+                                     feature sequences.
+     --o-stats PATH                  Artifact: DeblurStats [required if not
+                                     passing --output-dir]
+                                     Per-sample stats if
+                                     requested.
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Deblur sequences using a user-specified positive filter.
+
+   Perform sequence quality control for Illumina data using the Deblur
+   workflow, including positive alignment-based filtering. Only forward reads
+   are supported at this time. This mode of execution is particularly useful
+   when operating on non-16S data. For example, to apply Deblur to 18S data,
+   you would want to specify a reference composed of 18S sequences in order to
+   filter out sequences which do not appear to be 18S. The assessment is
+   performed by local alignment using SortMeRNA with a permissive e-value
+   threshold.
+
+   Parameters
+   ----------
+   demultiplexed_seqs : SampleData[PairedEndSequencesWithQuality | SequencesWithQuality]
+       The demultiplexed sequences to be denoised.
+   reference_seqs : FeatureData[Sequence]
+       Positive filtering database. Keep all sequences aligning to these
+       sequences.
+   trim_length : Int
+       Sequence trim length, specify -1 to disable trimming.
+   sample_stats : Bool, optional
+       If true, gather stats per sample.
+   mean_error : Float, optional
+       The mean per nucleotide error, used for original sequence estimate.
+   indel_prob : Float, optional
+       Insertion/deletion (indel) probability (same for N indels).
+   indel_max : Int, optional
+       Maximum number of insertion/deletions.
+   min_reads : Int, optional
+       Retain only features appearing at least min_reads times across all
+       samples in the resulting feature table.
+   min_size : Int, optional
+       In each sample, discard all features with an abundance less than
+       min_size.
+   jobs_to_start : Int, optional
+       Number of jobs to start (if to run in parallel).
+   hashed_feature_ids : Bool, optional
+       If true, hash the feature IDs.
+
+   Returns
+   -------
+   table : FeatureTable[Frequency]
+       The resulting denoised feature table.
+   representative_sequences : FeatureData[Sequence]
+       The resulting feature sequences.
+   stats : DeblurStats
+       Per-sample stats if requested.</pre>
+       </div>
+     </div>
+   </div>

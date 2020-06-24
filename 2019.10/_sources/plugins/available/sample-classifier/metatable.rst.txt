@@ -1,0 +1,119 @@
+metatable: Convert (and merge) positive numeric metadata (in)to feature table.
+==============================================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime sample-classifier metatable [OPTIONS]
+
+     Convert numeric sample metadata from TSV file into a feature table.
+     Optionally merge with an existing feature table. Only numeric metadata
+     will be converted; categorical columns will be silently dropped. By
+     default, if a table is used as input only samples found in both the table
+     and metadata (intersection) are merged, and others are silently dropped.
+     Set missing_samples="error" to raise an error if samples found in the
+     table are missing from the metadata file. The metadata file can always
+     contain a superset of samples. Note that columns will be dropped if they
+     are non-numeric, contain no unique values (zero variance), contain only
+     empty cells, or contain negative values. This method currently only
+     converts postive numeric metadata into feature data. Tip: convert
+     categorical columns to dummy variables to include them in the output
+     feature table.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          Feature table containing all features that should be
+                          used for target prediction.                  [optional]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple          Metadata file to convert to feature table.
+        arguments will    
+        be merged)                                                     [required]
+     --p-missing-samples TEXT Choices('error', 'ignore')
+                          How to handle missing samples in metadata. "error"
+                          will fail if missing samples are detected. "ignore"
+                          will cause the feature table and metadata to be
+                          filtered, so that only samples found in both files are
+                          retained.                           [default: 'ignore']
+     --p-missing-values TEXT Choices('drop_samples', 'drop_features', 'error',
+       'fill')            How to handle missing values (nans) in metadata.
+                          Either "drop_samples" with missing values,
+                          "drop_features" with missing values, "fill" missing
+                          values with zeros, or "error" if any missing values are
+                          found.                               [default: 'error']
+     --p-drop-all-unique / --p-no-drop-all-unique
+                          If True, columns that contain a unique value for every
+                          ID will be dropped.                    [default: False]
+   Outputs:
+     --o-converted-table ARTIFACT FeatureTable[Frequency]
+                          Converted feature table                      [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.sample_classifier.pipelines import metatable
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Convert (and merge) positive numeric metadata (in)to feature table.
+
+   Convert numeric sample metadata from TSV file into a feature table.
+   Optionally merge with an existing feature table. Only numeric metadata will
+   be converted; categorical columns will be silently dropped. By default, if
+   a table is used as input only samples found in both the table and metadata
+   (intersection) are merged, and others are silently dropped. Set
+   missing_samples="error" to raise an error if samples found in the table are
+   missing from the metadata file. The metadata file can always contain a
+   superset of samples. Note that columns will be dropped if they are non-
+   numeric, contain no unique values (zero variance), contain only empty
+   cells, or contain negative values. This method currently only converts
+   postive numeric metadata into feature data. Tip: convert categorical
+   columns to dummy variables to include them in the output feature table.
+
+   Parameters
+   ----------
+   metadata : Metadata
+       Metadata file to convert to feature table.
+   table : FeatureTable[Frequency], optional
+       Feature table containing all features that should be used for target
+       prediction.
+   missing_samples : Str % Choices('error', 'ignore'), optional
+       How to handle missing samples in metadata. "error" will fail if missing
+       samples are detected. "ignore" will cause the feature table and
+       metadata to be filtered, so that only samples found in both files are
+       retained.
+   missing_values : Str % Choices('drop_samples', 'drop_features', 'error', 'fill'), optional
+       How to handle missing values (nans) in metadata. Either "drop_samples"
+       with missing values, "drop_features" with missing values, "fill"
+       missing values with zeros, or "error" if any missing values are found.
+   drop_all_unique : Bool, optional
+       If True, columns that contain a unique value for every ID will be
+       dropped.
+
+   Returns
+   -------
+   converted_table : FeatureTable[Frequency]
+       Converted feature table</pre>
+       </div>
+     </div>
+   </div>

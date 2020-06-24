@@ -1,0 +1,115 @@
+mask: Positional conservation and gap filtering.
+================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: alignment:mask.bib
+   :list: bullet
+   :all:
+   :keyprefix: alignment:mask:
+   :labelprefix: alignment:mask:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime alignment mask [OPTIONS]
+
+     Mask (i.e., filter) unconserved and highly gapped columns from an
+     alignment. Default min_conservation was chosen to reproduce the mask
+     presented in Lane (1991).
+
+   Inputs:
+     --i-alignment ARTIFACT FeatureData[AlignedSequence]
+                             The alignment to be masked.               [required]
+   Parameters:
+     --p-max-gap-frequency PROPORTION Range(0, 1, inclusive_end=True)
+                             The maximum relative frequency of gap characters in
+                             a column for the column to be retained. This
+                             relative frequency must be a number between 0.0 and
+                             1.0 (inclusive), where 0.0 retains only those
+                             columns without gap characters, and 1.0 retains all
+                             columns regardless of gap character frequency.
+                                                                   [default: 1.0]
+     --p-min-conservation PROPORTION Range(0, 1, inclusive_end=True)
+                             The minimum relative frequency of at least one
+                             non-gap character in a column for that column to be
+                             retained. This relative frequency must be a number
+                             between 0.0 and 1.0 (inclusive). For example, if a
+                             value of 0.4 is provided, a column will only be
+                             retained if it contains at least one character that
+                             is present in at least 40% of the sequences.
+                                                                   [default: 0.4]
+   Outputs:
+     --o-masked-alignment ARTIFACT FeatureData[AlignedSequence]
+                             The masked alignment.                     [required]
+   Miscellaneous:
+     --output-dir PATH       Output unspecified results to a directory
+     --verbose / --quiet     Display verbose output to stdout and/or stderr
+                             during execution of this action. Or silence output
+                             if execution is successful (silence is golden).
+     --citations             Show citations and exit.
+     --help                  Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.alignment.methods import mask
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Positional conservation and gap filtering.
+
+   Mask (i.e., filter) unconserved and highly gapped columns from an
+   alignment. Default min_conservation was chosen to reproduce the mask
+   presented in Lane (1991).
+
+   Parameters
+   ----------
+   alignment : FeatureData[AlignedSequence]
+       The alignment to be masked.
+   max_gap_frequency : Float % Range(0, 1, inclusive_end=True), optional
+       The maximum relative frequency of gap characters in a column for the
+       column to be retained. This relative frequency must be a number between
+       0.0 and 1.0 (inclusive), where 0.0 retains only those columns without
+       gap characters, and 1.0 retains all columns regardless of gap character
+       frequency.
+   min_conservation : Float % Range(0, 1, inclusive_end=True), optional
+       The minimum relative frequency of at least one non-gap character in a
+       column for that column to be retained. This relative frequency must be
+       a number between 0.0 and 1.0 (inclusive). For example, if a value of
+       0.4 is provided, a column will only be retained if it contains at least
+       one character that is present in at least 40% of the sequences.
+
+   Returns
+   -------
+   masked_alignment : FeatureData[AlignedSequence]
+       The masked alignment.</pre>
+       </div>
+     </div>
+   </div>

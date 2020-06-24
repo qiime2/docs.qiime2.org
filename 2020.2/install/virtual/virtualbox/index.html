@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Installing QIIME 2 using VirtualBox &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../about/" />
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="Installing QIIME 2 using Amazon Web Services" href="../aws/" />
+    <link rel="prev" title="Installing QIIME 2 using Virtual Machines" href="../" />
+  <script src="../../../_static/bootstrap.min.js"></script>
+  <script src="../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="installing-qiime-2-using-virtualbox">
+<h1>Installing QIIME 2 using VirtualBox<a class="headerlink" href="#installing-qiime-2-using-virtualbox" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The following steps require at least ~25 GB of free disk space: ~5 GB for the ZIP file, ~5 GB for the unzipped ZIP file contents, and ~15 GB for the installed Virtual Machine (VM). Once you have installed the VM you can free up ~10 GB of space by deleting the ZIP + the unzipped ZIP file contents.</p>
+</div>
+<p>The QIIME 2 VirtualBox image offers a convenient way to get QIIME 2 up and running, and is also the easiest way to get your hands on the experimental preview of <a class="reference internal" href="../../../interfaces/q2studio/"><span class="doc">QIIME 2 Studio</span></a>.</p>
+<div class="section" id="install-virtualbox-on-your-computer">
+<h2>1. Install VirtualBox on your computer<a class="headerlink" href="#install-virtualbox-on-your-computer" title="Permalink to this headline">¶</a></h2>
+<p>Please see <a class="reference external" href="https://www.virtualbox.org">https://www.virtualbox.org</a> for details on how to install VirtualBox on your computer. Please note, some computers require activating a BIOS setting to enable virtualization — please consult your hardware documentation to determine if you need to do this, and how. After installing VirtualBox, take note of the version of VirtualBox that was installed.</p>
+</div>
+<div class="section" id="download-the-qiime-2-core-virtualbox-image">
+<h2>2. Download the QIIME 2 Core VirtualBox Image<a class="headerlink" href="#download-the-qiime-2-core-virtualbox-image" title="Permalink to this headline">¶</a></h2>
+<p>Please note, this installation document uses some placeholders throughout the following steps. <code class="docutils literal notranslate"><span class="pre">X.Y.Z</span></code> represents the version of QIIME 2 (e.g. <code class="docutils literal notranslate"><span class="pre">2020.2</span></code>), and <code class="docutils literal notranslate"><span class="pre">build_number</span></code> represents the build identifier for the VirtualBox image (an internal reference used by the QIIME 2 Developement Team). Please see the <a class="reference external" href="https://data.qiime2.org/distro/core/virtualbox-images.txt">VirtualBox Images</a> download link to get the download URL for the latest image. The minimum version of VirtualBox (as determined in Step 1 above) is provided for the latest releases of the VirtualBox image — please ensure you have installed a version of VirtualBox that is equal to or greater than the version of the QIIME 2 VirtualBox image you wish to install.</p>
+</div>
+<div class="section" id="unzip-the-file">
+<h2>3. Unzip the file<a class="headerlink" href="#unzip-the-file" title="Permalink to this headline">¶</a></h2>
+<p>Unzip/extract the <code class="docutils literal notranslate"><span class="pre">qiimeX_Y_Z-build_number.zip</span></code> file and open the directory that you chose to unzip to. Please note, some operating systems (e.g. Windows) open a read-only view of the ZIP file, which has not actually been extracted. Please follow the directions for your operating system/unarchiver tool as necessary.</p>
+</div>
+<div class="section" id="launch-virtualbox">
+<h2>4. Launch VirtualBox<a class="headerlink" href="#launch-virtualbox" title="Permalink to this headline">¶</a></h2>
+<p>Double-click the file named <code class="docutils literal notranslate"><span class="pre">QIIME</span> <span class="pre">2</span> <span class="pre">Core</span> <span class="pre">-</span> <span class="pre">X.Y.Z</span> <span class="pre">(build_number).ovf</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The file ending with the extension <code class="docutils literal notranslate"><span class="pre">ovf</span></code> is a type of VirtualBox “recipe” — it allows the QIIME 2 developers to define a set of reasonable default configuration values, rather than requiring you to manually specify RAM, CPU count, etc. The file ending with the extension <code class="docutils literal notranslate"><span class="pre">vmdk</span></code> is the actual virtual machine disk image. If you don’t want to import using the defaults specified in the <code class="docutils literal notranslate"><span class="pre">ovf</span></code> you can use the <code class="docutils literal notranslate"><span class="pre">vmdk</span></code> file to manually import the VM — see the <a class="reference external" href="https://www.virtualbox.org/manual/UserManual.html">VirtualBox Docs</a> for details.</p>
+</div>
+<img alt="../../../_images/vbox-install-01.jpg" src="../../../_images/vbox-install-01.jpg" />
+<p>You will be presented with an <code class="docutils literal notranslate"><span class="pre">Appliance</span> <span class="pre">Settings</span></code> import page. We have selected default settings for you that should work for most light workloads. If you are interested in changing the allocations (e.g. memory or CPUs), feel free to adjust these settings. When done, click <code class="docutils literal notranslate"><span class="pre">Import</span></code>.</p>
+<img alt="../../../_images/vbox-install-02.jpg" src="../../../_images/vbox-install-02.jpg" />
+<p>Once the import is complete, double-click on the new Virtual Machine entry that matches the <code class="docutils literal notranslate"><span class="pre">X.Y.Z</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">build_number</span></code> version that you just imported.</p>
+<img alt="../../../_images/vbox-install-03.jpg" src="../../../_images/vbox-install-03.jpg" />
+</div>
+<div class="section" id="launch-the-virtual-machine">
+<h2>5. Launch the virtual machine<a class="headerlink" href="#launch-the-virtual-machine" title="Permalink to this headline">¶</a></h2>
+<p>When prompted, select the user <code class="docutils literal notranslate"><span class="pre">qiime2</span></code>, and enter the password <code class="docutils literal notranslate"><span class="pre">qiime2</span></code>.</p>
+<img alt="../../../_images/vbox-install-04.jpg" src="../../../_images/vbox-install-04.jpg" />
+<p>Once logged in you should see a screen like this:</p>
+<img alt="../../../_images/vbox-install-05.jpg" src="../../../_images/vbox-install-05.jpg" />
+<p>Success! To confirm that everything is working, you can open up a terminal and run the following command:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime info
+</pre></div>
+</div>
+<img alt="../../../_images/vbox-install-06.jpg" src="../../../_images/vbox-install-06.jpg" />
+<p>Note, the list of installed plugins (and their versions) will likely differ depending on the version of the VirtualBox virtual machine that you chose to download and install.</p>
+</div>
+<div class="section" id="clean-up">
+<h2>6. Clean up<a class="headerlink" href="#clean-up" title="Permalink to this headline">¶</a></h2>
+<p>The import process creates a copy of the files from the directory that you unzipped in step 3 above. If you would like to reclaim that disk space, feel free to delete <code class="docutils literal notranslate"><span class="pre">qiimeX_Y_Z-build_number.zip</span></code>, and the unzipped folder from that file.</p>
+</div>
+<div class="section" id="optional-shared-folders-and-copy-and-paste">
+<h2>Optional: Shared Folders and Copy-and-Paste<a class="headerlink" href="#optional-shared-folders-and-copy-and-paste" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="install-guest-additions">
+<h3>1. Install Guest Additions<a class="headerlink" href="#install-guest-additions" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Optional</strong>: Guest Additions are already installed in the virtual machine, but if you need to reinstall (or update) them, you can perform the following steps.</p>
+</div>
+<p>Attach the Guest Additions DVD by following the instructions outlined in the <a class="reference external" href="https://www.virtualbox.org/manual/ch04.html#mountingadditionsiso">VirtualBox Guest Additions Docs</a>.</p>
+<p>Once inserted, the Guest Additions DVD should automatically launch (if not, double-click the DVD and click the ‘Run Software’ button in the upper right:</p>
+<img alt="../../../_images/vbox-guest-01.jpg" src="../../../_images/vbox-guest-01.jpg" />
+<p>Enter the password (<code class="docutils literal notranslate"><span class="pre">qiime2</span></code>) when prompted.</p>
+<img alt="../../../_images/vbox-guest-02.jpg" src="../../../_images/vbox-guest-02.jpg" />
+<p>When installation is done, your screen should look like the following. Follow the prompt and press <code class="docutils literal notranslate"><span class="pre">Return</span></code>.</p>
+<img alt="../../../_images/vbox-guest-03.jpg" src="../../../_images/vbox-guest-03.jpg" />
+</div>
+<div class="section" id="set-up-copy-and-paste">
+<h3>2. Set up copy-and-paste<a class="headerlink" href="#set-up-copy-and-paste" title="Permalink to this headline">¶</a></h3>
+<p>In the VirtualBox menu bar on your host computer, select <code class="docutils literal notranslate"><span class="pre">Machine</span> <span class="pre">-&gt;</span> <span class="pre">Settings</span></code>, then click <code class="docutils literal notranslate"><span class="pre">General</span></code> in the top bar, and <code class="docutils literal notranslate"><span class="pre">Advanced</span></code> in the bar immediately below it. We recommend setting <code class="docutils literal notranslate"><span class="pre">Shared</span> <span class="pre">Clipboard</span></code> and <code class="docutils literal notranslate"><span class="pre">Drag'n'Drop</span></code> to <code class="docutils literal notranslate"><span class="pre">Bidirectional</span></code>, which will allow copy-and-paste from host-to-guest and from guest-to-host. The <code class="docutils literal notranslate"><span class="pre">Drag'n'Drop</span></code> allows you to drag folders into the window to copy them into your Virtual Machine. Click <code class="docutils literal notranslate"><span class="pre">OK</span></code> when you are done.</p>
+<img alt="../../../_images/vbox-guest-10.jpg" src="../../../_images/vbox-guest-10.jpg" />
+</div>
+<div class="section" id="set-up-a-shared-folder">
+<h3>3. Set up a shared folder<a class="headerlink" href="#set-up-a-shared-folder" title="Permalink to this headline">¶</a></h3>
+<p>In the VirtualBox menu bar on your host computer, select <code class="docutils literal notranslate"><span class="pre">Devices</span> <span class="pre">-&gt;</span> <span class="pre">Shared</span> <span class="pre">Folders</span> <span class="pre">-&gt;</span> <span class="pre">Shared</span> <span class="pre">Folders</span> <span class="pre">Settings</span></code> (note, this might be slightly different on Windows or Linux systems, please check the official <a class="reference external" href="https://www.virtualbox.org/manual/UserManual.html">VirtualBox Docs</a>). Click on the green plus sign/folder on the right side of the window, you should see a new screen prompting you for info:</p>
+<img alt="../../../_images/vbox-guest-04.jpg" src="../../../_images/vbox-guest-04.jpg" />
+<p>Click on the <code class="docutils literal notranslate"><span class="pre">Folder</span> <span class="pre">Path</span></code> input, and using the file browser (by selecting the option <code class="docutils literal notranslate"><span class="pre">Other...</span></code>), select the folder you want to share with the VM. This example uses the Desktop (e.g. <code class="docutils literal notranslate"><span class="pre">/Users/matthew/Desktop</span></code> on a Mac). Make sure to select <code class="docutils literal notranslate"><span class="pre">Auto-mount</span></code> and <code class="docutils literal notranslate"><span class="pre">Make</span> <span class="pre">Permanent</span></code>, if you don’t want to repeat these steps every time you launch the VM. Also note, the <code class="docutils literal notranslate"><span class="pre">Folder</span> <span class="pre">Name</span></code> option (which VirtualBox will auto-suggest a value for) is the name of the mounted folder inside of your VM.  VirtualBox will always prepend the prefix <code class="docutils literal notranslate"><span class="pre">sf_</span></code> to that value (<code class="docutils literal notranslate"><span class="pre">sf</span></code> stands for <code class="docutils literal notranslate"><span class="pre">shared</span> <span class="pre">folder</span></code>). So in this case, the folder name will be <code class="docutils literal notranslate"><span class="pre">sf_Desktop</span></code>. The full path when mounted is <code class="docutils literal notranslate"><span class="pre">/media/sf_Desktop</span></code>.</p>
+<img alt="../../../_images/vbox-guest-05.jpg" src="../../../_images/vbox-guest-05.jpg" />
+<p>Click ‘OK’ on both dialogs to save your changes.</p>
+</div>
+<div class="section" id="reboot">
+<h3>4. Reboot<a class="headerlink" href="#reboot" title="Permalink to this headline">¶</a></h3>
+<p>Click the gear in the upper right of the screen, then <code class="docutils literal notranslate"><span class="pre">Shut</span> <span class="pre">Down...</span></code>, then <code class="docutils literal notranslate"><span class="pre">Restart</span></code>.</p>
+<img alt="../../../_images/vbox-guest-06.jpg" src="../../../_images/vbox-guest-06.jpg" />
+</div>
+<div class="section" id="enjoy">
+<h3>5. Enjoy!<a class="headerlink" href="#enjoy" title="Permalink to this headline">¶</a></h3>
+<p>Once the VM has rebooted and you have logged in, you should see your shared folder in the file browser (the icon on the left bar that looks like a file cabinet):</p>
+<img alt="../../../_images/vbox-guest-07.jpg" src="../../../_images/vbox-guest-07.jpg" />
+<p>The files there are the files on the Mac’s desktop! These files can also access the mounted folder via the Command Line at <code class="docutils literal notranslate"><span class="pre">/media/sf_Desktop</span></code>:</p>
+<img alt="../../../_images/vbox-guest-08.jpg" src="../../../_images/vbox-guest-08.jpg" />
+<p>Lastly, if you want to create a symbolic link to your shared folder to a more convenient location on your VM, you can run the following command:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ln -s /media/sf_Desktop ~/Desktop/shared
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">sf_Desktop</span></code> is the name of the shared directory from step 2 above, and <code class="docutils literal notranslate"><span class="pre">~/Desktop/shared</span></code> is a location of your choosing.</p>
+<img alt="../../../_images/vbox-guest-09.jpg" src="../../../_images/vbox-guest-09.jpg" />
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../">Installing QIIME 2</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../native/">Natively installing QIIME 2</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../">Installing QIIME 2 using Virtual Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../#qiime-2-core-2020-2-distribution">QIIME 2 Core 2020.2 distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

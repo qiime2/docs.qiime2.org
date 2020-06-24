@@ -1,0 +1,91 @@
+core-features: Identify core features in table
+==============================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table core-features [OPTIONS]
+
+     Identify "core" features, which are features observed in a user-defined
+     fraction of the samples. Since the core features are a function of the
+     fraction of samples that the feature must be observed in to be considered
+     core, this is computed over a range of fractions defined by the
+     `min_fraction`, `max_fraction`, and `steps` parameters.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          The feature table to use in core features
+                          calculations.                                [required]
+   Parameters:
+     --p-min-fraction PROPORTION Range(0.0, 1.0, inclusive_start=False)
+                          The minimum fraction of samples that a feature must be
+                          observed in for that feature to be considered a core
+                          feature.                                 [default: 0.5]
+     --p-max-fraction PROPORTION Range(0.0, 1.0, inclusive_end=True)
+                          The maximum fraction of samples that a feature must be
+                          observed in for that feature to be considered a core
+                          feature.                                 [default: 1.0]
+     --p-steps INTEGER    The number of steps to take between `min-fraction` and
+       Range(2, None)     `max-fraction` for core features calculations. This
+                          parameter has no effect if `min-fraction` and
+                          `max-fraction` are the same value.        [default: 11]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.visualizers import core_features
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Identify core features in table
+
+   Identify "core" features, which are features observed in a user-defined
+   fraction of the samples. Since the core features are a function of the
+   fraction of samples that the feature must be observed in to be considered
+   core, this is computed over a range of fractions defined by the
+   `min_fraction`, `max_fraction`, and `steps` parameters.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table to use in core features calculations.
+   min_fraction : Float % Range(0.0, 1.0, inclusive_start=False), optional
+       The minimum fraction of samples that a feature must be observed in for
+       that feature to be considered a core feature.
+   max_fraction : Float % Range(0.0, 1.0, inclusive_end=True), optional
+       The maximum fraction of samples that a feature must be observed in for
+       that feature to be considered a core feature.
+   steps : Int % Range(2, None), optional
+       The number of steps to take between `min_fraction` and `max_fraction`
+       for core features calculations. This parameter has no effect if
+       `min_fraction` and `max_fraction` are the same value.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

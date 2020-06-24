@@ -1,0 +1,93 @@
+alpha-phylogenetic: Alpha diversity (phylogenetic)
+==================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:alpha-phylogenetic.bib
+   :all:
+   :keyprefix: diversity:alpha-phylogenetic:
+   :labelprefix: diversity:alpha-phylogenetic:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime diversity alpha-phylogenetic [OPTIONS]
+
+     Computes a user-specified phylogenetic alpha diversity metric for all
+     samples in a feature table.
+
+   Options:
+     --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                     The feature table containing the samples for
+                                     which alpha diversity should be computed.
+                                     [required]
+     --i-phylogeny ARTIFACT PATH Phylogeny[Rooted]
+                                     Phylogenetic tree containing tip identifiers
+                                     that correspond to the feature identifiers
+                                     in the table. This tree can contain tip ids
+                                     that are not present in the table, but all
+                                     feature ids in the table must be present in
+                                     this tree.  [required]
+     --p-metric [faith_pd]           The alpha diversity metric to be computed.
+                                     [required]
+     --o-alpha-diversity ARTIFACT PATH SampleData[AlphaDiversity] % Properties(['phylogenetic'])
+                                     Vector containing per-sample alpha
+                                     diversities.  [required if not passing
+                                     --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Alpha diversity (phylogenetic)
+
+   Computes a user-specified phylogenetic alpha diversity metric for all
+   samples in a feature table.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The feature table containing the samples for which alpha diversity
+       should be computed.
+   phylogeny : Phylogeny[Rooted]
+       Phylogenetic tree containing tip identifiers that correspond to the
+       feature identifiers in the table. This tree can contain tip ids that
+       are not present in the table, but all feature ids in the table must be
+       present in this tree.
+   metric : Str % Choices({'faith_pd'})
+       The alpha diversity metric to be computed.
+
+   Returns
+   -------
+   alpha_diversity : SampleData[AlphaDiversity] % Properties(['phylogenetic'])
+       Vector containing per-sample alpha diversities.</pre>
+       </div>
+     </div>
+   </div>

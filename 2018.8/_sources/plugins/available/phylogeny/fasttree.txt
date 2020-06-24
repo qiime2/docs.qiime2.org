@@ -1,0 +1,96 @@
+fasttree: Construct a phylogenetic tree with FastTree.
+======================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: phylogeny:fasttree.bib
+   :all:
+   :keyprefix: phylogeny:fasttree:
+   :labelprefix: phylogeny:fasttree:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime phylogeny fasttree [OPTIONS]
+
+     Construct a phylogenetic tree with FastTree.
+
+   Options:
+     --i-alignment ARTIFACT PATH FeatureData[AlignedSequence]
+                                     Aligned sequences to be used for
+                                     phylogenetic reconstruction.  [required]
+     --p-n-threads INTEGER RANGE     The number of threads. Using more than one
+                                     thread runs the non-deterministic variant of
+                                     `FastTree` (`FastTreeMP`), and may result in
+                                     a different tree than single-threading. See h
+                                     ttp://www.microbesonline.org/fasttree/#OpenM
+                                     P for details. (Use 0 to automatically use
+                                     all available cores)  [default: 1]
+     --o-tree ARTIFACT PATH Phylogeny[Unrooted]
+                                     The resulting phylogenetic tree.  [required
+                                     if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.phylogeny.methods import fasttree
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Construct a phylogenetic tree with FastTree.
+
+   Construct a phylogenetic tree with FastTree.
+
+   Parameters
+   ----------
+   alignment : FeatureData[AlignedSequence]
+       Aligned sequences to be used for phylogenetic reconstruction.
+   n_threads : Int % Range(0, None), optional
+       The number of threads. Using more than one thread runs the non-
+       deterministic variant of `FastTree` (`FastTreeMP`), and may result in a
+       different tree than single-threading. See
+       http://www.microbesonline.org/fasttree/#OpenMP for details. (Use 0 to
+       automatically use all available cores)
+
+   Returns
+   -------
+   tree : Phylogeny[Unrooted]
+       The resulting phylogenetic tree.</pre>
+       </div>
+     </div>
+   </div>

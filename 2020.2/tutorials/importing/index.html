@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Importing data &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Exporting data" href="../exporting/" />
+    <link rel="prev" title="Differential abundance analysis with gneiss" href="../gneiss/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="importing-data">
+<h1><a class="toc-backref" href="#id28">Importing data</a><a class="headerlink" href="#importing-data" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="id1">
+<p class="topic-title">Importing data</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#importing-data" id="id28">Importing data</a></p>
+<ul>
+<li><p><a class="reference internal" href="#sequence-data-with-sequence-quality-information-i-e-fastq" id="id29">Sequence data with sequence quality information (i.e. FASTQ)</a></p></li>
+<li><p><a class="reference internal" href="#sequences-without-quality-information-i-e-fasta" id="id30">Sequences without quality information (i.e. FASTA)</a></p></li>
+<li><p><a class="reference internal" href="#per-feature-unaligned-sequence-data-i-e-representative-fasta-sequences" id="id31">Per-feature unaligned sequence data (i.e., representative FASTA sequences)</a></p></li>
+<li><p><a class="reference internal" href="#per-feature-aligned-sequence-data-i-e-aligned-representative-fasta-sequences" id="id32">Per-feature aligned sequence data (i.e., aligned representative FASTA sequences)</a></p></li>
+<li><p><a class="reference internal" href="#feature-table-data" id="id33">Feature table data</a></p></li>
+<li><p><a class="reference internal" href="#phylogenetic-trees" id="id34">Phylogenetic trees</a></p></li>
+<li><p><a class="reference internal" href="#other-data-types" id="id35">Other data types</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This tutorial assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a>.</p>
+</div>
+<p>In order to use QIIME 2, your input data must be stored in <em>QIIME 2 artifacts</em> (i.e. <code class="docutils literal notranslate"><span class="pre">.qza</span></code> files). This is what enables distributed and automatic provenance tracking, as well as semantic type validation and transformations between data formats (see the <a class="reference internal" href="../../concepts/"><span class="doc">core concepts</span></a> page for more details about QIIME 2 artifacts). This tutorial demonstrates how to import various data formats into QIIME 2 artifacts for use with QIIME 2.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This tutorial does not describe all data formats that are currently supported in QIIME 2. It is a work-in-progress that describes some of the most commonly used data formats that are available. We are also actively working on supporting additional data formats. If you need to import data in a format that is not covered here, please post to the <a class="reference external" href="https://forum.qiime2.org">QIIME 2 Forum</a> for help.</p>
+</div>
+<p>Importing will typically happen with your initial data (e.g. sequences obtained from a sequencing facility), but importing can be performed at any step in your analysis pipeline. For example, if a collaborator provides you with a feature table in <code class="docutils literal notranslate"><span class="pre">.biom</span></code> format, you can import it into a QIIME 2 artifact to perform “downstream” statistical analyses that operate on a feature table.</p>
+<p>Importing can be accomplished using any of the QIIME 2 <a class="reference internal" href="../../interfaces/"><span class="doc">interfaces</span></a>. This tutorial will focus on using the QIIME 2 command-line interface (<code class="docutils literal notranslate"><span class="pre">q2cli</span></code>) to import data with the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">import</span></code> method. Each section below briefly describes a data format, provides commands to download example data, and illustrates how to import the data into a QIIME 2 artifact.</p>
+<p>You may want to begin by creating a directory to work in.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir qiime2-importing-tutorial
+<span class="nb">cd</span> qiime2-importing-tutorial
+</pre></div>
+</div>
+<div class="section" id="sequence-data-with-sequence-quality-information-i-e-fastq">
+<span id="importing-seqs"></span><h2><a class="toc-backref" href="#id29">Sequence data with sequence quality information (i.e. FASTQ)</a><a class="headerlink" href="#sequence-data-with-sequence-quality-information-i-e-fastq" title="Permalink to this headline">¶</a></h2>
+<p>With QIIME 2, there are functions to import different types of FASTQ data:</p>
+<ol class="arabic simple">
+<li><p>FASTQ data with the EMP Protocol format</p></li>
+<li><p>FASTQ data with the Casava 1.8 demultiplexed format</p></li>
+<li><p>Any other kind of FASTQ data</p></li>
+</ol>
+<div class="section" id="emp-protocol-multiplexed-single-end-fastq">
+<span id="emp-import"></span><h3>“EMP protocol” multiplexed single-end fastq<a class="headerlink" href="#emp-protocol-multiplexed-single-end-fastq" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="format-description">
+<h4>Format description<a class="headerlink" href="#format-description" title="Permalink to this headline">¶</a></h4>
+<p>Single-end “<a class="reference external" href="http://www.earthmicrobiome.org/protocols-and-standards/">Earth Microbiome Project (EMP) protocol</a>”  formatted reads should have two <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> files total:</p>
+<ol class="arabic simple">
+<li><p>one <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> file that contains the single-end reads,</p></li>
+<li><p>and another that contains the associated barcode reads</p></li>
+</ol>
+<p>In this format, sequence data is still multiplexed (i.e. you have only one <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> file containing raw data for all of your samples).</p>
+<p>The order of the records in the two <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> files defines the association between a sequence read and its barcode read (i.e. the first barcode read corresponds to the first sequence read, the second barcode to the second read, and so on).</p>
+<div class="section" id="obtaining-example-data">
+<h5>Obtaining example data<a class="headerlink" href="#obtaining-example-data" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir emp-single-end-sequences
+</pre></div>
+</div>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/moving-pictures/emp-single-end-sequences/barcodes.fastq.gz">
+            https://data.qiime2.org/2020.2/tutorials/moving-pictures/emp-single-end-sequences/barcodes.fastq.gz
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> emp-single-end-sequences/barcodes.fastq.gz
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "emp-single-end-sequences/barcodes.fastq.gz" \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/emp-single-end-sequences/barcodes.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/emp-single-end-sequences/barcodes.fastq.gz" > \
+  "emp-single-end-sequences/barcodes.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/moving-pictures/emp-single-end-sequences/sequences.fastq.gz">
+            https://data.qiime2.org/2020.2/tutorials/moving-pictures/emp-single-end-sequences/sequences.fastq.gz
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> emp-single-end-sequences/sequences.fastq.gz
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "emp-single-end-sequences/sequences.fastq.gz" \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/emp-single-end-sequences/sequences.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/emp-single-end-sequences/sequences.fastq.gz" > \
+  "emp-single-end-sequences/sequences.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="section" id="id2">
+<h4>Importing data<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type EMPSingleEndSequences <span class="se">\</span>
+  --input-path emp-single-end-sequences <span class="se">\</span>
+  --output-path emp-single-end-sequences.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">emp-single-end-sequences.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Femp-single-end-sequences.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/emp-single-end-sequences.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="emp-protocol-multiplexed-paired-end-fastq">
+<h3>“EMP protocol” multiplexed paired-end fastq<a class="headerlink" href="#emp-protocol-multiplexed-paired-end-fastq" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h4>Format description<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>Paired-end “<a class="reference external" href="http://www.earthmicrobiome.org/protocols-and-standards/">Earth Microbiome Project (EMP) protocol</a>” formatted reads should have three <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> files total:</p>
+<ol class="arabic simple">
+<li><p>one <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> file that contains the forward sequence reads,</p></li>
+<li><p>one <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> file that contains the reverse sequence reads,</p></li>
+<li><p>and a third that contains the associated barcode reads</p></li>
+</ol>
+<p>In this format, sequence data is still multiplexed (i.e. you have only one forward and one reverse <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> file containing raw data for all of your samples).</p>
+<p>The order of the records in the <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> files defines the association between a sequence read and its barcode read (i.e. the first barcode read corresponds to the first sequence read, the second barcode to the second read, and so on.)</p>
+<div class="section" id="id4">
+<h5>Obtaining example data<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h5>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir emp-paired-end-sequences
+</pre></div>
+</div>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/forward.fastq.gz">
+            https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/forward.fastq.gz
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> emp-paired-end-sequences/forward.fastq.gz
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "emp-paired-end-sequences/forward.fastq.gz" \
+  "https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/forward.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/forward.fastq.gz" > \
+  "emp-paired-end-sequences/forward.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/reverse.fastq.gz">
+            https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/reverse.fastq.gz
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> emp-paired-end-sequences/reverse.fastq.gz
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "emp-paired-end-sequences/reverse.fastq.gz" \
+  "https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/reverse.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/reverse.fastq.gz" > \
+  "emp-paired-end-sequences/reverse.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-4" aria-controls="browser-4" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-4" aria-controls="wget-4" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-4" aria-controls="messages-4" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-4">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/barcodes.fastq.gz">
+            https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/barcodes.fastq.gz
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> emp-paired-end-sequences/barcodes.fastq.gz
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-4">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "emp-paired-end-sequences/barcodes.fastq.gz" \
+  "https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/barcodes.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-4">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/atacama-soils/1p/barcodes.fastq.gz" > \
+  "emp-paired-end-sequences/barcodes.fastq.gz"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="section" id="id5">
+<h4>Importing data<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type EMPPairedEndSequences <span class="se">\</span>
+  --input-path emp-paired-end-sequences <span class="se">\</span>
+  --output-path emp-paired-end-sequences.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">emp-paired-end-sequences.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Femp-paired-end-sequences.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/emp-paired-end-sequences.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="casava-1-8-single-end-demultiplexed-fastq">
+<span id="casava-import"></span><h3>Casava 1.8 single-end demultiplexed fastq<a class="headerlink" href="#casava-1-8-single-end-demultiplexed-fastq" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h4>Format description<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<p>In the <a class="reference external" href="http://illumina.bioinfo.ucr.edu/ht/documentation/data-analysis-docs/CASAVA-FASTQ.pdf/view">Casava 1.8 demultiplexed</a> (single-end) format, there is one <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> file for each sample in the study which contains the <cite>single-end</cite> reads for that sample. The file name includes the sample identifier and should look like <code class="docutils literal notranslate"><span class="pre">L2S357_15_L001_R1_001.fastq.gz</span></code>. The underscore-separated fields in this file name are:</p>
+<ol class="arabic simple">
+<li><p>the sample identifier,</p></li>
+<li><p>the barcode sequence or a barcode identifier,</p></li>
+<li><p>the lane number,</p></li>
+<li><p>the direction of the read (i.e. only R1, because these are single-end reads), and</p></li>
+<li><p>the set number.</p></li>
+</ol>
+<div class="section" id="id7">
+<h5>Obtaining example data<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h5>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-5" aria-controls="browser-5" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-5" aria-controls="wget-5" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-5" aria-controls="messages-5" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-5">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/casava-18-single-end-demultiplexed.zip">
+            https://data.qiime2.org/2020.2/tutorials/importing/casava-18-single-end-demultiplexed.zip
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> casava-18-single-end-demultiplexed.zip
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-5">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "casava-18-single-end-demultiplexed.zip" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/casava-18-single-end-demultiplexed.zip"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-5">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/casava-18-single-end-demultiplexed.zip" > \
+  "casava-18-single-end-demultiplexed.zip"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>unzip -q casava-18-single-end-demultiplexed.zip
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h4>Importing data<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type <span class="s1">&#39;SampleData[SequencesWithQuality]&#39;</span> <span class="se">\</span>
+  --input-path casava-18-single-end-demultiplexed <span class="se">\</span>
+  --input-format CasavaOneEightSingleLanePerSampleDirFmt <span class="se">\</span>
+  --output-path demux-single-end.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux-single-end.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Fdemux-single-end.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/demux-single-end.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="casava-1-8-paired-end-demultiplexed-fastq">
+<h3>Casava 1.8 paired-end demultiplexed fastq<a class="headerlink" href="#casava-1-8-paired-end-demultiplexed-fastq" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h4>Format description<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p>In <a class="reference external" href="http://illumina.bioinfo.ucr.edu/ht/documentation/data-analysis-docs/CASAVA-FASTQ.pdf/view">Casava 1.8 demultiplexed</a> (paired-end) format, there are two <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> files for each sample in the study, each containing the forward or reverse reads for that sample. The file name includes the sample identifier. The forward and reverse read file names for a single sample might look like <code class="docutils literal notranslate"><span class="pre">L2S357_15_L001_R1_001.fastq.gz</span></code> and <code class="docutils literal notranslate"><span class="pre">L2S357_15_L001_R2_001.fastq.gz</span></code>, respectively.
+The underscore-separated fields in this file name are:</p>
+<ol class="arabic simple">
+<li><p>the sample identifier,</p></li>
+<li><p>the barcode sequence or a barcode identifier,</p></li>
+<li><p>the lane number,</p></li>
+<li><p>the direction of the read (i.e. R1 or R2), and</p></li>
+<li><p>the set number.</p></li>
+</ol>
+<div class="section" id="id10">
+<h5>Obtaining example data<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h5>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-6" aria-controls="browser-6" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-6" aria-controls="wget-6" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-6" aria-controls="messages-6" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-6">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/casava-18-paired-end-demultiplexed.zip">
+            https://data.qiime2.org/2020.2/tutorials/importing/casava-18-paired-end-demultiplexed.zip
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> casava-18-paired-end-demultiplexed.zip
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-6">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "casava-18-paired-end-demultiplexed.zip" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/casava-18-paired-end-demultiplexed.zip"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-6">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/casava-18-paired-end-demultiplexed.zip" > \
+  "casava-18-paired-end-demultiplexed.zip"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>unzip -q casava-18-paired-end-demultiplexed.zip
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id11">
+<h4>Importing data<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --type <span class="s1">&#39;SampleData[PairedEndSequencesWithQuality]&#39;</span> <span class="se">\</span>
+  --input-path casava-18-paired-end-demultiplexed <span class="se">\</span>
+  --input-format CasavaOneEightSingleLanePerSampleDirFmt <span class="se">\</span>
+  --output-path demux-paired-end.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">demux-paired-end.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Fdemux-paired-end.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/demux-paired-end.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="fastq-manifest-formats">
+<span id="manifest-file"></span><h3>“Fastq manifest” formats<a class="headerlink" href="#fastq-manifest-formats" title="Permalink to this headline">¶</a></h3>
+<p>If you don’t have either EMP or Casava format, you need to import your data into QIIME 2 manually by first creating a “manifest file” and then using the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">tools</span> <span class="pre">import</span></code> command with different specifications than in the EMP or Casava import commands.</p>
+<div class="section" id="id12">
+<h4>Format description<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<p>First, you’ll create a text file called a “manifest file”, which maps sample identifiers to <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> or <code class="docutils literal notranslate"><span class="pre">fastq</span></code> <a class="reference external" href="https://en.wikipedia.org/wiki/Path_(computing)#Absolute_and_relative_paths">absolute filepaths</a> that contain sequence and quality data for the sample (i.e. these are FASTQ files).
+The manifest file also indicates the direction of the reads in each <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> or <code class="docutils literal notranslate"><span class="pre">fastq</span></code> file. The manifest file will generally be created by you, and it is designed to be a simple format that doesn’t put restrictions on the naming of the demultiplexed <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> / <code class="docutils literal notranslate"><span class="pre">fastq</span></code> files, since there is no broadly used naming convention for these files. You can call the manifest file whatever you want. As well, the manifest format is Metadata-compatible, so you can re-use the manifest file to bootstrap your <a class="reference internal" href="../metadata/"><span class="doc">Sample Metadata</span></a>, too.</p>
+<p>The manifest file is a tab-seperated (i.e., <code class="docutils literal notranslate"><span class="pre">.tsv</span></code>) text file. The first column defines the Sample ID, while the second (and optional third) column defines the absolute filepath to the forward (and optional reverse) reads. All of the rules and behavior of this format are inherited from the <a class="reference internal" href="../metadata/"><span class="doc">QIIME 2 Metadata format</span></a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> absolute filepaths may contain environment variables (e.g., <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> or <code class="docutils literal notranslate"><span class="pre">$PWD</span></code>). The following example illustrates a simple fastq manifest file for paired-end read data for four samples.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sample-id     forward-absolute-filepath       reverse-absolute-filepath
+sample-1      $PWD/some/filepath/sample0_R1.fastq.gz  $PWD/some/filepath/sample1_R2.fastq.gz
+sample-2      $PWD/some/filepath/sample2_R1.fastq.gz  $PWD/some/filepath/sample2_R2.fastq.gz
+sample-3      $PWD/some/filepath/sample3_R1.fastq.gz  $PWD/some/filepath/sample3_R2.fastq.gz
+sample-4      $PWD/some/filepath/sample4_R1.fastq.gz  $PWD/some/filepath/sample4_R2.fastq.gz
+</pre></div>
+</div>
+<p>Just like with <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code>, the absolute filepaths in the manifest for any <code class="docutils literal notranslate"><span class="pre">fastq</span></code> files must be accurate. The following example illustrates a simple fastq manifest file for <code class="docutils literal notranslate"><span class="pre">fastq</span></code> single-end read data for two samples.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>sample-id     absolute-filepath
+sample-1      $PWD/some/filepath/sample1_R1.fastq
+sample-2      $PWD/some/filepath/sample2_R1.fastq
+</pre></div>
+</div>
+<p>There are four variants of FASTQ data which you must specify to QIIME 2 when importing, and which are defined in the following sections. Since importing data in these four formats is very similar, we’ll only provide examples for two of the variants: <code class="docutils literal notranslate"><span class="pre">SingleEndFastqManifestPhred33V2</span></code> and <code class="docutils literal notranslate"><span class="pre">PairedEndFastqManifestPhred64V2</span></code>.</p>
+</div>
+<div class="section" id="singleendfastqmanifestphred33v2">
+<h4>SingleEndFastqManifestPhred33V2<a class="headerlink" href="#singleendfastqmanifestphred33v2" title="Permalink to this headline">¶</a></h4>
+<p>In this variant of the fastq manifest format, the read directions must all either be forward or reverse. This format assumes that the <a class="reference external" href="http://scikit-bio.org/docs/latest/generated/skbio.io.format.fastq.html#quality-score-variants">PHRED offset</a> used for the positional quality scores in all of the <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> / <code class="docutils literal notranslate"><span class="pre">fastq</span></code> files is 33.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-7" aria-controls="browser-7" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-7" aria-controls="wget-7" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-7" aria-controls="messages-7" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-7">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/se-33.zip">
+            https://data.qiime2.org/2020.2/tutorials/importing/se-33.zip
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> se-33.zip
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-7">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "se-33.zip" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/se-33.zip"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-7">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/se-33.zip" > \
+  "se-33.zip"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-8" aria-controls="browser-8" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-8" aria-controls="wget-8" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-8" aria-controls="messages-8" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-8">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/se-33-manifest">
+            https://data.qiime2.org/2020.2/tutorials/importing/se-33-manifest
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> se-33-manifest
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-8">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "se-33-manifest" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/se-33-manifest"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-8">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/se-33-manifest" > \
+  "se-33-manifest"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>unzip -q se-33.zip
+
+qiime tools import <span class="se">\</span>
+  --type <span class="s1">&#39;SampleData[SequencesWithQuality]&#39;</span> <span class="se">\</span>
+  --input-path se-33-manifest <span class="se">\</span>
+  --output-path single-end-demux.qza <span class="se">\</span>
+  --input-format SingleEndFastqManifestPhred33V2
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">single-end-demux.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Fsingle-end-demux.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/single-end-demux.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="singleendfastqmanifestphred64v2">
+<h4>SingleEndFastqManifestPhred64V2<a class="headerlink" href="#singleendfastqmanifestphred64v2" title="Permalink to this headline">¶</a></h4>
+<p>In this variant of the fastq manifest format, the read directions must all either be forward or reverse. This format assumes that the <a class="reference external" href="http://scikit-bio.org/docs/latest/generated/skbio.io.format.fastq.html#quality-score-variants">PHRED offset</a> used for the positional quality scores in all of the <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> / <code class="docutils literal notranslate"><span class="pre">fastq</span></code> files is 64. During import, QIIME 2 will convert the PHRED 64 encoded quality scores to PHRED 33 encoded quality scores. This conversion will be slow, but will only happen one time.</p>
+</div>
+<div class="section" id="pairedendfastqmanifestphred33v2">
+<h4>PairedEndFastqManifestPhred33V2<a class="headerlink" href="#pairedendfastqmanifestphred33v2" title="Permalink to this headline">¶</a></h4>
+<p>In this variant of the fastq manifest format, there must be forward and reverse read <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> / <code class="docutils literal notranslate"><span class="pre">fastq</span></code> files for each sample ID. This format assumes that the <a class="reference external" href="http://scikit-bio.org/docs/latest/generated/skbio.io.format.fastq.html#quality-score-variants">PHRED offset</a> used for the positional quality scores in all of the <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> / <code class="docutils literal notranslate"><span class="pre">fastq</span></code> files is 33.</p>
+</div>
+<div class="section" id="pairedendfastqmanifestphred64v2">
+<h4>PairedEndFastqManifestPhred64V2<a class="headerlink" href="#pairedendfastqmanifestphred64v2" title="Permalink to this headline">¶</a></h4>
+<p>In this variant of the fastq manifest format, there must be forward and reverse read <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> / <code class="docutils literal notranslate"><span class="pre">fastq</span></code> files for each sample ID. This format assumes that the <a class="reference external" href="http://scikit-bio.org/docs/latest/generated/skbio.io.format.fastq.html#quality-score-variants">PHRED offset</a> used for the positional quality scores in all of the <code class="docutils literal notranslate"><span class="pre">fastq.gz</span></code> / <code class="docutils literal notranslate"><span class="pre">fastq</span></code> files is 64. During import, QIIME 2 will convert the PHRED 64 encoded quality scores to PHRED 33 encoded quality scores. This conversion will be slow, but will only happen one time.</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-9" aria-controls="browser-9" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-9" aria-controls="wget-9" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-9" aria-controls="messages-9" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-9">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/pe-64.zip">
+            https://data.qiime2.org/2020.2/tutorials/importing/pe-64.zip
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> pe-64.zip
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-9">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "pe-64.zip" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/pe-64.zip"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-9">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/pe-64.zip" > \
+  "pe-64.zip"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-10" aria-controls="browser-10" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-10" aria-controls="wget-10" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-10" aria-controls="messages-10" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-10">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/pe-64-manifest">
+            https://data.qiime2.org/2020.2/tutorials/importing/pe-64-manifest
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> pe-64-manifest
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-10">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "pe-64-manifest" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/pe-64-manifest"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-10">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/pe-64-manifest" > \
+  "pe-64-manifest"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>unzip -q pe-64.zip
+
+qiime tools import <span class="se">\</span>
+  --type <span class="s1">&#39;SampleData[PairedEndSequencesWithQuality]&#39;</span> <span class="se">\</span>
+  --input-path pe-64-manifest <span class="se">\</span>
+  --output-path paired-end-demux.qza <span class="se">\</span>
+  --input-format PairedEndFastqManifestPhred64V2
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">paired-end-demux.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Fpaired-end-demux.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/paired-end-demux.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="sequences-without-quality-information-i-e-fasta">
+<h2><a class="toc-backref" href="#id30">Sequences without quality information (i.e. FASTA)</a><a class="headerlink" href="#sequences-without-quality-information-i-e-fasta" title="Permalink to this headline">¶</a></h2>
+<p>QIIME 2 currently supports importing the <a class="reference external" href="http://qiime.org/documentation/file_formats.html#post-split-libraries-fasta-file-overview">QIIME 1 <code class="docutils literal notranslate"><span class="pre">seqs.fna</span></code> file</a> format, which consists of a single FASTA file with exactly two lines per record: header and sequence. Each sequence must span exactly one line and cannot be split across multiple lines. The ID in each header must follow the format <code class="docutils literal notranslate"><span class="pre">&lt;sample-id&gt;_&lt;seq-id&gt;</span></code>. <code class="docutils literal notranslate"><span class="pre">&lt;sample-id&gt;</span></code> is the identifier of the sample the sequence belongs to, and <code class="docutils literal notranslate"><span class="pre">&lt;seq-id&gt;</span></code> is an identifier for the sequence <em>within</em> its sample.</p>
+<p>An example of importing and dereplicating this kind of data can be found in the <a class="reference internal" href="../otu-clustering/"><span class="doc">OTU Clustering tutorial</span></a>.</p>
+<p>Other FASTA formats like FASTA files with differently formatted sequence headers or per-sample demultiplexed FASTA files (i.e. one FASTA file per sample) are not currently supported.</p>
+</div>
+<div class="section" id="per-feature-unaligned-sequence-data-i-e-representative-fasta-sequences">
+<h2><a class="toc-backref" href="#id31">Per-feature unaligned sequence data (i.e., representative FASTA sequences)</a><a class="headerlink" href="#per-feature-unaligned-sequence-data-i-e-representative-fasta-sequences" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>Format description<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>Unaligned sequence data is imported from a FASTA formatted file containing DNA sequences that are not aligned (i.e., do not contain <cite>-</cite> or <cite>.</cite> characters). The sequences may contain degenerate nucleotide characters, such as <code class="docutils literal notranslate"><span class="pre">N</span></code>, but some QIIME 2 actions may not support these characters. See the <a class="reference external" href="http://scikit-bio.org/docs/latest/generated/skbio.io.format.fasta.html#fasta-format">scikit-bio FASTA format description</a> for more information about the FASTA format.</p>
+<div class="section" id="id14">
+<h4>Obtaining example data<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-11" aria-controls="browser-11" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-11" aria-controls="wget-11" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-11" aria-controls="messages-11" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-11">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/sequences.fna">
+            https://data.qiime2.org/2020.2/tutorials/importing/sequences.fna
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> sequences.fna
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-11">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "sequences.fna" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/sequences.fna"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-11">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/sequences.fna" > \
+  "sequences.fna"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="section" id="id15">
+<h3>Importing data<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --input-path sequences.fna <span class="se">\</span>
+  --output-path sequences.qza <span class="se">\</span>
+  --type <span class="s1">&#39;FeatureData[Sequence]&#39;</span>
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">sequences.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Fsequences.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/sequences.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="per-feature-aligned-sequence-data-i-e-aligned-representative-fasta-sequences">
+<h2><a class="toc-backref" href="#id32">Per-feature aligned sequence data (i.e., aligned representative FASTA sequences)</a><a class="headerlink" href="#per-feature-aligned-sequence-data-i-e-aligned-representative-fasta-sequences" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id16">
+<h3>Format description<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<p>Aligned sequence data is imported from a FASTA formatted file containing DNA sequences that are aligned to one another. All aligned sequences must be exactly the same length. The sequences may contain degenerate nucleotide characters, such as <code class="docutils literal notranslate"><span class="pre">N</span></code>, but some QIIME 2 actions may not support these characters. See the <a class="reference external" href="http://scikit-bio.org/docs/latest/generated/skbio.io.format.fasta.html#fasta-format">scikit-bio FASTA format description</a> for more information about the FASTA format.</p>
+<div class="section" id="id17">
+<h4>Obtaining example data<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h4>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-12" aria-controls="browser-12" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-12" aria-controls="wget-12" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-12" aria-controls="messages-12" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-12">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/aligned-sequences.fna">
+            https://data.qiime2.org/2020.2/tutorials/importing/aligned-sequences.fna
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> aligned-sequences.fna
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-12">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "aligned-sequences.fna" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/aligned-sequences.fna"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-12">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/aligned-sequences.fna" > \
+  "aligned-sequences.fna"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="section" id="id18">
+<h3>Importing data<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --input-path aligned-sequences.fna <span class="se">\</span>
+  --output-path aligned-sequences.qza <span class="se">\</span>
+  --type <span class="s1">&#39;FeatureData[AlignedSequence]&#39;</span>
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">aligned-sequences.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Faligned-sequences.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/aligned-sequences.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="feature-table-data">
+<span id="importing-feature-tables"></span><h2><a class="toc-backref" href="#id33">Feature table data</a><a class="headerlink" href="#feature-table-data" title="Permalink to this headline">¶</a></h2>
+<p>You can also import pre-processed feature tables into QIIME 2.</p>
+<div class="section" id="biom-v1-0-0">
+<h3>BIOM v1.0.0<a class="headerlink" href="#biom-v1-0-0" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h4>Format description<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h4>
+<p>See the <a class="reference external" href="http://biom-format.org/documentation/format_versions/biom-1.0.html">BIOM v1.0.0 format specification</a> for details.</p>
+<div class="section" id="id20">
+<h5>Obtaining example data<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h5>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-13" aria-controls="browser-13" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-13" aria-controls="wget-13" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-13" aria-controls="messages-13" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-13">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/feature-table-v100.biom">
+            https://data.qiime2.org/2020.2/tutorials/importing/feature-table-v100.biom
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> feature-table-v100.biom
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-13">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "feature-table-v100.biom" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/feature-table-v100.biom"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-13">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/feature-table-v100.biom" > \
+  "feature-table-v100.biom"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="section" id="id21">
+<h4>Importing data<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --input-path feature-table-v100.biom <span class="se">\</span>
+  --type <span class="s1">&#39;FeatureTable[Frequency]&#39;</span> <span class="se">\</span>
+  --input-format BIOMV100Format <span class="se">\</span>
+  --output-path feature-table-1.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">feature-table-1.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Ffeature-table-1.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/feature-table-1.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="biom-v2-1-0">
+<h3>BIOM v2.1.0<a class="headerlink" href="#biom-v2-1-0" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h4>Format description<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h4>
+<p>See the <a class="reference external" href="http://biom-format.org/documentation/format_versions/biom-2.1.html">BIOM v2.1.0 format specification</a> for details.</p>
+<div class="section" id="id23">
+<h5>Obtaining example data<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h5>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-14" aria-controls="browser-14" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-14" aria-controls="wget-14" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-14" aria-controls="messages-14" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-14">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/feature-table-v210.biom">
+            https://data.qiime2.org/2020.2/tutorials/importing/feature-table-v210.biom
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> feature-table-v210.biom
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-14">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "feature-table-v210.biom" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/feature-table-v210.biom"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-14">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/feature-table-v210.biom" > \
+  "feature-table-v210.biom"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="section" id="id24">
+<h4>Importing data<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --input-path feature-table-v210.biom <span class="se">\</span>
+  --type <span class="s1">&#39;FeatureTable[Frequency]&#39;</span> <span class="se">\</span>
+  --input-format BIOMV210Format <span class="se">\</span>
+  --output-path feature-table-2.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">feature-table-2.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Ffeature-table-2.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/feature-table-2.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="phylogenetic-trees">
+<h2><a class="toc-backref" href="#id34">Phylogenetic trees</a><a class="headerlink" href="#phylogenetic-trees" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id25">
+<h3>Format description<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<p>Phylogenetic trees are imported from newick formatted files. See the <a class="reference external" href="http://scikit-bio.org/docs/latest/generated/skbio.io.format.newick.html">scikit-bio newick format description</a> for more information about the newick format.</p>
+<div class="section" id="id26">
+<h4>Obtaining example data<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h4>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-15" aria-controls="browser-15" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-15" aria-controls="wget-15" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-15" aria-controls="messages-15" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-15">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/importing/unrooted-tree.tre">
+            https://data.qiime2.org/2020.2/tutorials/importing/unrooted-tree.tre
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> unrooted-tree.tre
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-15">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "unrooted-tree.tre" \
+  "https://data.qiime2.org/2020.2/tutorials/importing/unrooted-tree.tre"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-15">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/importing/unrooted-tree.tre" > \
+  "unrooted-tree.tre"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="section" id="id27">
+<h3>Importing data<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --input-path unrooted-tree.tre <span class="se">\</span>
+  --output-path unrooted-tree.qza <span class="se">\</span>
+  --type <span class="s1">&#39;Phylogeny[Unrooted]&#39;</span>
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">unrooted-tree.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Fimporting%2Funrooted-tree.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/importing/unrooted-tree.qza">download</a></p></li>
+</ul>
+</div>
+<p>If you have a rooted tree, you can use <code class="docutils literal notranslate"><span class="pre">--type</span> <span class="pre">'Phylogeny[Rooted]'</span></code> instead.</p>
+</div>
+</div>
+<div class="section" id="other-data-types">
+<h2><a class="toc-backref" href="#id35">Other data types</a><a class="headerlink" href="#other-data-types" title="Permalink to this headline">¶</a></h2>
+<p>QIIME 2 can import many other data types not covered in this tutorial.
+You can see which formats of input data are importable with the following command:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --show-importable-formats
+</pre></div>
+</div>
+<p>And which QIIME 2 types you can import these formats as:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime tools import <span class="se">\</span>
+  --show-importable-types
+</pre></div>
+</div>
+<p>Unfortunately, there isn’t currently documentation detailing which data formats can be imported as which QIIME 2 data types, but hopefully the names of these formats and types should be self-explanatory enough to figure it out.
+If you have any questions, please post to the <a class="reference external" href="https://forum.qiime2.org">QIIME 2 Forum</a> for help!</p>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filtering/">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+classify-sklearn: Pre-fitted sklearn-based taxonomy classifier
+==============================================================
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: feature-classifier:classify-sklearn.bib
+   :all:
+   :keyprefix: feature-classifier:classify-sklearn:
+   :labelprefix: feature-classifier:classify-sklearn:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-classifier classify-sklearn [OPTIONS]
+
+     Classify reads by taxon using a fitted classifier.
+
+   Options:
+     --i-reads ARTIFACT PATH FeatureData[Sequence]
+                                     The feature data to be classified.
+                                     [required]
+     --i-classifier ARTIFACT PATH TaxonomicClassifier
+                                     The taxonomic classifier for classifying the
+                                     reads.  [required]
+     --p-reads-per-batch INTEGER RANGE
+                                     Number of reads to process in each batch. If
+                                     0, this parameter is autoscaled to the
+                                     number of query sequences / n_jobs.
+                                     [default: 0]
+     --p-n-jobs INTEGER              The maximum number of concurrently worker
+                                     processes. If -1 all CPUs are used. If 1 is
+                                     given, no parallel computing code is used at
+                                     all, which is useful for debugging. For
+                                     n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                                     used. Thus for n_jobs = -2, all CPUs but one
+                                     are used.  [default: 1]
+     --p-pre-dispatch TEXT           "all" or expression, as in "3*n_jobs". The
+                                     number of batches (of tasks) to be pre-
+                                     dispatched.  [default: 2*n_jobs]
+     --p-confidence FLOAT            Confidence threshold for limiting taxonomic
+                                     depth. Provide -1 to disable confidence
+                                     calculation, or 0 to calculate confidence
+                                     but not apply it to limit the taxonomic
+                                     depth of the assignments.  [default: 0.7]
+     --p-read-orientation [reverse-complement|same]
+                                     Direction of reads with respect to reference
+                                     sequences. same will cause reads to be
+                                     classified unchanged; reverse-complement
+                                     will cause reads to be reversed and
+                                     complemented prior to classification.
+                                     Default is to autodetect based on the
+                                     confidence estimates for the first 100
+                                     reads.  [optional]
+     --o-classification ARTIFACT PATH FeatureData[Taxonomy]
+                                     [required if not passing --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --citations                     Show citations and exit.
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_classifier.methods import classify_sklearn
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Pre-fitted sklearn-based taxonomy classifier
+
+   Classify reads by taxon using a fitted classifier.
+
+   Parameters
+   ----------
+   reads : FeatureData[Sequence]
+       The feature data to be classified.
+   classifier : TaxonomicClassifier
+       The taxonomic classifier for classifying the reads.
+   reads_per_batch : Int % Range(0, None), optional
+       Number of reads to process in each batch. If 0, this parameter is
+       autoscaled to the number of query sequences / n_jobs.
+   n_jobs : Int, optional
+       The maximum number of concurrently worker processes. If -1 all CPUs are
+       used. If 1 is given, no parallel computing code is used at all, which
+       is useful for debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+       used. Thus for n_jobs = -2, all CPUs but one are used.
+   pre_dispatch : Str, optional
+       "all" or expression, as in "3*n_jobs". The number of batches (of tasks)
+       to be pre-dispatched.
+   confidence : Float, optional
+       Confidence threshold for limiting taxonomic depth. Provide -1 to
+       disable confidence calculation, or 0 to calculate confidence but not
+       apply it to limit the taxonomic depth of the assignments.
+   read_orientation : Str % Choices({'reverse-complement', 'same'}), optional
+       Direction of reads with respect to reference sequences. same will cause
+       reads to be classified unchanged; reverse-complement will cause reads
+       to be reversed and complemented prior to classification. Default is to
+       autodetect based on the confidence estimates for the first 100 reads.
+
+   Returns
+   -------
+   classification : FeatureData[Taxonomy]</pre>
+       </div>
+     </div>
+   </div>

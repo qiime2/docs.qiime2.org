@@ -1,0 +1,93 @@
+group: Group samples or features by a metadata column
+=====================================================
+
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime feature-table group [OPTIONS]
+
+     Group samples or features in a feature table using metadata to define the
+     mapping of IDs to a group.
+
+   Inputs:
+     --i-table ARTIFACT FeatureTable[Frequency]
+                          The table to group samples or features on.   [required]
+   Parameters:
+     --p-axis TEXT Choices('feature', 'sample')
+                          Along which axis to group. Each ID in the given axis
+                          must exist in `metadata`.                    [required]
+     --m-metadata-file METADATA
+     --m-metadata-column COLUMN  MetadataColumn[Categorical]
+                          A column defining the groups. Each unique value will
+                          become a new ID for the table on the given `axis`.
+                                                                       [required]
+     --p-mode TEXT Choices('median-ceiling', 'sum', 'mean-ceiling')
+                          How to combine samples or features within a group.
+                          `sum` will sum the frequencies across all samples or
+                          features within a group; `mean-ceiling` will take the
+                          ceiling of the mean of these frequencies;
+                          `median-ceiling` will take the ceiling of the median of
+                          these frequencies.                           [required]
+   Outputs:
+     --o-grouped-table ARTIFACT FeatureTable[Frequency]
+                          A table that has been grouped along the given `axis`.
+                          IDs on that axis are replaced by values in the
+                          `metadata` column.                           [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.feature_table.methods import group
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>Group samples or features by a metadata column
+
+   Group samples or features in a feature table using metadata to define the
+   mapping of IDs to a group.
+
+   Parameters
+   ----------
+   table : FeatureTable[Frequency]
+       The table to group samples or features on.
+   axis : Str % Choices('feature', 'sample')
+       Along which axis to group. Each ID in the given axis must exist in
+       `metadata`.
+   metadata : MetadataColumn[Categorical]
+       A column defining the groups. Each unique value will become a new ID
+       for the table on the given `axis`.
+   mode : Str % Choices('sum', 'median-ceiling', 'mean-ceiling')
+       How to combine samples or features within a group. `sum` will sum the
+       frequencies across all samples or features within a group; `mean-
+       ceiling` will take the ceiling of the mean of these frequencies;
+       `median-ceiling` will take the ceiling of the median of these
+       frequencies.
+
+   Returns
+   -------
+   grouped_table : FeatureTable[Frequency]
+       A table that has been grouped along the given `axis`. IDs on that axis
+       are replaced by values in the `metadata` column.</pre>
+       </div>
+     </div>
+   </div>

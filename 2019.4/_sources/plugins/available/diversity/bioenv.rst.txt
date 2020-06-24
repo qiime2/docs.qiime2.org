@@ -1,0 +1,96 @@
+bioenv: bioenv
+==============
+
+
+.. raw:: html
+
+   <table class="table action-info">
+     <tbody>
+       <tr>
+         <th scope="row"><p></p>Citations</th>
+         <td>
+
+.. bibliography:: diversity:bioenv.bib
+   :list: bullet
+   :all:
+   :keyprefix: diversity:bioenv:
+   :labelprefix: diversity:bioenv:
+
+.. raw:: html
+
+         </td>
+       </tr>
+     </tbody>
+   </table>
+
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <h4>Docstring:</h4>
+         <pre>Usage: qiime diversity bioenv [OPTIONS]
+
+     Find the subsets of variables in metadata whose Euclidean distances are
+     maximally rank-correlated with distance matrix. All numeric variables in
+     metadata will be considered, and samples which are missing data will be
+     dropped. The output visualization will indicate how many samples were
+     dropped due to missing data, if any were dropped.
+
+   Inputs:
+     --i-distance-matrix ARTIFACT
+       DistanceMatrix     Matrix of distances between pairs of samples.
+                                                                       [required]
+   Parameters:
+     --m-metadata-file METADATA...
+       (multiple          The sample metadata.
+        arguments will    
+        be merged)                                                     [required]
+   Outputs:
+     --o-visualization VISUALIZATION
+                                                                       [required]
+   Miscellaneous:
+     --output-dir PATH    Output unspecified results to a directory
+     --verbose / --quiet  Display verbose output to stdout and/or stderr during
+                          execution of this action. Or silence output if
+                          execution is successful (silence is golden).
+     --citations          Show citations and exit.
+     --help               Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+       <h4>Import:</h4>
+
+.. command-block::
+   :no-exec:
+
+   from qiime2.plugins.diversity.visualizers import bioenv
+
+.. raw:: html
+
+       <h4>Docstring:</h4>
+         <pre>bioenv
+
+   Find the subsets of variables in metadata whose Euclidean distances are
+   maximally rank-correlated with distance matrix. All numeric variables in
+   metadata will be considered, and samples which are missing data will be
+   dropped. The output visualization will indicate how many samples were
+   dropped due to missing data, if any were dropped.
+
+   Parameters
+   ----------
+   distance_matrix : DistanceMatrix
+       Matrix of distances between pairs of samples.
+   metadata : Metadata
+       The sample metadata.
+
+   Returns
+   -------
+   visualization : Visualization</pre>
+       </div>
+     </div>
+   </div>

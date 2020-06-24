@@ -1,0 +1,78 @@
+demux-paired: Demultiplex paired-end sequence data with barcodes in-sequence.
+=============================================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime cutadapt demux-paired [OPTIONS]
+
+     Demultiplex sequence data (i.e., map barcode reads to sample ids).
+     Barcodes are expected to be located within the sequence data (versus the
+     header, or a separate barcode file).
+
+   Options:
+     --i-seqs ARTIFACT PATH MultiplexedPairedEndBarcodeInSequence
+                                     The paired-end sequences to be
+                                     demultiplexed.  [required]
+     --m-forward-barcodes-file MULTIPLE PATH
+                                     Metadata file or artifact viewable as
+                                     metadata. This option may be supplied
+                                     multiple times to merge metadata.
+                                     [required]
+     --m-forward-barcodes-category TEXT
+                                     Category from metadata file or artifact
+                                     viewable as metadata. The sample metadata
+                                     category listing the per-sample barcodes for
+                                     the forward reads.  [required]
+     --p-error-rate FLOAT            The level of error tolerance, specified as
+                                     the maximum allowable error rate.  [default:
+                                     0.1]
+     --o-per-sample-sequences ARTIFACT PATH SampleData[PairedEndSequencesWithQuality]
+                                     The resulting demultiplexed sequences.
+                                     [required if not passing --output-dir]
+     --o-untrimmed-sequences ARTIFACT PATH MultiplexedPairedEndBarcodeInSequence
+                                     The sequences that were unmatched to
+                                     barcodes.  [required if not passing
+                                     --output-dir]
+     --output-dir DIRECTORY          Output unspecified results to a directory
+     --cmd-config PATH               Use config file for command options
+     --verbose                       Display verbose output to stdout and/or
+                                     stderr during execution of this action.
+                                     [default: False]
+     --quiet                         Silence output if execution is successful
+                                     (silence is golden).  [default: False]
+     --help                          Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Demultiplex paired-end sequence data with barcodes in-sequence.
+
+   Demultiplex sequence data (i.e., map barcode reads to sample ids). Barcodes
+   are expected to be located within the sequence data (versus the header, or
+   a separate barcode file).
+
+   Parameters
+   ----------
+   seqs : MultiplexedPairedEndBarcodeInSequence
+       The paired-end sequences to be demultiplexed.
+   forward_barcodes : MetadataCategory
+       The sample metadata category listing the per-sample barcodes for the
+       forward reads.
+   error_rate : Float % Range(0, 1, inclusive_end=True), optional
+       The level of error tolerance, specified as the maximum allowable error
+       rate.
+
+   Returns
+   -------
+   per_sample_sequences : SampleData[PairedEndSequencesWithQuality]
+       The resulting demultiplexed sequences.
+   untrimmed_sequences : MultiplexedPairedEndBarcodeInSequence
+       The sequences that were unmatched to barcodes.</pre>
+       </div>
+     </div>
+   </div>

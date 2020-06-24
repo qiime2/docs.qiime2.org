@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>denoise-16S: Deblur sequences using a 16S positive filter. &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+    <link rel="next" title="denoise-other: Deblur sequences using a user-specified positive filter." href="../denoise-other/" />
+    <link rel="prev" title="deblur" href="../" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <script src="../../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="denoise-16s-deblur-sequences-using-a-16s-positive-filter">
+<h1>denoise-16S: Deblur sequences using a 16S positive filter.<a class="headerlink" href="#denoise-16s-deblur-sequences-using-a-16s-positive-filter" title="Permalink to this headline">¶</a></h1>
+<div class="tabbed">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+    <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="cli" class="tab-pane fade in active">
+      <h4>Docstring:</h4>
+      <pre>Usage: qiime deblur denoise-16S [OPTIONS]
+
+  Perform sequence quality control for Illumina data using the Deblur
+  workflow with a 16S reference as a positive filter. Only forward reads are
+  supported at this time. The specific reference used is the 88% OTUs from
+  Greengenes 13_8. This mode of operation should only be used when data were
+  generated from a 16S amplicon protocol on an Illumina platform. The
+  reference is only used to assess whether each sequence is likely to be 16S
+  by a local alignment using SortMeRNA with a permissive e-value; the
+  reference is not used to characterize the sequences.
+
+Inputs:
+  --i-demultiplexed-seqs ARTIFACT SampleData[SequencesWithQuality |
+    PairedEndSequencesWithQuality | JoinedSequencesWithQuality]
+                         The demultiplexed sequences to be denoised.
+                                                                    [required]
+Parameters:
+  --p-trim-length INTEGER
+                         Sequence trim length, specify -1 to disable
+                         trimming.                                  [required]
+  --p-left-trim-len INTEGER
+    Range(0, None)       Sequence trimming from the 5' end. A value of 0 will
+                         disable this trim.                       [default: 0]
+  --p-sample-stats / --p-no-sample-stats
+                         If true, gather stats per sample.    [default: False]
+  --p-mean-error NUMBER  The mean per nucleotide error, used for original
+                         sequence estimate.                   [default: 0.005]
+  --p-indel-prob NUMBER  Insertion/deletion (indel) probability (same for N
+                         indels).                              [default: 0.01]
+  --p-indel-max INTEGER  Maximum number of insertion/deletions.   [default: 3]
+  --p-min-reads INTEGER  Retain only features appearing at least min-reads
+                         times across all samples in the resulting feature
+                         table.                                  [default: 10]
+  --p-min-size INTEGER   In each sample, discard all features with an
+                         abundance less than min-size.            [default: 2]
+  --p-jobs-to-start INTEGER
+                         Number of jobs to start (if to run in parallel).
+                                                                  [default: 1]
+  --p-hashed-feature-ids / --p-no-hashed-feature-ids
+                         If true, hash the feature IDs.        [default: True]
+Outputs:
+  --o-table ARTIFACT FeatureTable[Frequency]
+                         The resulting denoised feature table.      [required]
+  --o-representative-sequences ARTIFACT FeatureData[Sequence]
+                         The resulting feature sequences.           [required]
+  --o-stats ARTIFACT     Per-sample stats if requested.
+    DeblurStats                                                     [required]
+Miscellaneous:
+  --output-dir PATH      Output unspecified results to a directory
+  --verbose / --quiet    Display verbose output to stdout and/or stderr
+                         during execution of this action. Or silence output if
+                         execution is successful (silence is golden).
+  --citations            Show citations and exit.
+  --help                 Show this message and exit.</pre>
+    </div>
+    <div id="api" class="tab-pane fade">
+    <h4>Import:</h4><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>from qiime2.plugins.deblur.methods import denoise_16S
+</pre></div>
+</div>
+    <h4>Docstring:</h4>
+      <pre>Deblur sequences using a 16S positive filter.
+
+Perform sequence quality control for Illumina data using the Deblur
+workflow with a 16S reference as a positive filter. Only forward reads are
+supported at this time. The specific reference used is the 88% OTUs from
+Greengenes 13_8. This mode of operation should only be used when data were
+generated from a 16S amplicon protocol on an Illumina platform. The
+reference is only used to assess whether each sequence is likely to be 16S
+by a local alignment using SortMeRNA with a permissive e-value; the
+reference is not used to characterize the sequences.
+
+Parameters
+----------
+demultiplexed_seqs : SampleData[SequencesWithQuality | PairedEndSequencesWithQuality | JoinedSequencesWithQuality]
+    The demultiplexed sequences to be denoised.
+trim_length : Int
+    Sequence trim length, specify -1 to disable trimming.
+left_trim_len : Int % Range(0, None), optional
+    Sequence trimming from the 5' end. A value of 0 will disable this trim.
+sample_stats : Bool, optional
+    If true, gather stats per sample.
+mean_error : Float, optional
+    The mean per nucleotide error, used for original sequence estimate.
+indel_prob : Float, optional
+    Insertion/deletion (indel) probability (same for N indels).
+indel_max : Int, optional
+    Maximum number of insertion/deletions.
+min_reads : Int, optional
+    Retain only features appearing at least min_reads times across all
+    samples in the resulting feature table.
+min_size : Int, optional
+    In each sample, discard all features with an abundance less than
+    min_size.
+jobs_to_start : Int, optional
+    Number of jobs to start (if to run in parallel).
+hashed_feature_ids : Bool, optional
+    If true, hash the feature IDs.
+
+Returns
+-------
+table : FeatureTable[Frequency]
+    The resulting denoised feature table.
+representative_sequences : FeatureData[Sequence]
+    The resulting feature sequences.
+stats : DeblurStats
+    Per-sample stats if requested.</pre>
+    </div>
+  </div>
+</div></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

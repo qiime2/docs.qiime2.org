@@ -1,0 +1,81 @@
+mask: Positional conservation and gap filtering.
+================================================
+
+.. raw:: html
+
+   <div class="tabbed">
+     <ul class="nav nav-tabs">
+       <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+       <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+     </ul>
+     <div class="tab-content">
+       <div id="cli" class="tab-pane fade in active">
+         <pre>Usage: qiime alignment mask [OPTIONS]
+
+     Mask (i.e., filter) unconserved and highly gapped columns from an
+     alignment.
+
+   Options:
+     --i-alignment PATH           Artifact: FeatureData[AlignedSequence]
+                                  [required]
+                                  The alignment to be masked.
+     --p-max-gap-frequency FLOAT  [default: 1.0]
+                                  The maximum relative frequency
+                                  of gap characters in a column for the column to
+                                  be retained. This relative frequency must be a
+                                  number between 0.0 and 1.0 (inclusive), where
+                                  0.0 retains only those columns without gap
+                                  characters, and 1.0 retains all columns
+                                  regardless of gap character frequency.
+     --p-min-conservation FLOAT   [default: 0.4]
+                                  The minimum relative frequency
+                                  of at least one non-gap character in a column
+                                  for that column to be retained. This relative
+                                  frequency must be a number between 0.0 and 1.0
+                                  (inclusive). For example, if a value of 0.4 is
+                                  provided, a column will only be retained if it
+                                  contains at least one character that is present
+                                  in at least 40% of the sequences.
+     --o-masked-alignment PATH    Artifact: FeatureData[AlignedSequence]
+                                  [required if not passing --output-dir]
+                                  The
+                                  masked alignment.
+     --output-dir DIRECTORY       Output unspecified results to a directory
+     --cmd-config PATH            Use config file for command options
+     --verbose                    Display verbose output to stdout and/or stderr
+                                  during execution of this action.  [default:
+                                  False]
+     --quiet                      Silence output if execution is successful
+                                  (silence is golden).  [default: False]
+     --help                       Show this message and exit.</pre>
+       </div>
+       <div id="api" class="tab-pane fade">
+         <pre>Positional conservation and gap filtering.
+
+   Mask (i.e., filter) unconserved and highly gapped columns from an
+   alignment.
+
+   Parameters
+   ----------
+   alignment : FeatureData[AlignedSequence]
+       The alignment to be masked.
+   max_gap_frequency : Float, optional
+       The maximum relative frequency of gap characters in a column for the
+       column to be retained. This relative frequency must be a number between
+       0.0 and 1.0 (inclusive), where 0.0 retains only those columns without
+       gap characters, and 1.0 retains all columns regardless of gap character
+       frequency.
+   min_conservation : Float, optional
+       The minimum relative frequency of at least one non-gap character in a
+       column for that column to be retained. This relative frequency must be
+       a number between 0.0 and 1.0 (inclusive). For example, if a value of
+       0.4 is provided, a column will only be retained if it contains at least
+       one character that is present in at least 40% of the sequences.
+
+   Returns
+   -------
+   masked_alignment : FeatureData[AlignedSequence]
+       The masked alignment.</pre>
+       </div>
+     </div>
+   </div>

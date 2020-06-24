@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>heatmap: Generate a heatmap representation of a feature table &#8212; QIIME 2 2019.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '2019.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/external-links.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../../../about/" />
+    <link rel="top" title="QIIME 2 2019.1.0 documentation" href="../../../../" />
+    <link rel="up" title="feature-table" href="../" />
+    <link rel="next" title="summarize: Summarize table" href="../summarize/" />
+    <link rel="prev" title="core-features: Identify core features in table" href="../core-features/" />
+  <script src="../../../../_static/bootstrap.min.js"></script>
+  <script src="../../../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head>
+  <body role="document">
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="heatmap-generate-a-heatmap-representation-of-a-feature-table">
+<h1>heatmap: Generate a heatmap representation of a feature table<a class="headerlink" href="#heatmap-generate-a-heatmap-representation-of-a-feature-table" title="Permalink to this headline">¶</a></h1>
+<table class="table action-info">
+  <tbody>
+    <tr>
+      <th scope="row"><p></p>Citations</th>
+      <td><p id="bibtex-bibliography-plugins/available/feature-table/heatmap-0"><table class="docutils citation" frame="void" id="feature-table-heatmap-key0" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[feature-table:heatmap:Hun07]</td><td>John&nbsp;D. Hunter. Matplotlib: a 2d graphics environment. <em>Computing in Science &amp; Engineering</em>, 9(3):90–95, 2007. <a class="reference external" href="https://doi.org/10.1109/MCSE.2007.55">doi:10.1109/MCSE.2007.55</a>.</td></tr>
+</tbody>
+</table>
+</p>
+      </td>
+    </tr>
+  </tbody>
+</table><div class="tabbed">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#cli">Command line interface</a></li>
+    <li><a data-toggle="tab" href="#api">Artifact API</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="cli" class="tab-pane fade in active">
+      <h4>Docstring:</h4>
+      <pre>Usage: qiime feature-table heatmap [OPTIONS]
+
+  Generate a heatmap representation of a feature table with optional
+  clustering on both the sample and feature axes.
+
+  Tip: To generate a heatmap containing taxonomic annotations, use `qiime
+  taxa collapse` to collapse the feature table at the desired taxonomic
+  level.
+
+Options:
+  --i-table ARTIFACT PATH FeatureTable[Frequency]
+                                  The feature table to visualize.  [required]
+  --m-metadata-file MULTIPLE FILE
+                                  Metadata file or artifact viewable as
+                                  metadata. This option may be supplied
+                                  multiple times to merge metadata.
+                                  [optional]
+  --m-metadata-column MetadataColumn[Categorical]
+                                  Column from metadata file or artifact
+                                  viewable as metadata. Annotate the sample
+                                  IDs with these metadata values. When
+                                  metadata is present and `cluster`='feature',
+                                  samples will be sorted by the metadata
+                                  values.  [optional]
+  --p-normalize / --p-no-normalize
+                                  Normalize the feature table by adding a
+                                  psuedocount of 1 and then taking the log10
+                                  of the table.  [default: True]
+  --p-title TEXT                  Optional custom plot title.  [optional]
+  --p-metric [seuclidean|dice|sokalsneath|yule|minkowski|braycurtis|kulsinski|cityblock|russellrao|hamming|euclidean|cosine|canberra|rogerstanimoto|matching|sokalmichener|jaccard|chebyshev|sqeuclidean|mahalanobis|correlation]
+                                  Metrics exposed by seaborn (see http://seabo
+                                  rn.pydata.org/generated/seaborn.clustermap.h
+                                  tml#seaborn.clustermap for more detail).
+                                  [default: euclidean]
+  --p-method [median|centroid|single|ward|complete|weighted|average]
+                                  Clustering methods exposed by seaborn (see h
+                                  ttp://seaborn.pydata.org/generated/seaborn.c
+                                  lustermap.html#seaborn.clustermap for more
+                                  detail).  [default: average]
+  --p-cluster [samples|features|both]
+                                  Specify which axes to cluster.  [default:
+                                  both]
+  --p-color-scheme [gnuplot|Set3_r|Oranges_r|BuGn_r|CMRmap_r|bwr_r|vlag|hot_r|Vega20b|cubehelix_r|Dark2_r|RdGy|cool_r|copper|ocean_r|inferno|flag_r|gist_ncar|viridis_r|CMRmap|brg|PiYG_r|bone_r|gist_earth|GnBu_r|Oranges|Greens_r|coolwarm|cubehelix|hot|rainbow_r|binary_r|gist_heat_r|seismic|tab20_r|Vega20c|Accent_r|GnBu|spring|winter_r|Pastel2|plasma_r|gist_yarg_r|BuPu_r|mako_r|RdGy_r|Paired|Accent|Spectral_r|terrain_r|brg_r|icefire_r|coolwarm_r|Set2|gnuplot2_r|RdYlGn|RdPu|Wistia_r|summer_r|tab10_r|Blues|Blues_r|Reds|Greys_r|autumn_r|Vega10|Vega20_r|Vega20c_r|nipy_spectral|magma_r|vlag_r|YlGn_r|gray|Wistia|YlGn|gist_earth_r|PuRd_r|rainbow|Reds_r|spring_r|OrRd_r|icefire|OrRd|YlOrRd_r|PiYG|flag|nipy_spectral_r|RdYlBu|ocean|YlOrBr_r|RdYlBu_r|gist_heat|PuBu_r|mako|tab10|jet|Purples_r|RdYlGn_r|RdPu_r|plasma|magma|Set3|PRGn|Pastel2_r|pink_r|PuOr|autumn|BuGn|copper_r|Greys|BrBG_r|Vega20b_r|bwr|gist_stern|RdBu|winter|gist_rainbow_r|Set1_r|Paired_r|RdBu_r|jet_r|seismic_r|rocket_r|Pastel1|BrBG|PuBu|gist_ncar_r|PuBuGn_r|rocket|cool|Spectral|hsv_r|Dark2|Greens|tab20b_r|viridis|pink|gist_stern_r|gnuplot_r|YlGnBu|YlOrBr|Vega20|gist_gray_r|YlGnBu_r|gnuplot2|gray_r|PRGn_r|summer|gist_gray|PuBuGn|PuOr_r|Set1|gist_rainbow|BuPu|afmhot_r|Set2_r|gist_yarg|spectral_r|Vega10_r|afmhot|tab20b|binary|YlOrRd|tab20|inferno_r|hsv|tab20c_r|prism|Purples|bone|Pastel1_r|PuRd|spectral|tab20c|prism_r|terrain]
+                                  The matplotlib colorscheme to generate the
+                                  heatmap with.  [default: rocket]
+  --o-visualization VISUALIZATION PATH
+                                  [required if not passing --output-dir]
+  --output-dir DIRECTORY          Output unspecified results to a directory
+  --cmd-config FILE               Use config file for command options
+  --verbose                       Display verbose output to stdout and/or
+                                  stderr during execution of this action.
+                                  [default: False]
+  --quiet                         Silence output if execution is successful
+                                  (silence is golden).  [default: False]
+  --citations                     Show citations and exit.
+  --help                          Show this message and exit.</pre>
+    </div>
+    <div id="api" class="tab-pane fade">
+    <h4>Import:</h4><div class="highlight-shell"><div class="highlight"><pre><span></span>from qiime2.plugins.feature_table.visualizers import heatmap
+</pre></div>
+</div>
+    <h4>Docstring:</h4>
+      <pre>Generate a heatmap representation of a feature table
+
+Generate a heatmap representation of a feature table with optional
+clustering on both the sample and feature axes.  Tip: To generate a heatmap
+containing taxonomic annotations, use `qiime taxa collapse` to collapse the
+feature table at the desired taxonomic level.
+
+Parameters
+----------
+table : FeatureTable[Frequency]
+    The feature table to visualize.
+metadata : MetadataColumn[Categorical], optional
+    Annotate the sample IDs with these metadata values. When metadata is
+    present and `cluster`='feature', samples will be sorted by the metadata
+    values.
+normalize : Bool, optional
+    Normalize the feature table by adding a psuedocount of 1 and then
+    taking the log10 of the table.
+title : Str, optional
+    Optional custom plot title.
+metric : Str % Choices({'braycurtis', 'canberra', 'chebyshev', 'cityblock', 'correlation', 'cosine', 'dice', 'euclidean', 'hamming', 'jaccard', 'kulsinski', 'mahalanobis', 'matching', 'minkowski', 'rogerstanimoto', 'russellrao', 'seuclidean', 'sokalmichener', 'sokalsneath', 'sqeuclidean', 'yule'}), optional
+    Metrics exposed by seaborn (see http://seaborn.pydata.org/generated/sea
+    born.clustermap.html#seaborn.clustermap for more detail).
+method : Str % Choices({'average', 'centroid', 'complete', 'median', 'single', 'ward', 'weighted'}), optional
+    Clustering methods exposed by seaborn (see http://seaborn.pydata.org/ge
+    nerated/seaborn.clustermap.html#seaborn.clustermap for more detail).
+cluster : Str % Choices({'both', 'features', 'samples'}), optional
+    Specify which axes to cluster.
+color_scheme : Str % Choices({'Accent', 'Accent_r', 'Blues', 'Blues_r', 'BrBG', 'BrBG_r', 'BuGn', 'BuGn_r', 'BuPu', 'BuPu_r', 'CMRmap', 'CMRmap_r', 'Dark2', 'Dark2_r', 'GnBu', 'GnBu_r', 'Greens', 'Greens_r', 'Greys', 'Greys_r', 'OrRd', 'OrRd_r', 'Oranges', 'Oranges_r', 'PRGn', 'PRGn_r', 'Paired', 'Paired_r', 'Pastel1', 'Pastel1_r', 'Pastel2', 'Pastel2_r', 'PiYG', 'PiYG_r', 'PuBu', 'PuBuGn', 'PuBuGn_r', 'PuBu_r', 'PuOr', 'PuOr_r', 'PuRd', 'PuRd_r', 'Purples', 'Purples_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdPu', 'RdPu_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r', 'Reds', 'Reds_r', 'Set1', 'Set1_r', 'Set2', 'Set2_r', 'Set3', 'Set3_r', 'Spectral', 'Spectral_r', 'Vega10', 'Vega10_r', 'Vega20', 'Vega20_r', 'Vega20b', 'Vega20b_r', 'Vega20c', 'Vega20c_r', 'Wistia', 'Wistia_r', 'YlGn', 'YlGnBu', 'YlGnBu_r', 'YlGn_r', 'YlOrBr', 'YlOrBr_r', 'YlOrRd', 'YlOrRd_r', 'afmhot', 'afmhot_r', 'autumn', 'autumn_r', 'binary', 'binary_r', 'bone', 'bone_r', 'brg', 'brg_r', 'bwr', 'bwr_r', 'cool', 'cool_r', 'coolwarm', 'coolwarm_r', 'copper', 'copper_r', 'cubehelix', 'cubehelix_r', 'flag', 'flag_r', 'gist_earth', 'gist_earth_r', 'gist_gray', 'gist_gray_r', 'gist_heat', 'gist_heat_r', 'gist_ncar', 'gist_ncar_r', 'gist_rainbow', 'gist_rainbow_r', 'gist_stern', 'gist_stern_r', 'gist_yarg', 'gist_yarg_r', 'gnuplot', 'gnuplot2', 'gnuplot2_r', 'gnuplot_r', 'gray', 'gray_r', 'hot', 'hot_r', 'hsv', 'hsv_r', 'icefire', 'icefire_r', 'inferno', 'inferno_r', 'jet', 'jet_r', 'magma', 'magma_r', 'mako', 'mako_r', 'nipy_spectral', 'nipy_spectral_r', 'ocean', 'ocean_r', 'pink', 'pink_r', 'plasma', 'plasma_r', 'prism', 'prism_r', 'rainbow', 'rainbow_r', 'rocket', 'rocket_r', 'seismic', 'seismic_r', 'spectral', 'spectral_r', 'spring', 'spring_r', 'summer', 'summer_r', 'tab10', 'tab10_r', 'tab20', 'tab20_r', 'tab20b', 'tab20b_r', 'tab20c', 'tab20c_r', 'terrain', 'terrain_r', 'viridis', 'viridis_r', 'vlag', 'vlag_r', 'winter', 'winter_r'}), optional
+    The matplotlib colorscheme to generate the heatmap with.
+
+Returns
+-------
+visualization : Visualization</pre>
+    </div>
+  </div>
+</div></div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../../../">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../">Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../">Available plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../future/">Future plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../developing/">Developing a QIIME 2 plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../glossary/">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search/" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2018, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </div>
+  <script src="../../../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>

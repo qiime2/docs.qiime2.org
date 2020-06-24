@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Filtering data &#8212; QIIME 2 2020.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/external-links.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about/" />
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Training feature classifiers with q2-feature-classifier" href="../feature-classifier/" />
+    <link rel="prev" title="Metadata in QIIME 2" href="../metadata/" />
+  <script src="../../_static/bootstrap.min.js"></script>
+  <script src="../../_static/clipboard.min.js"></script>
+  <link rel="icon" href="../../_static/favicon.ico" type="image/png" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+  <link rel="stylesheet" href="../../_static/css/normalize.css" media="screen">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-86671044-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  </head><body>
+<a href="https://github.com/qiime2/qiime2" id="github-banner">
+  <img
+    src="../../_static/github_banner.png"
+    alt="Fork me on GitHub"
+  />
+</a>
+
+  <div id="wrapper" class="container clearfix">
+    <div id="header">
+      <a href="/">
+        <img
+          class="img-responsive"
+          src="../../_static/q2docs.png" alt="QIIME 2 Docs"
+        />
+      </a>
+    </div>
+    <div id="content">
+      
+      <div id="body" class="col-lg-10 col-md-10 col-sm-12 col-xs-12 main pull-right">
+        
+  <div class="section" id="filtering-data">
+<h1>Filtering data<a class="headerlink" href="#filtering-data" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide assumes you have installed QIIME 2 using one of the procedures in the <a class="reference internal" href="../../install/"><span class="doc">install documents</span></a>.</p>
+</div>
+<p>This tutorial describes how to filter feature tables, sequences, and distance matrices in QIIME 2, and will be expanded as more filtering functionality becomes available.</p>
+<div class="section" id="obtain-the-data">
+<h2>Obtain the data<a class="headerlink" href="#obtain-the-data" title="Permalink to this headline">¶</a></h2>
+<p>First, create a directory to work in and change to that directory.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir qiime2-filtering-tutorial
+<span class="nb">cd</span> qiime2-filtering-tutorial
+</pre></div>
+</div>
+<p>Download the data we’ll use in the tutorial. This includes sample metadata, a feature table, and a distance matrix:</p>
+<div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-0" aria-controls="browser-0" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-0" aria-controls="wget-0" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-0" aria-controls="messages-0" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-0">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv">
+            https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> sample-metadata.tsv
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-0">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "sample-metadata.tsv" \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-0">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/moving-pictures/sample_metadata.tsv" > \
+  "sample-metadata.tsv"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-1" aria-controls="browser-1" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-1" aria-controls="wget-1" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-1" aria-controls="messages-1" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-1">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/filtering/table.qza">
+            https://data.qiime2.org/2020.2/tutorials/filtering/table.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> table.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-1">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "table.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/filtering/table.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-1">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/filtering/table.qza" > \
+  "table.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-2" aria-controls="browser-2" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-2" aria-controls="wget-2" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-2" aria-controls="messages-2" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-2">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/filtering/distance-matrix.qza">
+            https://data.qiime2.org/2020.2/tutorials/filtering/distance-matrix.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> distance-matrix.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-2">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "distance-matrix.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/filtering/distance-matrix.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-2">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/filtering/distance-matrix.qza" > \
+  "distance-matrix.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-3" aria-controls="browser-3" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-3" aria-controls="wget-3" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-3" aria-controls="messages-3" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-3">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/filtering/taxonomy.qza">
+            https://data.qiime2.org/2020.2/tutorials/filtering/taxonomy.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> taxonomy.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-3">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "taxonomy.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/filtering/taxonomy.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-3">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/filtering/taxonomy.qza" > \
+  "taxonomy.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><div class="tabbed panel panel-default">
+  <div class="panel-heading white-bg">
+    Please select a download option that is most appropriate for your environment:
+  </div>
+
+  <div class="panel-body">
+    <ul class="nav nav-tabs gray-bg" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#browser-4" aria-controls="browser-4" role="tab" data-toggle="tab">
+          Browser
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#wget-4" aria-controls="wget-4" role="tab" data-toggle="tab">
+          wget
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#curl-4" aria-controls="messages-4" role="tab" data-toggle="tab">
+          curl
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="browser-4">
+        <p>
+          <strong>Download URL:</strong> <a href="https://data.qiime2.org/2020.2/tutorials/filtering/sequences.qza">
+            https://data.qiime2.org/2020.2/tutorials/filtering/sequences.qza
+          </a>
+        </p>
+        <p>
+          <strong>Save as:</strong> sequences.qza
+        </p>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="wget-4">
+        <div class="clearfix"></div>
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>wget \
+  -O "sequences.qza" \
+  "https://data.qiime2.org/2020.2/tutorials/filtering/sequences.qza"</pre>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="curl-4">
+        <div class="highlight-shell">
+          <div class="highlight">
+            <pre>curl -sL \
+  "https://data.qiime2.org/2020.2/tutorials/filtering/sequences.qza" > \
+  "sequences.qza"</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="section" id="filtering-feature-tables">
+<h2>Filtering feature tables<a class="headerlink" href="#filtering-feature-tables" title="Permalink to this headline">¶</a></h2>
+<p>In this section of the tutorial we’ll see how to filter (i.e., remove) samples and features from a feature table. Feature tables have two axes: the sample axis and the feature axis. The filtering operations described in this tutorial are generally applicable to the sample axis and the feature axis using the <code class="docutils literal notranslate"><span class="pre">filter-samples</span></code> and <code class="docutils literal notranslate"><span class="pre">filter-features</span></code> methods, respectively. Both of these methods are implemented in the <code class="docutils literal notranslate"><span class="pre">q2-feature-table</span></code> plugin. Taxonomy-based filtering can also be applied to filter features from a feature table using the <code class="docutils literal notranslate"><span class="pre">filter-table</span></code> method in the <code class="docutils literal notranslate"><span class="pre">q2-taxa</span></code> plugin.</p>
+<div class="section" id="total-frequency-based-filtering">
+<h3>Total-frequency-based filtering<a class="headerlink" href="#total-frequency-based-filtering" title="Permalink to this headline">¶</a></h3>
+<p>Total-frequency-based filtering is used to filter samples or features based on how frequently they are represented in the feature table.</p>
+<p>When filtering samples this can be used, for example, to filter samples whose total frequency is an outlier in the distribution of sample frequencies. In many 16S surveys, only a few (perhaps tens) of sequences will be obtained for some samples, possibly due to low biomass of the sample resulting in low DNA extraction yield. In this case, the user may want to remove samples based on their minimum total frequency (i.e., total number of sequences obtained for the sample, in this example). This can be achieved as follows (in this example, samples with a total frequency less than 1500 will be filtered).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-min-frequency <span class="m">1500</span> <span class="se">\</span>
+  --o-filtered-table sample-frequency-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">distance-matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fdistance-matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/distance-matrix.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">taxonomy.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ftaxonomy.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/taxonomy.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">sequences.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fsequences.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/sequences.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ftable.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/table.qza">download</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-frequency-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fsample-frequency-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/sample-frequency-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>This filter can be applied to the feature axis to remove low abundance features from a table. For example, you can remove all features with a total abundance (summed across all samples) of less than 10 as follows.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-min-frequency <span class="m">10</span> <span class="se">\</span>
+  --o-filtered-table feature-frequency-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">feature-frequency-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ffeature-frequency-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/feature-frequency-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>Both of these methods can also be applied to filter based on the maximum total frequency using the <code class="docutils literal notranslate"><span class="pre">--p-max-frequency</span></code>. The <code class="docutils literal notranslate"><span class="pre">--p-min-frequency</span></code> and <code class="docutils literal notranslate"><span class="pre">--p-max-frequency</span></code> can be combined to filter based on lower and upper limits of total frequency.</p>
+</div>
+<div class="section" id="contingency-based-filtering">
+<h3>Contingency-based filtering<a class="headerlink" href="#contingency-based-filtering" title="Permalink to this headline">¶</a></h3>
+<p>Contingency-based filtering is used to filter samples from a table contingent on the number of features they contain, or to filter features from a table contingent on the number of samples they’re observed in.</p>
+<p>This filtering is commonly used for filtering features that show up in only one or a few samples, based on the suspicion that these may not represent real biological diversity but rather PCR or sequencing errors (such as PCR chimeras). Features that are present in only a single sample could be filtered from a feature table as follows.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-features <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-min-samples <span class="m">2</span> <span class="se">\</span>
+  --o-filtered-table sample-contingency-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">sample-contingency-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fsample-contingency-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/sample-contingency-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>Similarly, samples that contain only a few features could be filtered from a feature table as follows.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --p-min-features <span class="m">10</span> <span class="se">\</span>
+  --o-filtered-table feature-contingency-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">feature-contingency-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ffeature-contingency-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/feature-contingency-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>Both of these methods can also be applied to filter contingent on the maximum number of features or samples, using the <code class="docutils literal notranslate"><span class="pre">--p-max-features</span></code> and <code class="docutils literal notranslate"><span class="pre">--p-max-samples</span></code> parameters, and these can optionally be used in combination with <code class="docutils literal notranslate"><span class="pre">--p-min-features</span></code> and <code class="docutils literal notranslate"><span class="pre">--p-min-samples</span></code>.</p>
+</div>
+<div class="section" id="identifier-based-filtering">
+<span id="id1"></span><h3>Identifier-based filtering<a class="headerlink" href="#identifier-based-filtering" title="Permalink to this headline">¶</a></h3>
+<p>Identifier-based filtering is used to retain only a user-specified list of samples or features based on their identifiers (IDs) in a QIIME 2 metadata file. To filter by IDs, the user will provide a QIIME 2 metadata file as input with the <code class="docutils literal notranslate"><span class="pre">--m-metadata-file</span></code> parameter (for <code class="docutils literal notranslate"><span class="pre">filter-samples</span></code> or <code class="docutils literal notranslate"><span class="pre">filter-features</span></code>) where the first column in the file contains the IDs that should be retained. Only the first column in this file will be used to filter IDs; all other columns (if any are present) will be ignored. Identifier-based filtering can be applied as follows to remove samples from a feature table.</p>
+<p>Let’s create a simple QIIME 2 metadata file that consists of a single column containing the IDs to filter by. We’ll write a header line and two sample IDs to a new file called <code class="docutils literal notranslate"><span class="pre">samples-to-keep.tsv</span></code>. If you already have a metadata file containing the IDs of the samples that you want to keep, you can skip this step. Otherwise, in practice, you’d probably create this file in a spreadsheet program or text editor, not on the command line as is being done here.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> SampleID &gt; samples-to-keep.tsv
+<span class="nb">echo</span> L1S8 &gt;&gt; samples-to-keep.tsv
+<span class="nb">echo</span> L1S105 &gt;&gt; samples-to-keep.tsv
+</pre></div>
+</div>
+<p>Then, we’ll run the <code class="docutils literal notranslate"><span class="pre">filter-samples</span></code> method with the parameter <code class="docutils literal notranslate"><span class="pre">--m-metadata-file</span> <span class="pre">samples-to-keep.tsv</span></code>. The resulting table will contain only the two samples whose IDs are listed in <code class="docutils literal notranslate"><span class="pre">samples-to-keep.tsv</span></code>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-metadata-file samples-to-keep.tsv <span class="se">\</span>
+  --o-filtered-table id-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">id-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fid-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/id-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="metadata-based-filtering">
+<span id="id2"></span><h3>Metadata-based filtering<a class="headerlink" href="#metadata-based-filtering" title="Permalink to this headline">¶</a></h3>
+<p>Metadata-based filtering is similar to identifier-based filtering, except that the list of IDs to keep is determined based on metadata search criteria rather than being provided by the user directly. This is achieved using the <code class="docutils literal notranslate"><span class="pre">--p-where</span></code> parameter in combination with the <code class="docutils literal notranslate"><span class="pre">--m-metadata-file</span></code> parameter. The user provides a description of the samples that should be retained based on their metadata using <code class="docutils literal notranslate"><span class="pre">--p-where</span></code>, where the syntax for this description is the SQLite <a class="reference external" href="https://en.wikipedia.org/wiki/Where_(SQL)">WHERE-clause</a> syntax.</p>
+<p>For example, filtering the table to contain only samples from subject 1 is performed as follows. Here, the <code class="docutils literal notranslate"><span class="pre">--p-where</span></code> parameter is specifying that we want to retain all of the samples whose <code class="docutils literal notranslate"><span class="pre">subject</span></code> is <code class="docutils literal notranslate"><span class="pre">subject-1</span></code> in <code class="docutils literal notranslate"><span class="pre">sample-metadata.tsv</span></code>. Note that the value <code class="docutils literal notranslate"><span class="pre">subject-1</span></code> must be enclosed in single quotes, and the column name (<code class="docutils literal notranslate"><span class="pre">subject</span></code>) should be quoted with square brackets to ensure SQLite interprets the column name correctly.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;[subject]=&#39;subject-1&#39;&quot;</span> <span class="se">\</span>
+  --o-filtered-table subject-1-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">subject-1-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fsubject-1-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/subject-1-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>If there are multiple values that should be retained from a single metadata column, the <code class="docutils literal notranslate"><span class="pre">IN</span></code> clause can be used to specify those values. For example, the following command can be used to retain all skin samples. Again, the values <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">palm</span></code> and <code class="docutils literal notranslate"><span class="pre">right</span> <span class="pre">palm</span></code> are enclosed in single quotes.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;[body-site] IN (&#39;left palm&#39;, &#39;right palm&#39;)&quot;</span> <span class="se">\</span>
+  --o-filtered-table skin-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">skin-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fskin-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/skin-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--p-where</span></code> expressions can be combined using the <code class="docutils literal notranslate"><span class="pre">AND</span></code> and <code class="docutils literal notranslate"><span class="pre">OR</span></code> keywords. Here the <code class="docutils literal notranslate"><span class="pre">--p-where</span></code> parameter is specifying that we want to retain only the samples whose <code class="docutils literal notranslate"><span class="pre">subject</span></code> is <code class="docutils literal notranslate"><span class="pre">subject-1</span></code> <em>and</em> whose <code class="docutils literal notranslate"><span class="pre">body-site</span></code> is <code class="docutils literal notranslate"><span class="pre">gut</span></code> in <code class="docutils literal notranslate"><span class="pre">sample-metadata.tsv</span></code>. With the <code class="docutils literal notranslate"><span class="pre">AND</span></code> keyword, both of the expressions being evaluated must be true for a sample to be retained. This means that samples whose <code class="docutils literal notranslate"><span class="pre">body-site</span></code> is <code class="docutils literal notranslate"><span class="pre">gut</span></code> but whose <code class="docutils literal notranslate"><span class="pre">subject</span></code> is <code class="docutils literal notranslate"><span class="pre">subject-2</span></code> would not be in the resulting table. Similarly, samples whose <code class="docutils literal notranslate"><span class="pre">subject</span></code> is <code class="docutils literal notranslate"><span class="pre">subject-1</span></code> but whose <code class="docutils literal notranslate"><span class="pre">body-site</span></code> is <em>not</em> <code class="docutils literal notranslate"><span class="pre">gut</span></code> would not be in the resulting table.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;[subject]=&#39;subject-1&#39; AND [body-site]=&#39;gut&#39;&quot;</span> <span class="se">\</span>
+  --o-filtered-table subject-1-gut-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">subject-1-gut-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fsubject-1-gut-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/subject-1-gut-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">OR</span></code> keyword syntax is similar to the <code class="docutils literal notranslate"><span class="pre">AND</span></code> keyword syntax, but specifies that either of the expressions can be true for a sample to be retained. For lack of a more relevant application to the example data being used here, the <code class="docutils literal notranslate"><span class="pre">OR</span></code> keyword in this example is applied to retain all of the samples where <code class="docutils literal notranslate"><span class="pre">body-site</span></code> is <code class="docutils literal notranslate"><span class="pre">gut</span></code> <em>or</em> <code class="docutils literal notranslate"><span class="pre">reported-antibiotic-usage</span></code> is <code class="docutils literal notranslate"><span class="pre">Yes</span></code> in <code class="docutils literal notranslate"><span class="pre">sample-metadata.tsv</span></code>. In contrast to <code class="docutils literal notranslate"><span class="pre">AND</span></code>, this means that samples whose <code class="docutils literal notranslate"><span class="pre">body-site</span></code> is <code class="docutils literal notranslate"><span class="pre">gut</span></code> but whose <code class="docutils literal notranslate"><span class="pre">reported-antibiotic-usage</span></code> is <code class="docutils literal notranslate"><span class="pre">No</span></code> would be in the resulting table. Similarly, samples whose <code class="docutils literal notranslate"><span class="pre">reported-antibiotic-usage</span></code> is <code class="docutils literal notranslate"><span class="pre">Yes</span></code> but whose <code class="docutils literal notranslate"><span class="pre">body-site</span></code> is <em>not</em> <code class="docutils literal notranslate"><span class="pre">gut</span></code> would also be in the resulting table.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;[body-site]=&#39;gut&#39; OR [reported-antibiotic-usage]=&#39;Yes&#39;&quot;</span> <span class="se">\</span>
+  --o-filtered-table gut-abx-positive-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">gut-abx-positive-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fgut-abx-positive-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/gut-abx-positive-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+<p>This syntax also supports negating individual clauses of the <code class="docutils literal notranslate"><span class="pre">--p-where</span></code> expression (or the whole expression). Here, the <code class="docutils literal notranslate"><span class="pre">--p-where</span></code> parameter is specifying that we want to retain only the samples whose <code class="docutils literal notranslate"><span class="pre">subject</span></code> is <code class="docutils literal notranslate"><span class="pre">subject-1</span></code> and whose <code class="docutils literal notranslate"><span class="pre">body-site</span></code> is <em>not</em> <code class="docutils literal notranslate"><span class="pre">gut</span></code> in <code class="docutils literal notranslate"><span class="pre">sample-metadata.tsv</span></code>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime feature-table filter-samples <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;[subject]=&#39;subject-1&#39; AND NOT [body-site]=&#39;gut&#39;&quot;</span> <span class="se">\</span>
+  --o-filtered-table subject-1-non-gut-filtered-table.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">subject-1-non-gut-filtered-table.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fsubject-1-non-gut-filtered-table.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/subject-1-non-gut-filtered-table.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="taxonomy-based-filtering-of-tables-and-sequences">
+<h3>Taxonomy-based filtering of tables and sequences<a class="headerlink" href="#taxonomy-based-filtering-of-tables-and-sequences" title="Permalink to this headline">¶</a></h3>
+<p>Taxonomy-based filtering is a very common type of feature-metadata-based filtering, so the <code class="docutils literal notranslate"><span class="pre">q2-taxa</span></code> plugin provides the <code class="docutils literal notranslate"><span class="pre">filter-table</span></code> method to simplify this process. Filtering can be applied to retain only specific taxa using <code class="docutils literal notranslate"><span class="pre">--p-include</span></code> and/or to remove specific taxa using <code class="docutils literal notranslate"><span class="pre">--p-exclude</span></code>.</p>
+<p>Removing a feature if its taxonomic annotation contains some specific text is achieved with the <code class="docutils literal notranslate"><span class="pre">--p-exclude</span></code> parameter. For example, <code class="docutils literal notranslate"><span class="pre">--p-exclude</span></code> is used here to remove all features annotated as <code class="docutils literal notranslate"><span class="pre">mitochondria</span></code> from a table. When searching with <code class="docutils literal notranslate"><span class="pre">--p-mode</span> <span class="pre">contains</span></code> (the default), search terms are case insensitive, so the search term <code class="docutils literal notranslate"><span class="pre">mitochondria</span></code> would return the same results as the search term <code class="docutils literal notranslate"><span class="pre">Mitochondria</span></code>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa filter-table <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --i-taxonomy taxonomy.qza <span class="se">\</span>
+  --p-exclude mitochondria <span class="se">\</span>
+  --o-filtered-table table-no-mitochondria.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table-no-mitochondria.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ftable-no-mitochondria.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/table-no-mitochondria.qza">download</a></p></li>
+</ul>
+</div>
+<p>Removing features that match more than one search term is achieved by providing the search terms in a comma-separated list. The following command will remove all features that contain either <code class="docutils literal notranslate"><span class="pre">mitochondria</span></code> or <code class="docutils literal notranslate"><span class="pre">chloroplast</span></code> in their taxonomic annotation.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa filter-table <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --i-taxonomy taxonomy.qza <span class="se">\</span>
+  --p-exclude mitochondria,chloroplast <span class="se">\</span>
+  --o-filtered-table table-no-mitochondria-no-chloroplast.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table-no-mitochondria-no-chloroplast.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ftable-no-mitochondria-no-chloroplast.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/table-no-mitochondria-no-chloroplast.qza">download</a></p></li>
+</ul>
+</div>
+<p>Filtering a table to retain only specific features is achieved using the <code class="docutils literal notranslate"><span class="pre">--p-include</span></code> parameter. For example, <code class="docutils literal notranslate"><span class="pre">--p-include</span></code> can be used to retain only features that were at least annotated to the phylum level. In the Greengenes taxonomy (which was used to generate the <code class="docutils literal notranslate"><span class="pre">FeatureTable[Taxonomy]</span></code> being provided here), all phylum annotations begin with the text <code class="docutils literal notranslate"><span class="pre">p__</span></code>. If a feature wasn’t assigned to a phylum (i.e., it contained at most a kingdom/domain annotation) it shouldn’t contain the text <code class="docutils literal notranslate"><span class="pre">p__</span></code>. We can therefore use <code class="docutils literal notranslate"><span class="pre">p__</span></code> as a <code class="docutils literal notranslate"><span class="pre">--p-include</span></code> include term here to retain only features that contain a phylum-level annotation. In practice, this filter might be useful for filtering features that are unlikely to be taxonomically informative about your samples.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa filter-table <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --i-taxonomy taxonomy.qza <span class="se">\</span>
+  --p-include p__ <span class="se">\</span>
+  --o-filtered-table table-with-phyla.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table-with-phyla.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ftable-with-phyla.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/table-with-phyla.qza">download</a></p></li>
+</ul>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--p-include</span></code> and <code class="docutils literal notranslate"><span class="pre">--p-exclude</span></code> parameters can be combined. The following command will retain all features that contain a phylum-level annotation, but exclude all features that contain either <code class="docutils literal notranslate"><span class="pre">mitochondria</span></code> or <code class="docutils literal notranslate"><span class="pre">chloroplast</span></code> in their taxonomic annotation.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa filter-table <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --i-taxonomy taxonomy.qza <span class="se">\</span>
+  --p-include p__ <span class="se">\</span>
+  --p-exclude mitochondria,chloroplast <span class="se">\</span>
+  --o-filtered-table table-with-phyla-no-mitochondria-no-chloroplast.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table-with-phyla-no-mitochondria-no-chloroplast.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ftable-with-phyla-no-mitochondria-no-chloroplast.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/table-with-phyla-no-mitochondria-no-chloroplast.qza">download</a></p></li>
+</ul>
+</div>
+<p>By default, the term(s) provided for <code class="docutils literal notranslate"><span class="pre">--p-include</span></code> or <code class="docutils literal notranslate"><span class="pre">--p-exclude</span></code> match if they are contained in a taxonomic annotation. If you’d like your terms to match only if they are the complete taxonomic annotation, that can be achieved by passing <code class="docutils literal notranslate"><span class="pre">--p-mode</span> <span class="pre">exact</span></code> (to indicate the search should require an exact match). When searching with <code class="docutils literal notranslate"><span class="pre">-p-mode</span> <span class="pre">exact</span></code>, search terms are case sensitive, so the search term <code class="docutils literal notranslate"><span class="pre">mitochondria</span></code> would not return the same results as the search term <code class="docutils literal notranslate"><span class="pre">Mitochondria</span></code>.</p>
+<p>Removing mitochondrial sequences with an exact match could be achieved as follows. (In the Greengenes taxonomy, there are sometimes genus and species annotations associated with mitochondria annotations, so this command may not remove all features annotated as mitochondria.)</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa filter-table <span class="se">\</span>
+  --i-table table.qza <span class="se">\</span>
+  --i-taxonomy taxonomy.qza <span class="se">\</span>
+  --p-mode exact <span class="se">\</span>
+  --p-exclude <span class="s2">&quot;k__Bacteria; p__Proteobacteria; c__Alphaproteobacteria; o__Rickettsiales; f__mitochondria&quot;</span> <span class="se">\</span>
+  --o-filtered-table table-no-mitochondria-exact.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">table-no-mitochondria-exact.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Ftable-no-mitochondria-exact.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/table-no-mitochondria-exact.qza">download</a></p></li>
+</ul>
+</div>
+<p>Taxonomy-based filtering of tables can also be achieved using <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">feature-table</span> <span class="pre">filter-features</span></code> with the <code class="docutils literal notranslate"><span class="pre">--p-where</span></code> parameter. If your filtering query is more complex than those supported through <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">taxa</span> <span class="pre">filter-table</span></code>, you should use <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">feature-table</span> <span class="pre">filter-features</span></code>.</p>
+</div>
+</div>
+<div class="section" id="filtering-sequences">
+<h2>Filtering sequences<a class="headerlink" href="#filtering-sequences" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">q2-taxa</span></code> plugin provides a method, <code class="docutils literal notranslate"><span class="pre">filter-seqs</span></code>, for filtering <code class="docutils literal notranslate"><span class="pre">FeatureData[Sequence]</span></code> based on a feature’s taxonomic annotation. The functionality is very similar to that provided in <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">taxa</span> <span class="pre">filter-table</span></code>, so you should refer to the <code class="docutils literal notranslate"><span class="pre">qiime</span> <span class="pre">taxa</span> <span class="pre">filter-table</span></code> examples above to learn more about taxonomy-based filtering. Briefly, <code class="docutils literal notranslate"><span class="pre">filter-seqs</span></code> can be applied as follows to retain all features that contain a phylum-level annotation, but exclude all features that contain either <code class="docutils literal notranslate"><span class="pre">mitochondria</span></code> or <code class="docutils literal notranslate"><span class="pre">chloroplast</span></code> in their taxonomic annotation.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime taxa filter-seqs <span class="se">\</span>
+  --i-sequences sequences.qza <span class="se">\</span>
+  --i-taxonomy taxonomy.qza <span class="se">\</span>
+  --p-include p__ <span class="se">\</span>
+  --p-exclude mitochondria,chloroplast <span class="se">\</span>
+  --o-filtered-sequences sequences-with-phyla-no-mitochondria-no-chloroplast.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">sequences-with-phyla-no-mitochondria-no-chloroplast.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fsequences-with-phyla-no-mitochondria-no-chloroplast.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/sequences-with-phyla-no-mitochondria-no-chloroplast.qza">download</a></p></li>
+</ul>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">q2-feature-table</span></code> plugin also has a <code class="docutils literal notranslate"><span class="pre">filter-seqs</span></code> method, which allows users to remove sequences based on various criteria, including which features are present within a feature table.</p>
+<p>See also the <a class="reference internal" href="../quality-control/"><span class="doc">q2-quality-control plugin</span></a>, which has an <code class="docutils literal notranslate"><span class="pre">exclude-seqs</span></code> action for filtering sequences based on alignment to a set of reference sequences or primers.</p>
+</div>
+<div class="section" id="filtering-distance-matrices">
+<h2>Filtering distance matrices<a class="headerlink" href="#filtering-distance-matrices" title="Permalink to this headline">¶</a></h2>
+<p>In this section of the tutorial we’ll see how to filter (i.e., remove) samples from a distance matrix using the <code class="docutils literal notranslate"><span class="pre">filter-distance-matrix</span></code> method provided by the <code class="docutils literal notranslate"><span class="pre">q2-diversity</span></code> plugin.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Filtering distance matrices works the same way as filtering feature tables by identifiers or sample metadata. The examples provided in this section are brief; please refer to <a class="reference internal" href="#identifier-based-filtering"><span class="std std-ref">Identifier-based filtering</span></a> and <a class="reference internal" href="#metadata-based-filtering"><span class="std std-ref">Metadata-based filtering</span></a> above for more details.</p>
+</div>
+<p>A distance matrix can be filtered based on identifiers. For example, to filter a distance matrix to retain the two samples specified in <code class="docutils literal notranslate"><span class="pre">samples-to-keep.tsv</span></code> above (see <a class="reference internal" href="#identifier-based-filtering"><span class="std std-ref">Identifier-based filtering</span></a>):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity filter-distance-matrix <span class="se">\</span>
+  --i-distance-matrix distance-matrix.qza <span class="se">\</span>
+  --m-metadata-file samples-to-keep.tsv <span class="se">\</span>
+  --o-filtered-distance-matrix identifier-filtered-distance-matrix.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">identifier-filtered-distance-matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fidentifier-filtered-distance-matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/identifier-filtered-distance-matrix.qza">download</a></p></li>
+</ul>
+</div>
+<p>A distance matrix can also be filtered based on sample metadata. For example, to filter a distance matrix to retain only samples from subject 2:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>qiime diversity filter-distance-matrix <span class="se">\</span>
+  --i-distance-matrix distance-matrix.qza <span class="se">\</span>
+  --m-metadata-file sample-metadata.tsv <span class="se">\</span>
+  --p-where <span class="s2">&quot;[subject]=&#39;subject-2&#39;&quot;</span> <span class="se">\</span>
+  --o-filtered-distance-matrix subject-2-filtered-distance-matrix.qza
+</pre></div>
+</div>
+<div class="admonition">
+<p><strong>Output artifacts:</strong></p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">subject-2-filtered-distance-matrix.qza</span></code>: <a class="reference external" href="https://view.qiime2.org?src=https%3A%2F%2Fdocs.qiime2.org%2F2020.2%2Fdata%2Ftutorials%2Ffiltering%2Fsubject-2-filtered-distance-matrix.qza">view</a> | <a class="reference external" href="https://docs.qiime2.org/2020.2/data/tutorials/filtering/subject-2-filtered-distance-matrix.qza">download</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+      </div>
+      
+
+      
+      <div id="sidebar" class="col-lg-2 col-md-2 col-sm-12 col-xs-12 side pull-left">
+        <div id="version-div" class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+          <ul id="version-list" class="dropdown-menu"></ul>
+        </div>
+        
+<h3><a href="../../">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/">What is QIIME 2?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../concepts/">Core concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/">Installing QIIME 2</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview/">Overview of QIIME 2 Plugin Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qiime2-for-experienced-microbiome-researchers/">QIIME 2 for Experienced Microbiome Researchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../moving-pictures/">“Moving Pictures” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fmt/">Fecal microbiota transplant (FMT) study: an exercise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../atacama-soils/">“Atacama soil microbiome” tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pd-mice/">Parkinson’s Mouse Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gneiss/">Differential abundance analysis with gneiss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../importing/">Importing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../exporting/">Exporting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metadata/">Metadata in QIIME 2</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Filtering data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feature-classifier/">Training feature classifiers with q2-feature-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quality-control/">Evaluating and controlling data quality with q2-quality-control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sample-classifier/">Predicting sample metadata values with q2-sample-classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../longitudinal/">Performing longitudinal and paired sample comparisons with q2-longitudinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../chimera/">Identifying and filtering chimeric feature sequences with q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../read-joining/">Alternative methods of read-joining in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otu-clustering/">Clustering sequences into OTUs using q2-vsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/">Utilities in QIIME 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phylogeny/">Phylogenetic inference with q2-phylogeny</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../interfaces/">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../semantic-types/">Semantic types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-resources/">Data resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../supplementary-resources/">Supplementary resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary/">User Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../citation/">Citing QIIME 2</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+      </div>
+      
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016-2020, QIIME 2 development team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </div>
+  <script src="../../_static/bootstrap-dropdown.js" charset="utf-8"></script>
+  <script src="../../_static/clipboard-driver.js"></script>
+  <script src="/versions.js" charset="utf-8"></script>
+  </body>
+</html>
