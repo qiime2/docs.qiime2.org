@@ -1,13 +1,17 @@
 (function($) {
   var defaultText = 'This document reflects an older version of QIIME 2 that is no longer supported. Please consider upgrading to a newer release!';
   var versions = {
+    "2020.6": {
+      "name": "2020.6",
+      "deprecated": false
+    },
     "2020.2": {
       "name": "2020.2",
-      "deprecated": false
+      "deprecated": true
     },
     "2019.10": {
       "name": "2019.10",
-      "deprecated": false
+      "deprecated": true
     },
     "2019.7": {
       "name": "2019.7",
